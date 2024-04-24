@@ -1,4 +1,4 @@
-package com.lvtn.dto;
+package com.lvtn.utils;
 
 import lombok.Builder;
 import lombok.Data;

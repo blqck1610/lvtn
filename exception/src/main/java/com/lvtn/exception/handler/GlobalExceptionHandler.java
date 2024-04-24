@@ -1,6 +1,6 @@
 package com.lvtn.exception.handler;
 
-import com.lvtn.dto.ApiResponse;
+
 import com.lvtn.exception.BaseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +14,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<String> handlerBaseException(BaseException e) {
-        ApiResponse apiResponse = ApiResponse.builder()
-                .code(e.getCode())
-                .message(e.getMessage())
-                .build();
-        return ResponseEntity.status(apiResponse.getCode()).body(apiResponse.getMessage());
+
+        return ResponseEntity.status(e.getCode()).body(e.getMessage());
     }
 
 
