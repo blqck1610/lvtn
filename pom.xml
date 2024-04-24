@@ -14,6 +14,8 @@
     <module>user</module>
     <module>exception</module>
     <module>eureka-server</module>
+      <module>clients</module>
+    <module>dto</module>
   </modules>
 
 
@@ -63,6 +65,19 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+
+<!--    exception and handler exception-->
+    <dependency>
+      <groupId>com.lvtn</groupId>
+      <artifactId>exception</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.lvtn</groupId>
+      <artifactId>dto</artifactId>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
