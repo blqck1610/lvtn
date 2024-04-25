@@ -10,7 +10,7 @@
     <artifactId>discovery-service</artifactId>
     <packaging>jar</packaging>
 
-    <name>eureka-server</name>
+    <name>discovery-service</name>
     <url>http://maven.apache.org</url>
 
     <properties>

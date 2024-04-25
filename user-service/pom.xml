@@ -10,7 +10,7 @@
     <artifactId>user-service</artifactId>
     <packaging>jar</packaging>
 
-    <name>user</name>
+    <name>user-service</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -84,7 +84,7 @@
             <artifactId>clients</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-<!--        security-->
+        <!--        security-->
 
         <dependency>
             <groupId>com.lvtn</groupId>

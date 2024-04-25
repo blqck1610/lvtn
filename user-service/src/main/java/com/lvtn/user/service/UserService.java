@@ -4,14 +4,12 @@ import com.lvtn.exception.BaseException;
 import com.lvtn.user.dto.AuthRequest;
 import com.lvtn.user.dto.UserDto;
 import com.lvtn.user.dto.UserRegistrationRequest;
-import com.lvtn.user.repository.UserRepository;
 import com.lvtn.user.entity.User;
+import com.lvtn.user.repository.UserRepository;
 import com.lvtn.utils.ApiResponse;
 import com.lvtn.utils.Provider;
 import com.lvtn.utils.Role;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

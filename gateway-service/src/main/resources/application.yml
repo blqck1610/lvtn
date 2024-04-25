@@ -2,7 +2,7 @@ server:
   port: 8083
 spring:
   application:
-    name: api-gateway
+    name: gateway-service
   cloud:
     gateway:
       routes:
