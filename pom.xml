@@ -10,13 +10,14 @@
   <name>lvtn</name>
   <modules>
     <module>amqp</module>
-    <module>api-gateway</module>
-    <module>user</module>
+    <module>gateway-service</module>
+    <module>user-service</module>
     <module>exception</module>
-    <module>eureka-server</module>
+    <module>discovery-service</module>
     <module>clients</module>
 
     <module>utils</module>
+    <module>authentication-service</module>
   </modules>
 
 

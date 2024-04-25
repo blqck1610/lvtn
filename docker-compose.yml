@@ -43,6 +43,7 @@ services:
       - "9411:9411"
     networks:
       - spring
+    restart: unless-stopped
   rabbitmq:
     image: rabbitmq:3.9.11-management-alpine
     container_name: rabbitmq
@@ -51,3 +52,4 @@ services:
       - "15672:15672"
     networks:
       - spring
+    restart: unless-stopped

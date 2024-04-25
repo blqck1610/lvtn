@@ -1,0 +1,27 @@
+server:
+  port: 8084
+
+application:
+  security:
+    jwt:
+      secret-key: eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcxNDA0OTI2OSwiaWF0IjoxNzE0MDQ5MjY5fQ.AUTscBS7TFPgTd2prOAJIY3Duxh0wFEm-3I1J0HEwyE
+      expiration: 86400000 # 1 day
+      refresh-token:
+        expiration: 604800000 # 7 days
+spring:
+  application:
+    name: authentication-service
+#    database
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: admin
+    url: jdbc:postgresql://localhost:5432/token
+    password: password
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format-sql: 'true'
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: 'true'

@@ -1,11 +1,11 @@
-package com.lvtn.clients.user;
+package com.lvtn.user.dto;
 
 import com.lvtn.utils.Provider;
 import com.lvtn.utils.Role;
-import lombok.Data;
-
+import lombok.Builder;
 import java.time.LocalDateTime;
-@Data
+
+@Builder
 public class UserDto {
     private Integer id;
     private String username;
