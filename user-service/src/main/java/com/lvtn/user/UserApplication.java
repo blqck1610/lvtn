@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication(scanBasePackages = {
         "com.lvtn.user",
         "com.lvtn.amqp"
-}, exclude = { SecurityAutoConfiguration.class , ManagementWebSecurityAutoConfiguration.class})
+})
 @EnableFeignClients(basePackages = "com.lvtn.clients")
 public class UserApplication {
     public static void main(String[] args) {
