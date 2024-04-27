@@ -1,9 +1,10 @@
 package com.lvtn.user.service;
 
+import com.lvtn.clients.user.AuthRequest;
+import com.lvtn.clients.user.UserDto;
+import com.lvtn.clients.user.UserRegistrationRequest;
 import com.lvtn.exception.BaseException;
-import com.lvtn.user.dto.AuthRequest;
-import com.lvtn.user.dto.UserDto;
-import com.lvtn.user.dto.UserRegistrationRequest;
+
 import com.lvtn.user.entity.User;
 import com.lvtn.user.repository.UserRepository;
 import com.lvtn.utils.ApiResponse;
@@ -23,20 +24,9 @@ public class UserService {
     private final UserRepository userRepository;
 
 
-    public UserDto authenticate(AuthRequest authRequest){
-        User user = userRepository.getByUsername(authRequest.getUsername());
-        if (user == null){
-            throw new BaseException(400, "username doesn't exist");
-        }
-        if(user.getPassword() != authRequest.getPassword()){
-            throw new BaseException(400, "wrong password");
-        }
-        return UserDto.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .role(user.getRole())
-                .build();
-    }
+
+
+
 
     @Transactional(rollbackFor = { SQLException.class, Exception.class })
     public ApiResponse registerNewUser(UserRegistrationRequest request){
@@ -77,9 +67,13 @@ public class UserService {
     public UserDto getUserInfo(String username) {
 
         User user = userRepository.getByUsername(username);
+        if (user == null){
+            return null;
+        }
         return  UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
+                .password(user.getPassword())
                 .role(user.getRole())
                 .build();
     }

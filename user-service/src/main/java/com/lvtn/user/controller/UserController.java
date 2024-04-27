@@ -1,9 +1,9 @@
 package com.lvtn.user.controller;
 
 
-import com.lvtn.user.dto.AuthRequest;
-import com.lvtn.user.dto.UserDto;
-import com.lvtn.user.dto.UserRegistrationRequest;
+import com.lvtn.clients.user.AuthRequest;
+import com.lvtn.clients.user.UserDto;
+import com.lvtn.clients.user.UserRegistrationRequest;
 import com.lvtn.user.service.UserService;
 import com.lvtn.utils.ApiResponse;
 import jakarta.validation.Valid;
@@ -21,25 +21,26 @@ public class UserController {
 
     @GetMapping(value = "/test")
     public ResponseEntity<String> test(){
-        log.info("user controller called");
+        log.info("user controller test called");
         return  ResponseEntity.ok("ok");
     }
 
-    @PostMapping(value = "/register")
+    @PostMapping(value = "/create-new-user")
     public ResponseEntity<String>  register(@RequestBody @Valid UserRegistrationRequest request){
         ApiResponse apiResponse = userService.registerNewUser(request);
         log.info("created user {}", request);
         return ResponseEntity.status(apiResponse.getCode()).body(apiResponse.getMessage());
     }
 
-    @PostMapping(value ="/authenticate")
-    public UserDto authenticate(@RequestBody @Valid AuthRequest request){
-        return  userService.authenticate(request);
-    }
 
     @GetMapping(value = "/{username}/info")
     public UserDto getUserInfo(@PathVariable(value = "username") String username){
         return userService.getUserInfo(username);
+    }
+
+    @GetMapping(value = "/secured")
+    public ResponseEntity<String> getSecured(){
+        return ResponseEntity.ok("secured api");
     }
 
 

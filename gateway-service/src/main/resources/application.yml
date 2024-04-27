@@ -8,12 +8,8 @@ spring:
       discovery:
         locator:
           enabled: true
-      routes:
-        - id: customer
-          uri: lb://CUSTOMER
-          predicates:
-            - Path=/api/v1/customer/**
-#        - id:
+
+#
 
 eureka:
   client:
@@ -36,4 +32,4 @@ logging:
 application:
   security:
     jwt:
-      secret-key: eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcxNDA0OTI2OSwiaWF0IjoxNzE0MDQ5MjY5fQ.AUTscBS7TFPgTd2prOAJIY3Duxh0wFEm-3I1J0HEwyE
+      secret-key: bb49931b1b6e4cd6529c2f21bcbce342c46d5dfe6b8b829237dceff8afb4d1cf

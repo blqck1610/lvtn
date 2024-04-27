@@ -14,6 +14,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<String> handlerBaseException(BaseException e) {
+        System.out.println("exception: " + e.getMessage());
         return ResponseEntity.status(e.getCode()).body(e.getMessage());
     }
 
@@ -23,7 +24,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handlerBindException(BindException e) {
         String errorMessage = "invalid request!";
         if (e.getBindingResult().hasErrors()) {
-            errorMessage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+            errorMessage = e.getBindingResult().getAllErrors().getFirst().getDefaultMessage();
         }
         return ResponseEntity.status(400).body(errorMessage);
 

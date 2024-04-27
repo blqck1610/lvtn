@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(value = "USER", path = "/api/v1/user")
+@FeignClient(value = "USER-SERVICE", path = "/api/v1/user")
 public interface UserClient {
 
-    @PostMapping(value = "/register")
+    @PostMapping(value = "/create-new-user")
     public ResponseEntity<String> register(@RequestBody UserRegistrationRequest request);
-
-    @PostMapping(value ="/authenticate")
-    public UserDto authenticate(@RequestBody @Valid AuthRequest request);
 
     @GetMapping(value = "/{username}/info")
     public UserDto getUserInfo(@PathVariable(value = "username") String username);
+
+    @GetMapping(value = "/secured")
+    public ResponseEntity<String> getSecured();
 
 }

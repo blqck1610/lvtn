@@ -8,7 +8,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication(scanBasePackages = {
         "com.lvtn.user",
-        "com.lvtn.amqp"
+        "com.lvtn.amqp",
+        "com.lvtn.exception"
 })
 @EnableFeignClients(basePackages = "com.lvtn.clients")
 public class UserApplication {

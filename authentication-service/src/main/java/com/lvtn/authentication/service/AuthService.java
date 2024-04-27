@@ -7,13 +7,16 @@ import com.lvtn.authentication.dto.AuthResponse;
 import com.lvtn.authentication.entity.Token;
 import com.lvtn.authentication.entity.TokenType;
 import com.lvtn.authentication.repository.TokenRepository;
+import com.lvtn.authentication.util.CryptoUtil;
 import com.lvtn.clients.user.AuthRequest;
 import com.lvtn.clients.user.UserClient;
 import com.lvtn.clients.user.UserDto;
 import com.lvtn.clients.user.UserRegistrationRequest;
+import com.lvtn.exception.BaseException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,34 +27,32 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
     private final UserClient userClient;
+
     private final TokenRepository tokenRepository;
 
     public ResponseEntity<String> register(UserRegistrationRequest request) {
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
+        request.setPassword(CryptoUtil.encrypt(request.getPassword()));
         return userClient.register(request);
     }
 
-    public AuthResponse authenticate(AuthRequest request) {
-        UserDto userDto = userClient.authenticate(request);
-        String accessToken = jwtService.generateToken(userDto.getUsername(), userDto.getRole().toString(), "ACCESS_TOKEN");
-        String refreshToken = jwtService.generateToken(userDto.getUsername(), userDto.getRole().toString(), "REFRESH_TOKEN");
-
-        revokeAllUserTokens(userDto.getId());
-        saveUserToken(userDto.getId(), refreshToken);
-
+    public AuthResponse authenticate(UserDto user) {
+        String accessToken = jwtService.generateToken(user.getUsername(), user.getRole().toString(), "ACCESS_TOKEN");
+        String refreshToken = jwtService.generateToken(user.getUsername(), user.getRole().toString(), "REFRESH_TOKEN");
+        revokeAllUserTokens(user.getId());
+        saveUserToken(user.getId(), refreshToken);
         return new AuthResponse(accessToken, refreshToken);
     }
-
+// todo: fix
     public void refreshToken(HttpServletRequest request, HttpServletResponse response)
             throws StreamWriteException, DatabindException, IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String refreshToken;
         String username;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null) {
             return;
         }
         refreshToken = authHeader.substring(7);
