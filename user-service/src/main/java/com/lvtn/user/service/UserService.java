@@ -1,11 +1,12 @@
 package com.lvtn.user.service;
 
-import com.lvtn.clients.user.AuthRequest;
+import com.lvtn.amqp.RabbitMQMessageProducer;
+import com.lvtn.clients.notificaiton.NotificationRequest;
 import com.lvtn.clients.user.UserDto;
 import com.lvtn.clients.user.UserRegistrationRequest;
 import com.lvtn.exception.BaseException;
-
 import com.lvtn.user.entity.User;
+import com.lvtn.user.rabbitmq.config.NotificationConfig;
 import com.lvtn.user.repository.UserRepository;
 import com.lvtn.utils.ApiResponse;
 import com.lvtn.utils.Provider;
@@ -22,16 +23,13 @@ import java.time.LocalDateTime;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final NotificationConfig notificationConfig;
+    private final RabbitMQMessageProducer producer;
 
-
-
-
-
-
-    @Transactional(rollbackFor = { SQLException.class, Exception.class })
-    public ApiResponse registerNewUser(UserRegistrationRequest request){
-        if(userRepository.getByUsername(request.getUsername()) != null){
-            throw new BaseException(400,"User already exists");
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ApiResponse registerNewUser(UserRegistrationRequest request) {
+        if (userRepository.getByUsername(request.getUsername()) != null) {
+            throw new BaseException(400, "User already exists");
         }
         User user = User.builder()
                 .username(request.getUsername())
@@ -44,22 +42,33 @@ public class UserService {
         user = userRepository.saveAndFlush(user);
         //todo: publish notification
 
+        NotificationRequest notificationRequest = NotificationRequest.builder()
+                .customerEmail(user.getEmail())
+                .customerId(user.getId())
+                .message("account create successfully at " + LocalDateTime.now() +": email=" + user.getEmail() + " username: " + user.getUsername())
+                .build();
+
+        producer.publish(notificationRequest,
+                notificationConfig.getInternalExchange(),
+                notificationConfig.getInternalNotificationRoutingKey());
 
         return new ApiResponse(201, "create successfully");
     }
-    @Transactional(rollbackFor = { SQLException.class, Exception.class })
-    public ApiResponse deleteUser(Integer userId){
+
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public ApiResponse deleteUser(Integer userId) {
         User user = userRepository.getReferenceById(userId);
         userRepository.delete(user);
 
-        return new ApiResponse(200,  "User deleted");
+        return new ApiResponse(200, "User deleted");
     }
 
-    public ApiResponse changePassword(String password){
+    public ApiResponse changePassword(String password) {
 //        todo: change password
         return null;
     }
-    public ApiResponse update(){
+
+    public ApiResponse update() {
 //        todo: update user
         return null;
     }
@@ -67,10 +76,10 @@ public class UserService {
     public UserDto getUserInfo(String username) {
 
         User user = userRepository.getByUsername(username);
-        if (user == null){
+        if (user == null) {
             return null;
         }
-        return  UserDto.builder()
+        return UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())
