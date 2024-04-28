@@ -7,10 +7,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>user-service</artifactId>
+    <artifactId>product-service</artifactId>
     <packaging>jar</packaging>
 
-    <name>user-service</name>
+    <name>product-service</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -32,20 +32,18 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.3</version>
             <scope>runtime</scope>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client -->
+<!--eureka server-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
-        <!--        tracing-->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -69,30 +67,28 @@
             <artifactId>zipkin-reporter-brave</artifactId>
         </dependency>
         <!--        message queue-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-            <version>3.2.4</version>
-        </dependency>
-        <dependency>
-            <groupId>com.lvtn</groupId>
-            <artifactId>amqp</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-amqp</artifactId>-->
+<!--            <version>3.2.4</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.lvtn</groupId>-->
+<!--            <artifactId>amqp</artifactId>-->
+<!--            <version>1.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
+
+<!--        feign client-->
         <dependency>
             <groupId>com.lvtn</groupId>
             <artifactId>clients</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+<!--handler exception-->
         <dependency>
             <groupId>com.lvtn</groupId>
             <artifactId>exception</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.lvtn</groupId>
-            <artifactId>utils</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

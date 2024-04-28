@@ -13,6 +13,7 @@
         <option value="$PROJECT_DIR$/authentication/pom.xml" />
         <option value="$PROJECT_DIR$/dto/pom.xml" />
         <option value="$PROJECT_DIR$/gw/pom.xml" />
+        <option value="$PROJECT_DIR$/production-service/pom.xml" />
       </set>
     </option>
   </component>

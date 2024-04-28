@@ -86,4 +86,10 @@ public class UserService {
                 .role(user.getRole())
                 .build();
     }
+
+
+
+    public String test(){
+        return System.getProperty("user.dir");
+    }
 }

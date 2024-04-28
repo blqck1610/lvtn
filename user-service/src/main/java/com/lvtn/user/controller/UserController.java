@@ -21,8 +21,8 @@ public class UserController {
 
     @GetMapping(value = "/test")
     public ResponseEntity<String> test(){
-        log.info("user controller test called");
-        return  ResponseEntity.ok("ok");
+        String t = userService.test();
+        return  ResponseEntity.ok(t);
     }
 
     @PostMapping(value = "/create-new-user")
