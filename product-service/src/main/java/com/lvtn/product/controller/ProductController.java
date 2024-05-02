@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/v1/product")
 @RequiredArgsConstructor
@@ -52,6 +54,18 @@ public class ProductController {
         // todo: delete product
 
         return ResponseEntity.ok("ok");
+    }
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Product> getProduct(@PathVariable(value = "id") Integer productId){
+        Product product = productService.getProduct(productId);
+        return ResponseEntity.ok(product);
+    }
+    @GetMapping(value = "/search/{keyword}")
+    public ResponseEntity<List<Product>> findProductList(@PathVariable("keyword") String keyword,
+                                                         @RequestParam("brand") List<String> brandList
+                                                         ){
+//        todo: find product list by keyword, filter ....
+        return null;
     }
 //    end CRUD
 

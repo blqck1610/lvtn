@@ -46,7 +46,7 @@ public class AuthService {
         saveUserToken(user.getId(), refreshToken);
         return new AuthResponse(accessToken, refreshToken);
     }
-// todo: fix
+// todo: fix refresh token
     public void refreshToken(HttpServletRequest request, HttpServletResponse response)
             throws StreamWriteException, DatabindException, IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);

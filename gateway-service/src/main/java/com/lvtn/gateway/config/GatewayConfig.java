@@ -30,6 +30,7 @@ public class GatewayConfig {
                 .route("product-service", r -> r.path("/api/v1/product/**")
                         .uri("lb://PRODUCT-SERVICE")
                 )
+
                 .build();
     }
 
