@@ -14,6 +14,7 @@ public class RouterVallidator {
             "/api/v1/user/test",
             "/api/v1/auth/register",
             "/api/v1/auth/authenticate"
+
     );
 
 //    check if the requested endpoint is secured or open to the world

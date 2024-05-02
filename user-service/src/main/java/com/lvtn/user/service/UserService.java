@@ -1,7 +1,7 @@
 package com.lvtn.user.service;
 
 import com.lvtn.amqp.RabbitMQMessageProducer;
-import com.lvtn.clients.notificaiton.NotificationRequest;
+import com.lvtn.clients.notification.NotificationRequest;
 import com.lvtn.clients.user.UserDto;
 import com.lvtn.clients.user.UserRegistrationRequest;
 import com.lvtn.exception.BaseException;
@@ -73,9 +73,9 @@ public class UserService {
         return null;
     }
 
-    public UserDto getUserInfo(String username) {
+    public UserDto getUserInfo(Integer userId) {
 
-        User user = userRepository.getByUsername(username);
+        User user = userRepository.getReferenceById(userId);
         if (user == null) {
             return null;
         }

@@ -20,17 +20,11 @@ public class ProductService {
 
     private final ServletContext context;
 
-    public String addProduct(Product product, MultipartFile multipartFile) {
-//        productRepository.save(product);
 
-        String fileName = multipartFile.getOriginalFilename();
-        File file = new File(this.getFolderUpload(), fileName);
-        try {
-            multipartFile.transferTo(file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return "success";
+
+    public Product saveProduct(Product product) {
+        product = productRepository.saveAndFlush(product);
+        return product;
     }
 
     public String updateProduct(Integer productId, Product product) {
@@ -49,9 +43,18 @@ public class ProductService {
         return null;
     }
 
+    public String saveImg(MultipartFile multipartFile){
+        String fileName = multipartFile.getOriginalFilename();
+        File file = new File(this.getFolderUpload(), fileName);
+        try {
+            multipartFile.transferTo(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return file.getAbsolutePath();
+    }
 
     public File getFolderUpload() {
-
         File folderUpload = new File(System.getProperty("user.dir") + "/image/product");
         if (!folderUpload.exists()) {
             folderUpload.mkdirs();

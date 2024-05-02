@@ -1,7 +1,6 @@
 package com.lvtn.user.controller;
 
 
-import com.lvtn.clients.user.AuthRequest;
 import com.lvtn.clients.user.UserDto;
 import com.lvtn.clients.user.UserRegistrationRequest;
 import com.lvtn.user.service.UserService;
@@ -33,15 +32,30 @@ public class UserController {
     }
 
 
-    @GetMapping(value = "/{username}/info")
-    public UserDto getUserInfo(@PathVariable(value = "username") String username){
-        return userService.getUserInfo(username);
+    @GetMapping(value = "/{userId}")
+    public ResponseEntity<UserDto> getUserInfo(@PathVariable(value = "userId") Integer userId){
+        return ResponseEntity.ok(userService.getUserInfo(userId));
+    }
+
+    @PutMapping(value = "/{userId}")
+    public ResponseEntity<UserDto> updateUserInfo(@PathVariable(value = "userId") Integer user){
+//        todo: implement update user
+
+        return null;
+    }
+    @DeleteMapping(value = "/{userId}")
+    public ResponseEntity<UserDto> deleteUserInfo(@PathVariable(value = "userId") Integer user){
+//        todo: implement delete user
+
+        return null;
     }
 
     @GetMapping(value = "/secured")
     public ResponseEntity<String> getSecured(){
         return ResponseEntity.ok("secured api");
     }
+
+
 
 
 }

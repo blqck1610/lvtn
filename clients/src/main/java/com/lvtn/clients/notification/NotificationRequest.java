@@ -1,4 +1,4 @@
-package com.lvtn.clients.notificaiton;
+package com.lvtn.clients.notification;
 
 
 import lombok.AllArgsConstructor;

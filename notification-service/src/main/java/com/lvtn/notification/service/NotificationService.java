@@ -1,7 +1,7 @@
 package com.lvtn.notification.service;
 
 
-import com.lvtn.clients.notificaiton.NotificationRequest;
+import com.lvtn.clients.notification.NotificationRequest;
 import com.lvtn.notification.entity.Notification;
 import com.lvtn.notification.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
