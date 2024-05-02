@@ -53,3 +53,12 @@ services:
     networks:
       - spring
     restart: unless-stopped
+
+  eureka-server:
+    image: blqck/discovery-service:latest
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - spring
+    restart: unless-stopped

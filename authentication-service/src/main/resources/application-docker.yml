@@ -1,0 +1,39 @@
+server:
+  port: 8084
+
+application:
+  security:
+    jwt:
+      secret-key: bb49931b1b6e4cd6529c2f21bcbce342c46d5dfe6b8b829237dceff8afb4d1cf
+      expiration: 86400000 # 1 day
+      refresh-token:
+        expiration: 604800000 # 7 days
+spring:
+  application:
+    name: auth-service
+#    database
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: admin
+    url: jdbc:postgresql://postgres:5432/token
+    password: password
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format-sql: 'true'
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: 'true'
+
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    enabled: true
+
+# traceID and spanId are predefined MDC keys - we want the logs to include them
+logging:
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'

@@ -22,8 +22,10 @@ public class Review {
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_id_sequence")
     private Integer id;
+    private Integer userId;
     private String reviewerName;
     private Integer productId;
+
     private Integer rating;
     private String comment;
     private LocalDate reviewAt;

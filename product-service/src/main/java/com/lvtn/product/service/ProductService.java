@@ -6,11 +6,18 @@ import com.lvtn.product.repository.ProductRepository;
 import jakarta.servlet.ServletContext;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @Data
@@ -21,7 +28,7 @@ public class ProductService {
     private final ServletContext context;
 
 
-
+    @Transactional
     public Product saveProduct(Product product) {
         product = productRepository.saveAndFlush(product);
         return product;
@@ -62,4 +69,13 @@ public class ProductService {
         return folderUpload;
     }
 
+    public Page<Product> findProducts(int page, String keyword, List<String> brands, List<String> categories, Sort sort){
+        return productRepository.findProducts(getPageable(page, sort), keyword, brands, categories);
+
+    }
+
+    private Pageable getPageable(int page, Sort sort) {
+        int pageSize = 8;
+        return PageRequest.of(page, pageSize, sort);
+    }
 }
