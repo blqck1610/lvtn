@@ -52,6 +52,8 @@ public class UserService {
                 notificationConfig.getInternalExchange(),
                 notificationConfig.getInternalNotificationRoutingKey());
 
+//        todo: create shopping cart
+
         return new ApiResponse(201, "create successfully");
     }
 

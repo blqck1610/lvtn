@@ -7,7 +7,6 @@ import lombok.*;
 
 @Entity
 @Data
-@RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -16,6 +15,7 @@ public class Item {
     @SequenceGenerator(name = "item_id_sequence", sequenceName = "item_id_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_id_sequence")
     private int id;
+    private Integer productId;
     private String productName;
     private Integer quantity;
     private String imgSrc;

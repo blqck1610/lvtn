@@ -38,6 +38,11 @@ public class GatewayConfig {
                         .filters(f -> f.filter(new RoleAuthGateway("ADMIN")))
                         .uri("lb://ADMIN-SERVICE")
                 )
+                .route("cart-service", r -> r.path("/api/v1/cart/**")
+//                        .filters(f -> f.filter(filter))
+                        .uri("lb://CART-SERVICE")
+
+                )
 
                 .build();
     }
