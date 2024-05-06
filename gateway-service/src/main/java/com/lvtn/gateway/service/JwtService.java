@@ -28,5 +28,10 @@ public class JwtService {
         return extractAllClaims(token).getExpiration().before(new Date());
 
     }
+    public String extractRoles(String token) {
+        Claims claims = extractAllClaims(token);
+        return (String) claims.get("role");
+
+    }
 
 }

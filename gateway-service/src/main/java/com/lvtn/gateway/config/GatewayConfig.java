@@ -2,10 +2,14 @@ package com.lvtn.gateway.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.GatewayFilterSpec;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.cloud.gateway.route.builder.UriSpec;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.function.Function;
 
 @Configuration
 @EnableHystrix
@@ -29,6 +33,10 @@ public class GatewayConfig {
                 )
                 .route("product-service", r -> r.path("/api/v1/product/**")
                         .uri("lb://PRODUCT-SERVICE")
+                )
+                .route("admin-service", r -> r.path("/api/v1/admin/**")
+                        .filters(f -> f.filter(new RoleAuthGateway("ADMIN")))
+                        .uri("lb://ADMIN-SERVICE")
                 )
 
                 .build();

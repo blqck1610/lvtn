@@ -2,7 +2,9 @@ package com.lvtn.product.controller;
 
 
 import com.lvtn.product.entity.Product;
+import com.lvtn.product.entity.Review;
 import com.lvtn.product.service.ProductService;
+import com.lvtn.product.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import java.util.List;
 @Slf4j
 public class ProductController {
     private final ProductService productService;
+    private final ReviewService reviewService;
 
     //CRUD API
     @PostMapping(value = "/add-product")
@@ -70,21 +73,23 @@ public class ProductController {
     }
 
     @GetMapping(value = "/search/{keyword}")
-    public ResponseEntity<List<Product>> findProductList(@RequestParam("page") Integer page,@PathVariable("keyword") String keyword,
+    public ResponseEntity<List<Product>> findProductList(@RequestParam("page") Integer page, @PathVariable("keyword") String keyword,
                                                          @RequestParam("brand") List<String> brandList
     ) {
 //        todo: find product list by keyword, filter ....
         return null;
     }
+
     @GetMapping(value = "/category/{categoryName}")
     public ResponseEntity<List<Product>> findProductListByCategory(@RequestParam("page") Integer page,
                                                                    @PathVariable("categoryName") String categoryName
     ) {
 //        todo: find product list by category ....
         page = page == null ? 0 : page;
-        Page<Product> products = productService.findProducts(page,null,null, List.of(categoryName), Sort.by("name"));
+        Page<Product> products = productService.findProducts(page, null, null, List.of(categoryName), Sort.by("productName"));
         return null;
     }
+
     @GetMapping(value = "/brand/{brandName}")
     public ResponseEntity<List<Product>> findProductListByBrand(@RequestParam("page") Integer page,
                                                                 @PathVariable("brandName") String brandName
@@ -98,6 +103,38 @@ public class ProductController {
     @GetMapping(value = "/test-callback")
     public ResponseEntity<String> testCall() {
         return ResponseEntity.ok("ok");
+    }
+
+    //    review
+    @PostMapping(value = "/review/add-review")
+    public ResponseEntity<String> addReview(@RequestBody Review review) {
+        log.info("Adding review {}", review);
+        reviewService.saveReview(review);
+        return ResponseEntity.ok("Review added successfully");
+
+    }
+
+    @PutMapping(value = "/review/{id}")
+    public ResponseEntity<String> updateReview(@PathVariable("id") Integer reviewId, @RequestBody Review review) {
+        log.info("updating review {}", review);
+        reviewService.updateReview(reviewId, review);
+        return ResponseEntity.ok("Review update successfully");
+
+    }
+
+    @DeleteMapping(value = "/review/{id}")
+    public ResponseEntity<String> deleteReview(@PathVariable("id") Integer reviewId) {
+        log.info("delete review {}", reviewId);
+        reviewService.deleteReview(reviewId);
+        return ResponseEntity.ok("delete successfully");
+
+    }
+
+    @GetMapping(value = "/get-reviews/{productId}")
+    public ResponseEntity<Page<Review>> getReviews(@PathVariable("productId") Integer productId,
+                                                   @RequestParam(value = "page", required = false) Integer page) {
+        page = page == null ? 0 : page;
+        return ResponseEntity.ok(reviewService.getReviewsByProduct(page, productId));
     }
 
 

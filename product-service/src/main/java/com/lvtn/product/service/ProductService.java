@@ -41,7 +41,7 @@ public class ProductService {
     }
 
     public Product getProduct(Integer productId) {
-        Product product = productRepository.getReferenceById(productId);
+        Product product = productRepository.findById(productId).orElse(null);
         return product;
     }
 
