@@ -1,7 +1,8 @@
-package com.lvtn.exception.handler;
+package com.lvtn.utils.exception.handler;
 
 
-import com.lvtn.exception.BaseException;
+
+import com.lvtn.utils.exception.BaseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;

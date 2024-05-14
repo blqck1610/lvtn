@@ -1,4 +1,4 @@
-package com.lvtn.exception;
+package com.lvtn.utils.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,7 @@
 package com.lvtn.user.service;
 
 import com.lvtn.amqp.RabbitMQMessageProducer;
+import com.lvtn.clients.cart.CartClient;
 import com.lvtn.clients.notification.NotificationRequest;
 import com.lvtn.clients.user.UserDto;
 import com.lvtn.clients.user.UserRegistrationRequest;
@@ -25,6 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final NotificationConfig notificationConfig;
     private final RabbitMQMessageProducer producer;
+    private final CartClient cartClient;
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ApiResponse registerNewUser(UserRegistrationRequest request) {
@@ -47,12 +49,13 @@ public class UserService {
                 .customerId(user.getId())
                 .message("account create successfully at " + LocalDateTime.now() +": email=" + user.getEmail() + " username: " + user.getUsername())
                 .build();
+//        todo: create shopping cart
+        cartClient.createCart(user.getId());
 
         producer.publish(notificationRequest,
                 notificationConfig.getInternalExchange(),
                 notificationConfig.getInternalNotificationRoutingKey());
 
-//        todo: create shopping cart
 
         return new ApiResponse(201, "create successfully");
     }
