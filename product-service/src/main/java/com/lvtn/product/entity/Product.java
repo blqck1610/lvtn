@@ -4,6 +4,8 @@ package com.lvtn.product.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Builder
 @NoArgsConstructor
@@ -18,8 +20,14 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id_sequence")
     private  Integer id;
     private String productName;
-    private String brandName;
-    private String categoryName;
+    @ManyToOne()
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
+    @ManyToOne()
+    @JoinColumn(name = "category_id")
+    private Category category;
+    private String description;
+    private Integer availableQuantity;
     private Double price;
     private String imageUrl;
 }

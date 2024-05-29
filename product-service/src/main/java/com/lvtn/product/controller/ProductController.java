@@ -1,8 +1,11 @@
 package com.lvtn.product.controller;
 
 
+import com.lvtn.product.entity.Category;
 import com.lvtn.product.entity.Product;
 import com.lvtn.product.entity.Review;
+import com.lvtn.product.repository.BrandRepository;
+import com.lvtn.product.repository.CategoryRepository;
 import com.lvtn.product.service.ProductService;
 import com.lvtn.product.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -23,17 +26,20 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
     private final ReviewService reviewService;
+    private final BrandRepository brandRepository;
+    private final CategoryRepository categoryRepository;
 
     //CRUD API
     @PostMapping(value = "/add-product")
-    public ResponseEntity<String> addProduct(@RequestParam("productName") String productName, @RequestParam("brandName") String brandName
-            , @RequestParam("categoryName") String categoryName, @RequestParam("price") Double price,
+    public ResponseEntity<String> addProduct(@RequestParam("productName") String productName,
+                                             @RequestParam("brandId") Integer brandId,
+                                             @RequestParam("categoryId") Integer categoryId,
+                                             @RequestParam("price") Double price,
                                              @RequestParam("file") MultipartFile image) {
-
         Product product = Product.builder()
                 .productName(productName)
-                .brandName(brandName)
-                .categoryName(categoryName)
+                .brand(brandRepository.getReferenceById(brandId))
+                .category(categoryRepository.getReferenceById(categoryId))
                 .price(price)
                 .imageUrl(productService.saveImg(image))
                 .build();
@@ -86,7 +92,8 @@ public class ProductController {
     ) {
 //        todo: find product list by category ....
         page = page == null ? 0 : page;
-        Page<Product> products = productService.findProducts(page, null, null, List.of(categoryName), Sort.by("productName"));
+        Category category = categoryRepository.findByName(categoryName).orElseThrow();
+        Page<Product> products = productService.findProducts(page, null, null, List.of(category), Sort.by("productName"));
         return null;
     }
 

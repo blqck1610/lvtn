@@ -1,6 +1,8 @@
 package com.lvtn.product.service;
 
 
+import com.lvtn.product.entity.Brand;
+import com.lvtn.product.entity.Category;
 import com.lvtn.product.entity.Product;
 import com.lvtn.product.repository.ProductRepository;
 import jakarta.servlet.ServletContext;
@@ -41,7 +43,7 @@ public class ProductService {
     }
 
     public Product getProduct(Integer productId) {
-        Product product = productRepository.findById(productId).orElse(null);
+        Product product = productRepository.findById(productId).orElseThrow();
         return product;
     }
 
@@ -69,7 +71,7 @@ public class ProductService {
         return folderUpload;
     }
 
-    public Page<Product> findProducts(int page, String keyword, List<String> brands, List<String> categories, Sort sort){
+    public Page<Product> findProducts(int page, String keyword, List<Brand> brands, List<Category> categories, Sort sort){
         return productRepository.findProducts(getPageable(page, sort), keyword, brands, categories);
 
     }
