@@ -3,21 +3,26 @@ package com.lvtn.user.service;
 import com.lvtn.amqp.RabbitMQMessageProducer;
 import com.lvtn.clients.cart.CartClient;
 import com.lvtn.clients.notification.NotificationRequest;
+import com.lvtn.clients.user.Address;
 import com.lvtn.clients.user.UserDto;
 import com.lvtn.clients.user.UserRegistrationRequest;
-import com.lvtn.exception.BaseException;
+import com.lvtn.user.dto.UserRequest;
 import com.lvtn.user.entity.User;
 import com.lvtn.user.rabbitmq.config.NotificationConfig;
 import com.lvtn.user.repository.UserRepository;
 import com.lvtn.utils.ApiResponse;
 import com.lvtn.utils.Provider;
 import com.lvtn.utils.Role;
+import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,9 +33,11 @@ public class UserService {
     private final RabbitMQMessageProducer producer;
     private final CartClient cartClient;
 
+    private final UserMapper mapper;
+
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ApiResponse registerNewUser(UserRegistrationRequest request) {
-        if (userRepository.getByUsername(request.getUsername()) != null) {
+        if (isUserExists(request.getUsername())) {
             throw new BaseException(400, "User already exists");
         }
         User user = User.builder()
@@ -62,39 +69,53 @@ public class UserService {
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ApiResponse deleteUser(Integer userId) {
-        User user = userRepository.getReferenceById(userId);
+        User user = userRepository.findById(userId).orElseThrow();
         userRepository.delete(user);
 
         return new ApiResponse(200, "User deleted");
     }
-
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ApiResponse changePassword(String password) {
 //        todo: change password
         return null;
     }
+    @Transactional(rollbackFor = {SQLException.class, Exception.class})
+    public Integer update(Integer userId, UserRequest userRequest) {
 
-    public ApiResponse update() {
 //        todo: update user
-        return null;
+        User user = userRepository.findById(userId).orElseThrow();
+        mergerUser(user, userRequest);
+        userRepository.save(user);
+        return userId;
     }
 
-    public UserDto getUserInfo(Integer userId) {
+    private void mergerUser(User user, UserRequest userRequest) {
+    }
 
-        User user = userRepository.getReferenceById(userId);
-        if (user == null) {
-            return null;
-        }
+
+    public UserDto getUserInfo(Integer userId) {
+        User user = userRepository.findById(userId).orElseThrow();
         return UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
-                .password(user.getPassword())
+                .address(new Address(user.getAddress().getAddress(), user.getAddress().getPhoneNumber()))
                 .role(user.getRole())
                 .build();
+    }
+
+    public List<UserDto> findAll(){
+        return  userRepository.findAll().stream().map(mapper::fromUser).collect(Collectors.toList());
+
     }
 
 
 
     public String test(){
         return System.getProperty("user.dir");
+    }
+
+    public Boolean isUserExists(String username) {
+        User user = userRepository.getByUsername(username);
+        return user != null;
     }
 }

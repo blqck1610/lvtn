@@ -55,6 +55,12 @@ public class UserController {
         return ResponseEntity.ok("secured api");
     }
 
+    @GetMapping(value = "/exists/username")
+    public ResponseEntity<Boolean> isUserExists(@PathVariable(value = "username") String username){
+
+        return ResponseEntity.ok(userService.isUserExists(username));
+    }
+
 
 
 

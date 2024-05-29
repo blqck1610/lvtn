@@ -1,22 +1,16 @@
 package com.lvtn.user.entity;
 
-import com.lvtn.utils.Provider;
-import com.lvtn.utils.Role;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
+@Entity
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "_user")
-public class User  {
+public class Address {
     @Id
     @SequenceGenerator(
             name = "user_id_sequence",
@@ -25,14 +19,7 @@ public class User  {
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_sequence")
     private Integer id;
-    private String username;
-    private String email;
-    private String password;
-    private Role role;
-    @OneToOne
-    private Address address;
-    private Provider provider;
-//    todo: 2fa authenticate
-    private LocalDateTime creatAt;
+    private String address;
+    private String phoneNumber;
 
 }
