@@ -38,6 +38,11 @@
             <version>42.7.3</version>
             <scope>runtime</scope>
         </dependency>
+<!--        flyway-->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
 <!--eureka server-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

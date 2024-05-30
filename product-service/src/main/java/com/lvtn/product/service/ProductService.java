@@ -5,10 +5,10 @@ import com.lvtn.product.entity.Brand;
 import com.lvtn.product.entity.Category;
 import com.lvtn.product.entity.Product;
 import com.lvtn.product.repository.ProductRepository;
+import com.lvtn.utils.exception.BaseException;
 import jakarta.servlet.ServletContext;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,9 +31,9 @@ public class ProductService {
 
 
     @Transactional
-    public Product saveProduct(Product product) {
+    public Integer saveProduct(Product product) {
         product = productRepository.saveAndFlush(product);
-        return product;
+        return product.getId();
     }
 
     public String updateProduct(Integer productId, Product product) {
@@ -42,9 +42,8 @@ public class ProductService {
         return null;
     }
 
-    public Product getProduct(Integer productId) {
-        Product product = productRepository.findById(productId).orElseThrow();
-        return product;
+    public Product findById(Integer productId) {
+         return productRepository.findById(productId).orElseThrow(() -> new BaseException(404, "Product not found"));
     }
 
     public Product deleteProduct(Integer productId) {
@@ -79,5 +78,9 @@ public class ProductService {
     private Pageable getPageable(int page, Sort sort) {
         int pageSize = 8;
         return PageRequest.of(page, pageSize, sort);
+    }
+
+    public List<Product> findAll() {
+        return productRepository.findAll();
     }
 }

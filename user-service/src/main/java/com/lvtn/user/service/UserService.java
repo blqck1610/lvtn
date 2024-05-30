@@ -3,7 +3,6 @@ package com.lvtn.user.service;
 import com.lvtn.amqp.RabbitMQMessageProducer;
 import com.lvtn.clients.cart.CartClient;
 import com.lvtn.clients.notification.NotificationRequest;
-import com.lvtn.clients.user.Address;
 import com.lvtn.clients.user.UserDto;
 import com.lvtn.clients.user.UserRegistrationRequest;
 import com.lvtn.user.dto.UserRequest;
@@ -18,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -69,7 +67,7 @@ public class UserService {
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ApiResponse deleteUser(Integer userId) {
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(404, "user not found"));
         userRepository.delete(user);
 
         return new ApiResponse(200, "User deleted");
@@ -83,7 +81,7 @@ public class UserService {
     public Integer update(Integer userId, UserRequest userRequest) {
 
 //        todo: update user
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(404 , "user not found"));
         mergerUser(user, userRequest);
         userRepository.save(user);
         return userId;
@@ -94,13 +92,8 @@ public class UserService {
 
 
     public UserDto getUserInfo(Integer userId) {
-        User user = userRepository.findById(userId).orElseThrow();
-        return UserDto.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .address(new Address(user.getAddress().getAddress(), user.getAddress().getPhoneNumber()))
-                .role(user.getRole())
-                .build();
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(404 , "user not found"));
+        return mapper.fromUser(user);
     }
 
     public List<UserDto> findAll(){

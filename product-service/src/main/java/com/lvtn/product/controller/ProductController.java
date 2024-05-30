@@ -30,22 +30,11 @@ public class ProductController {
     private final CategoryRepository categoryRepository;
 
     //CRUD API
-    @PostMapping(value = "/add-product")
-    public ResponseEntity<String> addProduct(@RequestParam("productName") String productName,
-                                             @RequestParam("brandId") Integer brandId,
-                                             @RequestParam("categoryId") Integer categoryId,
-                                             @RequestParam("price") Double price,
-                                             @RequestParam("file") MultipartFile image) {
-        Product product = Product.builder()
-                .productName(productName)
-                .brand(brandRepository.getReferenceById(brandId))
-                .category(categoryRepository.getReferenceById(categoryId))
-                .price(price)
-                .imageUrl(productService.saveImg(image))
-                .build();
-        productService.saveProduct(product);
-        log.info("Product saved successfully {}", product);
-        return ResponseEntity.status(HttpStatus.CREATED).body("product saved successfully");
+    @PostMapping(value = "/create-product")
+    public ResponseEntity<Integer> createProduct(@RequestParam("productName") String productName, @RequestParam("brandId") Integer brandId, @RequestParam("categoryId") Integer categoryId, @RequestParam("price") Double price, @RequestParam("file") MultipartFile image) {
+        Product product = Product.builder().productName(productName).brand(brandRepository.getReferenceById(brandId)).category(categoryRepository.getReferenceById(categoryId)).price(price).imageUrl(productService.saveImg(image)).build();
+        log.info("Product saving successfully {}", product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(product));
     }
 
     @PostMapping(value = "/test")
@@ -70,26 +59,26 @@ public class ProductController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable(value = "id") Integer productId) {
-        Product product = productService.getProduct(productId);
+    public ResponseEntity<Product> findById(@PathVariable(value = "id") Integer productId) {
 
-        if (product == null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        return ResponseEntity.ok(product);
+
+        return ResponseEntity.ok(productService.findById(productId));
+    }
+    @GetMapping(value = "/find-all")
+    public ResponseEntity<List<Product>> findAll() {
+
+
+        return ResponseEntity.ok(productService.findAll());
     }
 
     @GetMapping(value = "/search/{keyword}")
-    public ResponseEntity<List<Product>> findProductList(@RequestParam("page") Integer page, @PathVariable("keyword") String keyword,
-                                                         @RequestParam("brand") List<String> brandList
-    ) {
+    public ResponseEntity<List<Product>> findProductList(@RequestParam("page") Integer page, @PathVariable("keyword") String keyword, @RequestParam("brand") List<String> brandList) {
 //        todo: find product list by keyword, filter ....
         return null;
     }
 
     @GetMapping(value = "/category/{categoryName}")
-    public ResponseEntity<List<Product>> findProductListByCategory(@RequestParam("page") Integer page,
-                                                                   @PathVariable("categoryName") String categoryName
-    ) {
+    public ResponseEntity<List<Product>> findProductListByCategory(@RequestParam("page") Integer page, @PathVariable("categoryName") String categoryName) {
 //        todo: find product list by category ....
         page = page == null ? 0 : page;
         Category category = categoryRepository.findByName(categoryName).orElseThrow();
@@ -98,9 +87,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "/brand/{brandName}")
-    public ResponseEntity<List<Product>> findProductListByBrand(@RequestParam("page") Integer page,
-                                                                @PathVariable("brandName") String brandName
-    ) {
+    public ResponseEntity<List<Product>> findProductListByBrand(@RequestParam("page") Integer page, @PathVariable("brandName") String brandName) {
 //        todo: find product list by brand ....
         return null;
     }
@@ -138,8 +125,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "/get-reviews/{productId}")
-    public ResponseEntity<Page<Review>> getReviews(@PathVariable("productId") Integer productId,
-                                                   @RequestParam(value = "page", required = false) Integer page) {
+    public ResponseEntity<Page<Review>> getReviews(@PathVariable("productId") Integer productId, @RequestParam(value = "page", required = false) Integer page) {
         page = page == null ? 0 : page;
         return ResponseEntity.ok(reviewService.getReviewsByProduct(page, productId));
     }
