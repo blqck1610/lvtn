@@ -1,5 +1,4 @@
-package com.lvtn.cart.entity;
-
+package com.lvtn.product.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -15,11 +14,11 @@ public class Item {
     @SequenceGenerator(name = "item_id_sequence", sequenceName = "item_id_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_id_sequence")
     private int id;
-    private Integer productId;
-    private String productName;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference(value = "product")
+    @JoinColumn(name = "product")
+    private Product product;
     private Integer quantity;
-    private String imgSrc;
-    private Double price;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference(value = "cart")
@@ -27,6 +26,6 @@ public class Item {
     private Cart cart;
 
     public double getTotalPrice() {
-        return price * quantity;
+        return product.getPrice() * quantity;
     }
 }

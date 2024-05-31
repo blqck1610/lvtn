@@ -1,9 +1,11 @@
-package com.lvtn.cart.entity;
-
+package com.lvtn.product.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class Cart {
     public Double getTotalPrice(){
         double rs = 0.0;
         for (Item item : items){
-            rs += item.getPrice() * item.getQuantity();
+            rs += item.getProduct().getPrice() * item.getQuantity();
         }
         return rs;
     }
