@@ -28,5 +28,5 @@ public class Transaction {
     private String responseCode;
     private String orderInfo;
     private Date payDate;
-    private String payType;
+    private PaymentMethod paymentMethod;
 }

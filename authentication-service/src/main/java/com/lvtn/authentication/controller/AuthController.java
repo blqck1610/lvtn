@@ -3,10 +3,7 @@ package com.lvtn.authentication.controller;
 
 import com.lvtn.authentication.service.AuthService;
 import com.lvtn.authentication.util.CryptoUtil;
-import com.lvtn.clients.user.AuthRequest;
-import com.lvtn.clients.user.UserClient;
-import com.lvtn.clients.user.UserDto;
-import com.lvtn.clients.user.UserRegistrationRequest;
+import com.lvtn.clients.user.*;
 import com.lvtn.exception.BaseException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +24,7 @@ public class AuthController {
 
     @PostMapping(value = "/register")
     public ResponseEntity<String> register(@Valid @RequestBody UserRegistrationRequest request){
-        UserDto user = userClient.getUserInfo(request.getUsername());
+        UserForAuth user = userClient.getUserForAuth(request.getUsername());
         if(user != null){
             throw new BaseException(400, "username already registered");
         }
@@ -38,7 +35,7 @@ public class AuthController {
 
     @PostMapping(value = "/authenticate")
     public ResponseEntity<Object> authenticate(@Valid @RequestBody AuthRequest request){
-        UserDto user = userClient.getUserInfo(request.getUsername());
+        UserForAuth user = userClient.getUserForAuth(request.getUsername());
         if(user == null){
             throw new BaseException(400, "username does not exist");
         }

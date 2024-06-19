@@ -21,4 +21,6 @@ public interface UserClient {
     @GetMapping(value = "/secured")
     public ResponseEntity<String> getSecured();
 
+    @GetMapping(value = "/auth")
+    public UserForAuth getUserForAuth(String username);
 }

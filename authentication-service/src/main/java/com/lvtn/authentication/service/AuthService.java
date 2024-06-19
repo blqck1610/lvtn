@@ -8,10 +8,7 @@ import com.lvtn.authentication.entity.Token;
 import com.lvtn.authentication.entity.TokenType;
 import com.lvtn.authentication.repository.TokenRepository;
 import com.lvtn.authentication.util.CryptoUtil;
-import com.lvtn.clients.user.AuthRequest;
-import com.lvtn.clients.user.UserClient;
-import com.lvtn.clients.user.UserDto;
-import com.lvtn.clients.user.UserRegistrationRequest;
+import com.lvtn.clients.user.*;
 import com.lvtn.exception.BaseException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,9 +36,9 @@ public class AuthService {
         return userClient.register(request);
     }
 
-    public AuthResponse authenticate(UserDto user) {
-        String accessToken = jwtService.generateToken(user.getUsername(), user.getRole().toString(), "ACCESS_TOKEN");
-        String refreshToken = jwtService.generateToken(user.getUsername(), user.getRole().toString(), "REFRESH_TOKEN");
+    public AuthResponse authenticate(UserForAuth user) {
+        String accessToken = jwtService.generateToken(user.getUsername(), user.getRole(), "ACCESS_TOKEN");
+        String refreshToken = jwtService.generateToken(user.getUsername(), user.getRole(), "REFRESH_TOKEN");
         revokeAllUserTokens(user.getId());
         saveUserToken(user.getId(), refreshToken);
         return new AuthResponse(accessToken, refreshToken);

@@ -23,7 +23,7 @@ public class GatewayConfig {
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("user-service", r -> r.path("/api/v1/user/**")
-                        .filters(f -> f.filter(filter))
+//                        .filters(f -> f.filter(filter))
                         .uri("lb://USER-SERVICE")
 
                 )

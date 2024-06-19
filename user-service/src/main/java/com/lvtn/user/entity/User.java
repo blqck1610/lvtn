@@ -29,8 +29,8 @@ public class User  {
     private String email;
     private String password;
     private Role role;
-    @OneToOne
-    private Address address;
+
+    private String address;
     private Provider provider;
 //    todo: 2fa authenticate
     private LocalDateTime creatAt;

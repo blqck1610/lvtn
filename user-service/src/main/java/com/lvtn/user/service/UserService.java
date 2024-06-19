@@ -3,8 +3,9 @@ package com.lvtn.user.service;
 import com.lvtn.amqp.RabbitMQMessageProducer;
 import com.lvtn.clients.cart.CartClient;
 import com.lvtn.clients.notification.NotificationRequest;
-import com.lvtn.clients.user.UserDto;
+import com.lvtn.clients.user.UserForAuth;
 import com.lvtn.clients.user.UserRegistrationRequest;
+import com.lvtn.user.dto.UserDto;
 import com.lvtn.user.dto.UserRequest;
 import com.lvtn.user.entity.User;
 import com.lvtn.user.rabbitmq.config.NotificationConfig;
@@ -110,5 +111,20 @@ public class UserService {
     public Boolean isUserExists(String username) {
         User user = userRepository.getByUsername(username);
         return user != null;
+    }
+
+    public UserForAuth getUserForAuth(String username) {
+        User user = userRepository.getByUsername(username);
+        if(user == null){
+            return null;
+        }
+
+
+        return UserForAuth.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .role(user.getRole().toString())
+                .build();
     }
 }

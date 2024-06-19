@@ -1,10 +1,13 @@
 package com.lvtn.user.controller;
 
 
-import com.lvtn.clients.user.UserDto;
+import com.lvtn.clients.user.AuthRequest;
+import com.lvtn.clients.user.UserForAuth;
 import com.lvtn.clients.user.UserRegistrationRequest;
+import com.lvtn.user.dto.UserDto;
 import com.lvtn.user.service.UserService;
 import com.lvtn.utils.ApiResponse;
+import com.lvtn.utils.exception.BaseException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +51,11 @@ public class UserController {
 //        todo: implement delete user
 
         return null;
+    }
+    @GetMapping(value = "/auth")
+    public UserForAuth getUserForAuth(String username){
+
+        return userService.getUserForAuth(username);
     }
 
     @GetMapping(value = "/secured")

@@ -39,10 +39,7 @@
             <scope>runtime</scope>
         </dependency>
 <!--        flyway-->
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-        </dependency>
+
 <!--eureka server-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -90,11 +87,7 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-<!--handler exception-->
-        <dependency>
-            <groupId>com.lvtn</groupId>
-            <artifactId>exception</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+
+
     </dependencies>
 </project>

@@ -70,7 +70,7 @@ public class CartService {
             var newAvailableQuantity = item.getProduct().getAvailableQuantity() - item.getQuantity();
             Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(() -> new BaseException(404, "product not found"));
             product.setAvailableQuantity(newAvailableQuantity);
-            productRepository.saveAndFlush(product);
+            productRepository.save(product);
         }
         return 1;
 
