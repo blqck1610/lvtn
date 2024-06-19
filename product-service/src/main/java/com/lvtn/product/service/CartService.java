@@ -3,7 +3,7 @@ package com.lvtn.product.service;
 
 import com.lvtn.exception.BaseException;
 import com.lvtn.product.entity.Cart;
-import com.lvtn.product.entity.Item;
+import com.lvtn.product.entity.PurchaseRequest;
 import com.lvtn.product.entity.Product;
 import com.lvtn.product.repository.CartRepository;
 import com.lvtn.product.repository.ProductRepository;
@@ -24,7 +24,7 @@ public class CartService {
     public void createCart(Integer userId) {
         Cart cart = Cart.builder()
                 .id(userId)
-                .items(new ArrayList<>())
+                .purchaseRequests(new ArrayList<>())
                 .build();
         cartRepository.save(cart);
     }
@@ -34,11 +34,11 @@ public class CartService {
     }
 
     public void updateCart(int id, int productId, int quantity) {
-        Item i = null;
+        PurchaseRequest i = null;
         Cart cart = cartRepository.getReferenceById(id);
-        for (Item item : cart.getItems()) {
-            if (item.getProduct().getId() == productId) {
-                i = item;
+        for (PurchaseRequest purchaseRequest : cart.getPurchaseRequests()) {
+            if (purchaseRequest.getProduct().getId() == productId) {
+                i = purchaseRequest;
             }
         }
         if (i != null) {
@@ -50,25 +50,25 @@ public class CartService {
     }
 
     public void removeItem(int id, int productId) {
-        Item i = null;
+        PurchaseRequest i = null;
         Cart cart = cartRepository.getReferenceById(id);
-        for (Item item : cart.getItems()) {
-            if (item.getProduct().getId() == productId) {
-                i = item;
+        for (PurchaseRequest purchaseRequest : cart.getPurchaseRequests()) {
+            if (purchaseRequest.getProduct().getId() == productId) {
+                i = purchaseRequest;
             }
         }
         if (i != null) {
-            cart.getItems().remove(i);
+            cart.getPurchaseRequests().remove(i);
         }
     }
 
     public Integer purchaseProducts(Cart cart){
-        for(Item item : cart.getItems()){
-            if(item.getQuantity() > item.getProduct().getAvailableQuantity()){
-                throw new BaseException(200, "Insufficient stock  quantity for product " + item.getProduct().getId());
+        for(PurchaseRequest purchaseRequest : cart.getPurchaseRequests()){
+            if(purchaseRequest.getQuantity() > purchaseRequest.getProduct().getAvailableQuantity()){
+                throw new BaseException(200, "Insufficient stock  quantity for product " + purchaseRequest.getProduct().getId());
             }
-            var newAvailableQuantity = item.getProduct().getAvailableQuantity() - item.getQuantity();
-            Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(() -> new BaseException(404, "product not found"));
+            var newAvailableQuantity = purchaseRequest.getProduct().getAvailableQuantity() - purchaseRequest.getQuantity();
+            Product product = productRepository.findById(purchaseRequest.getProduct().getId()).orElseThrow(() -> new BaseException(404, "product not found"));
             product.setAvailableQuantity(newAvailableQuantity);
             productRepository.save(product);
         }

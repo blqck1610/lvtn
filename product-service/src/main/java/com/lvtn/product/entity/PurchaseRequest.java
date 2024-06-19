@@ -9,10 +9,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Item {
+public class PurchaseRequest {
     @Id
-    @SequenceGenerator(name = "item_id_sequence", sequenceName = "item_id_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_id_sequence")
+    @SequenceGenerator(name = "purchaseRequest_id_sequence", sequenceName = "purchaseRequest_id_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "purchaseRequest_id_sequence")
     private int id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference(value = "product")
