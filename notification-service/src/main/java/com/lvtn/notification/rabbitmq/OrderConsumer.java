@@ -1,8 +1,6 @@
 package com.lvtn.notification.rabbitmq;
 
-import com.lvtn.clients.notification.NotificationRequest;
-import com.lvtn.clients.notification.OrderConfirmInformation;
-import com.lvtn.notification.service.NotificationService;
+import com.lvtn.clients.notification.OrderConfirmation;
 import com.lvtn.notification.service.OrderConfirmService;
 import io.micrometer.observation.annotation.Observed;
 import lombok.AllArgsConstructor;
@@ -19,9 +17,9 @@ public class OrderConsumer {
 
     @RabbitListener(queues = "${rabbitmq.queue.order}")
     @Observed
-    public void consumerNotification(OrderConfirmInformation orderConfirmInformation){
-        log.info("consumer  {} from queue", orderConfirmInformation);
-        service.send(orderConfirmInformation);
+    public void consumerNotification(OrderConfirmation orderConfirmation){
+        log.info("consumer  {} from queue", orderConfirmation);
+        service.send(orderConfirmation);
     }
 
 
