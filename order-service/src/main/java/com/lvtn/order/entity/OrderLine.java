@@ -1,5 +1,6 @@
 package com.lvtn.order.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,9 +21,12 @@ public class OrderLine {
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_line_id_sequence")
     private Integer id;
+
     @ManyToOne
+    @JsonBackReference(value = "order_id")
     @JoinColumn(name = "order_id")
     private Order order;
+
     private Integer productId;
     private Integer quantity;
 

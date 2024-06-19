@@ -48,5 +48,7 @@ rabbitmq:
     internal: internal.exchanges
   queue:
     notification: notification.queue
+    order: order.queue
   routing-keys:
     internal-notification: internal.notification.routing-keys
+    internal-order: internal.order.routing-keys

@@ -1,6 +1,8 @@
 package com.lvtn.product.service;
 
 
+import com.lvtn.clients.product.PurchaseRequest;
+import com.lvtn.clients.product.PurchaseResponse;
 import com.lvtn.product.entity.Brand;
 import com.lvtn.product.entity.Category;
 import com.lvtn.product.entity.Product;
@@ -19,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -28,6 +32,7 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     private final ServletContext context;
+    private final ProductMapper productMapper;
 
 
     @Transactional
@@ -43,7 +48,7 @@ public class ProductService {
     }
 
     public Product findById(Integer productId) {
-         return productRepository.findById(productId).orElseThrow(() -> new BaseException(404, "Product not found"));
+         return productRepository.findById(productId).orElse(null);
     }
 
     public Product deleteProduct(Integer productId) {
@@ -82,5 +87,32 @@ public class ProductService {
 
     public List<Product> findAll() {
         return productRepository.findAll();
+    }
+
+
+
+    public List<PurchaseResponse> purchaseProducts(List<PurchaseRequest> requests) {
+        var productIds = requests.stream().map(PurchaseRequest::getProductId).toList();
+        List<Product> storedProducts = productRepository.findAllByIdInOrderById(productIds);
+        List<PurchaseRequest> storedRequests = requests.stream().sorted(Comparator.comparing(PurchaseRequest::getProductId)).toList();
+
+        if(productIds.size() != storedProducts.size()) {
+            throw new BaseException(200, "One or more products does not exist");
+        }
+        List<PurchaseResponse> purchasedProducts = new ArrayList<PurchaseResponse>();
+        for(int i = 0; i < storedProducts.size(); i++) {
+            var product = storedProducts.get(i);
+            var productRequest = storedRequests.get(i);
+            if(product.getAvailableQuantity() < productRequest.getQuantity()){
+                throw new BaseException(400, "Insufficient stock quantity  for product with id: " + product.getId());
+            }
+            var newAvailableQuantity = product.getAvailableQuantity() - productRequest.getQuantity();
+            product.setAvailableQuantity(newAvailableQuantity);
+            productRepository.saveAndFlush(product);
+            purchasedProducts.add(productMapper.toPurchaseResponse(product, productRequest.getQuantity()));
+        }
+
+
+        return purchasedProducts;
     }
 }

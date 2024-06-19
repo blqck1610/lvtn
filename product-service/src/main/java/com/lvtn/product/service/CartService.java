@@ -1,12 +1,12 @@
 package com.lvtn.product.service;
 
 
-import com.lvtn.exception.BaseException;
 import com.lvtn.product.entity.Cart;
-import com.lvtn.product.entity.PurchaseRequest;
+import com.lvtn.product.entity.Item;
 import com.lvtn.product.entity.Product;
 import com.lvtn.product.repository.CartRepository;
 import com.lvtn.product.repository.ProductRepository;
+import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ public class CartService {
     public void createCart(Integer userId) {
         Cart cart = Cart.builder()
                 .id(userId)
-                .purchaseRequests(new ArrayList<>())
+                .items(new ArrayList<>())
                 .build();
         cartRepository.save(cart);
     }
@@ -34,11 +34,11 @@ public class CartService {
     }
 
     public void updateCart(int id, int productId, int quantity) {
-        PurchaseRequest i = null;
+        Item i = null;
         Cart cart = cartRepository.getReferenceById(id);
-        for (PurchaseRequest purchaseRequest : cart.getPurchaseRequests()) {
-            if (purchaseRequest.getProduct().getId() == productId) {
-                i = purchaseRequest;
+        for (Item item : cart.getItems()) {
+            if (item.getProduct().getId() == productId) {
+                i = item;
             }
         }
         if (i != null) {
@@ -50,31 +50,19 @@ public class CartService {
     }
 
     public void removeItem(int id, int productId) {
-        PurchaseRequest i = null;
+        Item i = null;
         Cart cart = cartRepository.getReferenceById(id);
-        for (PurchaseRequest purchaseRequest : cart.getPurchaseRequests()) {
-            if (purchaseRequest.getProduct().getId() == productId) {
-                i = purchaseRequest;
+        for (Item item : cart.getItems()) {
+            if (item.getProduct().getId() == productId) {
+                i = item;
             }
         }
         if (i != null) {
-            cart.getPurchaseRequests().remove(i);
+            cart.getItems().remove(i);
         }
     }
 
-    public Integer purchaseProducts(Cart cart){
-        for(PurchaseRequest purchaseRequest : cart.getPurchaseRequests()){
-            if(purchaseRequest.getQuantity() > purchaseRequest.getProduct().getAvailableQuantity()){
-                throw new BaseException(200, "Insufficient stock  quantity for product " + purchaseRequest.getProduct().getId());
-            }
-            var newAvailableQuantity = purchaseRequest.getProduct().getAvailableQuantity() - purchaseRequest.getQuantity();
-            Product product = productRepository.findById(purchaseRequest.getProduct().getId()).orElseThrow(() -> new BaseException(404, "product not found"));
-            product.setAvailableQuantity(newAvailableQuantity);
-            productRepository.save(product);
-        }
-        return 1;
 
-    }
 
 }
 

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +29,10 @@ public class Notification {
     private String sender;
     private String toCustomerEmail;
     private Integer toCustomerId;
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
+
+    @CreatedDate
     private LocalDateTime sendAt;
 
 }

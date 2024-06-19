@@ -7,17 +7,18 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/user-service/pom.xml" />
         <option value="$PROJECT_DIR$/cart-service/pom.xml" />
+        <option value="$PROJECT_DIR$/clients/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/authentication/pom.xml" />
         <option value="$PROJECT_DIR$/cart-service/pom.xml" />
-        <option value="$PROJECT_DIR$/clients/pom.xml" />
         <option value="$PROJECT_DIR$/dto/pom.xml" />
         <option value="$PROJECT_DIR$/exception/pom.xml" />
         <option value="$PROJECT_DIR$/gw/pom.xml" />
         <option value="$PROJECT_DIR$/production-service/pom.xml" />
+        <option value="$PROJECT_DIR$/stock-service/pom.xml" />
       </set>
     </option>
   </component>

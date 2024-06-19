@@ -1,6 +1,8 @@
 package com.lvtn.product.controller;
 
 
+import com.lvtn.clients.product.PurchaseRequest;
+import com.lvtn.clients.product.PurchaseResponse;
 import com.lvtn.product.entity.Category;
 import com.lvtn.product.entity.Product;
 import com.lvtn.product.entity.Review;
@@ -61,13 +63,10 @@ public class ProductController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<Product> findById(@PathVariable(value = "id") Integer productId) {
 
-
         return ResponseEntity.ok(productService.findById(productId));
     }
     @GetMapping(value = "/find-all")
     public ResponseEntity<List<Product>> findAll() {
-
-
         return ResponseEntity.ok(productService.findAll());
     }
 
@@ -92,6 +91,12 @@ public class ProductController {
         return null;
     }
 //    end CRUD
+
+    @PostMapping(value = "/purchase")
+    public ResponseEntity<List<PurchaseResponse >> purchaseProducts(@RequestBody List<PurchaseRequest> requests){
+        return ResponseEntity.ok(productService.purchaseProducts(requests));
+    }
+
 
 
     @GetMapping(value = "/test-callback")
@@ -129,6 +134,8 @@ public class ProductController {
         page = page == null ? 0 : page;
         return ResponseEntity.ok(reviewService.getReviewsByProduct(page, productId));
     }
+
+
 
 
 }

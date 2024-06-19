@@ -1,8 +1,9 @@
 package com.lvtn.user.service;
 
 import com.lvtn.amqp.RabbitMQMessageProducer;
-import com.lvtn.clients.cart.CartClient;
+//import com.lvtn.clients.cart.CartClient;
 import com.lvtn.clients.notification.NotificationRequest;
+import com.lvtn.clients.product.ProductClient;
 import com.lvtn.clients.user.UserForAuth;
 import com.lvtn.clients.user.UserRegistrationRequest;
 import com.lvtn.user.dto.UserDto;
@@ -30,7 +31,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final NotificationConfig notificationConfig;
     private final RabbitMQMessageProducer producer;
-    private final CartClient cartClient;
+    private final ProductClient productClient;
 
     private final UserMapper mapper;
 
@@ -56,7 +57,7 @@ public class UserService {
                 .message("account create successfully at " + LocalDateTime.now() +": email=" + user.getEmail() + " username: " + user.getUsername())
                 .build();
 //        todo: create shopping cart
-        cartClient.createCart(user.getId());
+//        productClient.createCart(user.getId());
 
         producer.publish(notificationRequest,
                 notificationConfig.getInternalExchange(),
@@ -93,7 +94,10 @@ public class UserService {
 
 
     public UserDto getUserInfo(Integer userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(404 , "user not found"));
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null){
+            return null;
+        }
         return mapper.fromUser(user);
     }
 

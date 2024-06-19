@@ -1,4 +1,4 @@
-package com.lvtn.notification.config;
+package com.lvtn.order.rabbitmq;
 
 import lombok.Data;
 import org.springframework.amqp.core.Binding;
@@ -11,15 +11,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Data
-public class NotificationConfig {
+public class OrderAMQPConfig {
     @Value("${rabbitmq.exchanges.internal}")
     private String internalExchange;
-    @Value("${rabbitmq.queue.notification}")
-    private String notificationQueue;
-    @Value("${rabbitmq.routing-keys.internal-notification}")
-    private String internalNotificationRoutingKey;
-
-
     @Value("${rabbitmq.queue.order}")
     private String orderQueue;
     @Value("${rabbitmq.routing-keys.internal-order}")
@@ -31,25 +25,14 @@ public class NotificationConfig {
     }
 
     @Bean
-    public Queue notificationQueue(){
-        return new Queue(notificationQueue);
-    }
-    @Bean
-    public Queue orderQueue(){
+    public Queue queue(){
         return new Queue(orderQueue);
     }
 
     @Bean
     public Binding internalNotificationBinding(){
         return BindingBuilder
-                .bind(notificationQueue())
-                .to(topicExchange())
-                .with(internalNotificationRoutingKey);
-    }
-    @Bean
-    public Binding internalOrderBinding(){
-        return BindingBuilder
-                .bind(orderQueue())
+                .bind(queue())
                 .to(topicExchange())
                 .with(internalOrderRoutingKey);
     }

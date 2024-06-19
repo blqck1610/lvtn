@@ -1,5 +1,6 @@
 package com.lvtn.order.dto;
 
+import com.lvtn.clients.product.PurchaseRequest;
 import com.lvtn.order.entity.PaymentMethod;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -20,7 +21,6 @@ import java.util.List;
 public class OrderRequest {
     private Integer id;
     private String reference;
-
     @Positive(message = "order amount should be positive")
     private BigDecimal amount;
     @NotNull(message = "payment method should be precised")

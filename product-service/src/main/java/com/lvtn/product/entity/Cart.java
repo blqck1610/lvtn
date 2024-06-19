@@ -19,12 +19,12 @@ public class Cart {
     private Integer id;
     @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "cart")
     @JsonBackReference(value = "cart")
-    private List<PurchaseRequest> purchaseRequests;
+    private List<Item> items;
 
     public Double getTotalPrice(){
         double rs = 0.0;
-        for (PurchaseRequest purchaseRequest : purchaseRequests){
-            rs += purchaseRequest.getProduct().getPrice() * purchaseRequest.getQuantity();
+        for (Item item : items){
+            rs += item.getProduct().getPrice() * item.getQuantity();
         }
         return rs;
     }

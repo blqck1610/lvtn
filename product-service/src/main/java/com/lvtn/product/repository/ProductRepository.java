@@ -24,4 +24,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
                 AND (u.category in (:categories) OR :categories IS NULL)
    """)
     Page<Product> findProducts(Pageable pageable, @Param("keyword") String keyword, @Param("brands") List<Brand> brands, @Param("categories") List<Category> categories);
+
+    List<Product> findAllByIdInOrderById(List<Integer> productIds);
 }
