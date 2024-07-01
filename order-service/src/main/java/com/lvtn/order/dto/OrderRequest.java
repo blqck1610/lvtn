@@ -22,7 +22,7 @@ public class OrderRequest {
     private Integer id;
     private String reference;
     @Positive(message = "order amount should be positive")
-    private BigDecimal amount;
+    private long amount;
     @NotNull(message = "payment method should be precised")
     private PaymentMethod paymentMethod;
     @NotNull(message = "payment method should be present")

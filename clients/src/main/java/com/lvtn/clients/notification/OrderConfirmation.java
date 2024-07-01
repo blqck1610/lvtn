@@ -17,9 +17,8 @@ import java.util.List;
 @Builder
 public class OrderConfirmation {
     private String orderReference;
-    private BigDecimal totalAmount;
+    private long totalAmount;
     private String paymentMethod;
-    private UserDto userDto;
     private List<PurchaseResponse> products;
 
 

@@ -14,9 +14,9 @@ import org.springframework.context.annotation.Configuration;
 public class OrderAMQPConfig {
     @Value("${rabbitmq.exchanges.internal}")
     private String internalExchange;
-    @Value("${rabbitmq.queue.order}")
+    @Value("${rabbitmq.queue.notification}")
     private String orderQueue;
-    @Value("${rabbitmq.routing-keys.internal-order}")
+    @Value("${rabbitmq.routing-keys.internal-notification}")
     private String internalOrderRoutingKey;
 
     @Bean

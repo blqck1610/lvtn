@@ -1,7 +1,9 @@
 package com.lvtn.order.service;
 
 import com.lvtn.order.dto.OrderLineRequest;
+import com.lvtn.order.dto.OrderLineResponse;
 import com.lvtn.order.dto.OrderRequest;
+import com.lvtn.order.dto.OrderResponse;
 import com.lvtn.order.entity.Order;
 import com.lvtn.order.entity.OrderLine;
 import lombok.Builder;
@@ -30,6 +32,25 @@ public class Mapper {
                 .productId(orderLineRequest.productId())
                 .quantity(orderLineRequest.quantity())
 
+                .build();
+    }
+    OrderLineResponse toOrderLineResponse(OrderLine orderLine){
+        return OrderLineResponse.builder()
+                .id(orderLine.getProductId())
+                .quantity(orderLine.getQuantity())
+                .build();
+
+    }
+
+    public OrderResponse toOrderResponse(Order order){
+        return OrderResponse.builder()
+                .createdDate(order.getCreatedDate())
+                .status(order.getStatus())
+                .userId(order.getCustomerId())
+                .id(order.getId())
+                .paymentMethod(order.getPaymentMethod())
+                .reference(order.getReference())
+                .totalAmount(order.getTotalAmount())
                 .build();
     }
 }

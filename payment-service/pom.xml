@@ -10,7 +10,7 @@
     <artifactId>payment-service</artifactId>
     <packaging>jar</packaging>
 
-    <name>payment-service</name>
+    <name>transaction-service</name>
     <url>http://maven.apache.org</url>
 
     <properties>

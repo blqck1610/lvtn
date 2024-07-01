@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "_transaction")
@@ -15,6 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 public class Transaction {
     @Id
     @SequenceGenerator(name = "transaction_id_sequence",
@@ -27,6 +30,10 @@ public class Transaction {
     private String bankCode;
     private String responseCode;
     private String orderInfo;
-    private Date payDate;
+    @CreatedDate
+    private LocalDateTime createdDate;
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 }

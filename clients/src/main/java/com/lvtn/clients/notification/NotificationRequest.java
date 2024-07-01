@@ -15,5 +15,6 @@ public class NotificationRequest {
     private String message;
     private String customerEmail;
     private Integer customerId;
+    private NotificationType type;
 
 }

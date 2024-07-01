@@ -1,4 +1,4 @@
-package com.lvtn.notification.entity;
+package com.lvtn.clients.notification;
 
 public enum NotificationType {
 

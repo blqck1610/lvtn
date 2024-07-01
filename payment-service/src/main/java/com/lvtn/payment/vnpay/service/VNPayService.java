@@ -1,52 +1,37 @@
-package com.lvtn.payment.vnpay.controller;
+package com.lvtn.payment.vnpay.service;
 
+import com.lvtn.clients.payment.PaymentRequest;
 import com.lvtn.payment.dto.PaymentResponseDTO;
-import com.lvtn.payment.entity.Transaction;
 import com.lvtn.payment.service.PaymentService;
 import com.lvtn.payment.vnpay.config.Config;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@RestController
+@Service
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/payment/vnpay")
-@Slf4j
-public class VNPayController {
+public class VNPayService {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-
     private final PaymentService paymentService;
 
-    @GetMapping(value = "test")
-    public ResponseEntity<String> test(){
-        return ResponseEntity.ok("OK");
-    }
 
 
-    @GetMapping(value = "/create-payment")
-    public ResponseEntity<?> createVNPayPayment(HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
+    public PaymentResponseDTO createVNPayPayment(HttpServletRequest request, PaymentRequest paymentRequest) throws UnsupportedEncodingException {
 //        String vnp_Version = "2.1.0";
 //        String vnp_Command = "pay";
         String orderType = "other";
 //        long amount = Integer.parseInt(req.getParameter("amount"))*100;
 //        String bankCode = req.getParameter("bankCode");
-        long amount = 10000;
-        String vnp_TxnRef = Config.getRandomNumber(8);
-        String vnp_IpAddr = Config.getIpAddress(req);
+        long amount = paymentRequest.amount();
+        String vnp_TxnRef = paymentRequest.orderId();
+        String vnp_IpAddr = Config.getIpAddress(request);
 
         String vnp_TmnCode = Config.vnp_TmnCode;
 
@@ -93,7 +78,7 @@ public class VNPayController {
         while (itr.hasNext()) {
             String fieldName = (String) itr.next();
             String fieldValue = (String) vnp_Params.get(fieldName);
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
+            if ((fieldValue != null) && (!fieldValue.isEmpty())) {
                 //Build hash data
                 hashData.append(fieldName);
                 hashData.append('=');
@@ -124,44 +109,13 @@ public class VNPayController {
 //        job.addProperty("data", paymentUrl);
 //        Gson gson = new Gson();
 //        resp.getWriter().write(gson.toJson(job));
+        RestTemplate restTemplate = new RestTemplate();
 
-        return ResponseEntity.status(HttpStatus.OK).body(paymentResponseDTO);
+
+        return paymentResponseDTO;
     }
 
 
-    @GetMapping("/transaction-info")
-    public ResponseEntity<?> transactionVNPay(
-            @RequestParam(value = "vnp_Amount", required = false) String amount,
-            @RequestParam(value = "vnp_BankCode", required = false) String bankCode,
-            @RequestParam(value = "vnp_ResponseCode", required = false) String responseCode,
-            @RequestParam(value = "vnp_OrderInfo", required = false) String orderInfo,
-            @RequestParam(value = "vnp_PayDate", required = false) String payDateString
 
-    ) throws ParseException {
-        Date payDate = formatter.parse(payDateString);
-        PaymentResponseDTO paymentResponseDTO = new PaymentResponseDTO();
-        if (responseCode.equals("00")) {
-            paymentResponseDTO.setStatus("OK");
-            paymentResponseDTO.setMessage("successfully");
-
-            Transaction transaction = Transaction.builder()
-                    .responseCode(responseCode)
-                    .amount(amount)
-                    .bankCode(bankCode)
-                    .orderInfo(orderInfo)
-                    .payDate(payDate)
-                    .payType("ONLINE_VNPAY")
-                    .build();
-
-            paymentService.saveTransaction(transaction);
-            log.info("saved transaction {}", transaction);
-
-        } else{
-            paymentResponseDTO.setStatus("FAILED");
-            paymentResponseDTO.setMessage("failed");
-        }
-        return ResponseEntity.ok(paymentResponseDTO);
-
-    }
 
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "customer_order")
 public class Order {
     @Id
@@ -27,7 +29,8 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_id_sequence")
     private Integer id;
     private String reference;
-    private BigDecimal totalAmount;
+    private String status;
+    private long totalAmount;
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
     private Integer customerId;

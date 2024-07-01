@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "_user")
+@EntityListeners(AuditingEntityListener.class)
 public class User  {
     @Id
     @SequenceGenerator(
@@ -33,6 +36,7 @@ public class User  {
     private String address;
     private Provider provider;
 //    todo: 2fa authenticate
+    @CreatedDate
     private LocalDateTime creatAt;
 
 }

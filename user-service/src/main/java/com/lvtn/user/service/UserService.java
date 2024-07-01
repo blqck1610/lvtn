@@ -3,6 +3,7 @@ package com.lvtn.user.service;
 import com.lvtn.amqp.RabbitMQMessageProducer;
 //import com.lvtn.clients.cart.CartClient;
 import com.lvtn.clients.notification.NotificationRequest;
+import com.lvtn.clients.notification.NotificationType;
 import com.lvtn.clients.product.ProductClient;
 import com.lvtn.clients.user.UserForAuth;
 import com.lvtn.clients.user.UserRegistrationRequest;
@@ -46,7 +47,6 @@ public class UserService {
                 .email(request.getEmail())
                 .role(Role.USER)
                 .provider(Provider.LOCAL)
-                .creatAt(LocalDateTime.now())
                 .build();
         user = userRepository.saveAndFlush(user);
         //todo: publish notification
@@ -55,6 +55,7 @@ public class UserService {
                 .customerEmail(user.getEmail())
                 .customerId(user.getId())
                 .message("account create successfully at " + LocalDateTime.now() +": email=" + user.getEmail() + " username: " + user.getUsername())
+                .type(NotificationType.NOTIFICATION)
                 .build();
 //        todo: create shopping cart
 //        productClient.createCart(user.getId());
