@@ -46,7 +46,7 @@ public class OrderService {
 
     private final PaymentClient paymentClient;
 
-    public Integer createOrder(OrderRequest orderRequest){
+    public PaymentResponseDTO createOrder(OrderRequest orderRequest) throws UnsupportedEncodingException {
 //        check the user --> openfeign
         UserDto userDto = userClient.getUserInfo(orderRequest.getCustomerId()).getBody();
         if(userDto == null){
@@ -62,25 +62,31 @@ public class OrderService {
                     null, order.getId(), purchaseRequest.getProductId(), purchaseRequest.getQuantity()
             ));
         }
-//        todo: start payment process
+//        start payment process
+        PaymentRequest paymentRequest = PaymentRequest.builder()
+                .orderId(order.getId().toString())
+                .amount(order.getTotalAmount())
 
-
-        OrderConfirmation orderConfirmation = OrderConfirmation.builder()
-                .orderReference(order.getReference())
-                .totalAmount(order.getTotalAmount())
-                .paymentMethod(order.getPaymentMethod().toString())
-                .products(purchasedProducts)
                 .build();
-        String message = orderConfirmation.toString();
-        NotificationRequest rq = NotificationRequest.builder()
-                .type(NotificationType.ORDER_INFORMATION_CONFIRM)
-                .customerEmail(userDto.getEmail())
-                .message(message)
-                .customerId(userDto.getId())
-                .build();
-        producer.publish(rq, amqpConfig.getInternalExchange(), amqpConfig.getInternalOrderRoutingKey());
+        PaymentResponseDTO payment = paymentClient.createVNPayPayment(paymentRequest).getBody();
 
-        return order.getId();
+// no need
+//        OrderConfirmation orderConfirmation = OrderConfirmation.builder()
+//                .orderReference(order.getReference())
+//                .totalAmount(order.getTotalAmount())
+//                .paymentMethod(order.getPaymentMethod().toString())
+//                .products(purchasedProducts)
+//                .build();
+//        String message = orderConfirmation.toString();
+//        NotificationRequest rq = NotificationRequest.builder()
+//                .type(NotificationType.ORDER_INFORMATION_CONFIRM)
+//                .customerEmail(userDto.getEmail())
+//                .message(message)
+//                .customerId(userDto.getId())
+//                .build();
+//        producer.publish(rq, amqpConfig.getInternalExchange(), amqpConfig.getInternalOrderRoutingKey());
+
+        return payment;
 
 
 
@@ -97,24 +103,13 @@ public class OrderService {
         return orderRepository.findById(orderId).map(mapper::toOrderResponse).orElseThrow(() -> new BaseException(404, "Order not found with id " + orderId));
     }
 
-    public OrderResponse test(HttpServletRequest request) throws UnsupportedEncodingException {
-        PaymentRequest paymentRequest = new PaymentRequest(10000, 1+"", getIpAddress(request));
+    public String test(HttpServletRequest request) throws UnsupportedEncodingException {
+        PaymentRequest paymentRequest = new PaymentRequest(10000, 1+"");
         PaymentResponseDTO paymentResponseDTO = paymentClient.createVNPayPayment(paymentRequest).getBody();
-        
+        RestTemplate restTemplate = new RestTemplate();
 
-        return null;
+        return paymentResponseDTO.getURL();
 
     }
-    public static String getIpAddress(HttpServletRequest request) {
-        String ipAdress;
-        try {
-            ipAdress = request.getHeader("X-FORWARDED-FOR");
-            if (ipAdress == null) {
-                ipAdress = request.getRemoteAddr();
-            }
-        } catch (Exception e) {
-            ipAdress = "Invalid IP:" + e.getMessage();
-        }
-        return ipAdress;
-    }
+
 }

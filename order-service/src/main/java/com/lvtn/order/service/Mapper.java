@@ -45,7 +45,7 @@ public class Mapper {
     public OrderResponse toOrderResponse(Order order){
         return OrderResponse.builder()
                 .createdDate(order.getCreatedDate())
-                .status(order.getStatus())
+                .status(order.getStatus().toString())
                 .userId(order.getCustomerId())
                 .id(order.getId())
                 .paymentMethod(order.getPaymentMethod())

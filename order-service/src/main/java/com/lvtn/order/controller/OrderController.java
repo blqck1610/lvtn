@@ -1,6 +1,7 @@
 package com.lvtn.order.controller;
 
 
+import com.lvtn.clients.payment.PaymentResponseDTO;
 import com.lvtn.order.dto.OrderRequest;
 import com.lvtn.order.dto.OrderResponse;
 import com.lvtn.order.entity.Order;
@@ -24,9 +25,9 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<Integer> createOrder(
+    public ResponseEntity<PaymentResponseDTO> createOrder(
             @RequestBody @Valid OrderRequest orderRequest
-    ) {
+    ) throws UnsupportedEncodingException {
 
         return ResponseEntity.ok(orderService.createOrder(orderRequest));
     }
@@ -41,8 +42,8 @@ public class OrderController {
         return  ResponseEntity.ok(orderService.getOrderById(orderId));
     }
     @GetMapping(value = "/test")
-    public ResponseEntity<OrderResponse> test(HttpServletRequest request) throws UnsupportedEncodingException {
-        return  ResponseEntity.ok(orderService.test(request));
+    public String test(HttpServletRequest request) throws UnsupportedEncodingException {
+        return  orderService.test(request);
     }
 
 }

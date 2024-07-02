@@ -1,5 +1,6 @@
 package com.lvtn.order.entity;
 
+import com.lvtn.utils.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,14 +30,16 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_id_sequence")
     private Integer id;
     private String reference;
-    private String status;
     private long totalAmount;
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
     private Integer customerId;
     @OneToMany(mappedBy = "order")
     private List<OrderLine> orderLines;
-
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
     @CreatedDate
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdDate;
@@ -44,5 +47,6 @@ public class Order {
     @LastModifiedDate
     @Column(insertable = false)
     private LocalDateTime lastModifiedDate;
+
 
 }
