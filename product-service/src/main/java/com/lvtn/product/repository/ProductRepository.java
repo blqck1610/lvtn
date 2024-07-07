@@ -1,7 +1,9 @@
 package com.lvtn.product.repository;
 
+import com.lvtn.clients.product.ProductDto;
 import com.lvtn.product.entity.Brand;
 import com.lvtn.product.entity.Category;
+import com.lvtn.product.entity.Gender;
 import com.lvtn.product.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,4 +28,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Page<Product> findProducts(Pageable pageable, @Param("keyword") String keyword, @Param("brands") List<Brand> brands, @Param("categories") List<Category> categories);
 
     List<Product> findAllByIdInOrderById(List<Integer> productIds);
+
+    Page<Product> findByGender(Pageable pageable, Gender gender);
 }

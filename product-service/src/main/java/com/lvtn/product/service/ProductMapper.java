@@ -4,16 +4,21 @@ import com.lvtn.clients.product.ProductDto;
 import com.lvtn.clients.product.PurchaseRequest;
 import com.lvtn.clients.product.PurchaseResponse;
 import com.lvtn.product.entity.Product;
+import com.lvtn.product.repository.BrandRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ProductMapper {
+
     ProductDto toProductDto(Product product) {
         return ProductDto.builder()
                 .productId(product.getId())
                 .productName(product.getProductName())
                 .brandName(product.getBrand().getName())
                 .price(product.getPrice())
+                .gender(product.getGender().toString())
                 .imageUrl(product.getImageUrl())
                 .categoryName(product.getCategory().getName())
                 .build();

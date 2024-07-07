@@ -1,15 +1,16 @@
 package com.lvtn.product.controller;
 
 
+import com.lvtn.clients.product.ProductDto;
 import com.lvtn.clients.product.PurchaseRequest;
 import com.lvtn.clients.product.PurchaseResponse;
-import com.lvtn.product.entity.Category;
-import com.lvtn.product.entity.Product;
-import com.lvtn.product.entity.Review;
+import com.lvtn.product.dto.ProductRequest;
+import com.lvtn.product.entity.*;
 import com.lvtn.product.repository.BrandRepository;
 import com.lvtn.product.repository.CategoryRepository;
 import com.lvtn.product.service.ProductService;
 import com.lvtn.product.service.ReviewService;
+import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -32,9 +33,27 @@ public class ProductController {
     private final CategoryRepository categoryRepository;
 
     //CRUD API
-    @PostMapping(value = "/create-product")
-    public ResponseEntity<Integer> createProduct(@RequestParam("productName") String productName, @RequestParam("brandId") Integer brandId, @RequestParam("categoryId") Integer categoryId, @RequestParam("price") Double price, @RequestParam("file") MultipartFile image) {
-        Product product = Product.builder().productName(productName).brand(brandRepository.getReferenceById(brandId)).category(categoryRepository.getReferenceById(categoryId)).price(price).imageUrl(productService.saveImg(image)).build();
+//    add new product
+    @PostMapping(value = "/add-product")
+    public ResponseEntity<Integer> addProduct(@RequestParam("productName") String productName,
+                                              @RequestParam("brandId")
+                                              Integer brandId,
+                                              @RequestParam("categoryId") Integer categoryId,
+                                              @RequestParam("gender") String genderRaw,
+                                              @RequestParam("price") Double price,
+                                              @RequestParam("file") MultipartFile image) {
+        Gender gender;
+        try {
+            gender = Gender.valueOf(genderRaw.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new BaseException(400, "Invalid gender");
+        }
+        Product product = Product.builder()
+                .productName(productName)
+                .brand(brandRepository.getReferenceById(brandId))
+                .category(categoryRepository.getReferenceById(categoryId))
+                .price(price)
+                .imageUrl(productService.saveImg(image)).build();
         log.info("Product saving successfully {}", product);
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(product));
     }
@@ -46,6 +65,7 @@ public class ProductController {
         return ResponseEntity.ok("ok");
     }
 
+    // update product
     @PutMapping(value = "/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable(value = "id") Integer productId, @RequestBody Product product) {
         // todo: update product
@@ -53,6 +73,7 @@ public class ProductController {
         return ResponseEntity.ok("ok");
     }
 
+    // delete product
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable(value = "id") Integer productId) {
         // todo: delete product
@@ -60,22 +81,28 @@ public class ProductController {
         return ResponseEntity.ok("ok");
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Product> findById(@PathVariable(value = "id") Integer productId) {
+    //find product by id
+    @GetMapping(value = "/product-details/{id}")
+    public ResponseEntity<ProductDto> findById(@PathVariable(value = "id") Integer productId) {
 
         return ResponseEntity.ok(productService.findById(productId));
     }
+
+
+    // get all products
     @GetMapping(value = "/find-all")
     public ResponseEntity<List<Product>> findAll() {
         return ResponseEntity.ok(productService.findAll());
     }
 
+    //find products by keyword
     @GetMapping(value = "/search/{keyword}")
     public ResponseEntity<List<Product>> findProductList(@RequestParam("page") Integer page, @PathVariable("keyword") String keyword, @RequestParam("brand") List<String> brandList) {
 //        todo: find product list by keyword, filter ....
         return null;
     }
 
+    // find product list by category
     @GetMapping(value = "/category/{categoryName}")
     public ResponseEntity<List<Product>> findProductListByCategory(@RequestParam("page") Integer page, @PathVariable("categoryName") String categoryName) {
 //        todo: find product list by category ....
@@ -85,18 +112,34 @@ public class ProductController {
         return null;
     }
 
+    //find products by brand
     @GetMapping(value = "/brand/{brandName}")
     public ResponseEntity<List<Product>> findProductListByBrand(@RequestParam("page") Integer page, @PathVariable("brandName") String brandName) {
 //        todo: find product list by brand ....
         return null;
     }
-//    end CRUD
 
-    @PostMapping(value = "/purchase")
-    public ResponseEntity<List<PurchaseResponse >> purchaseProducts(@RequestBody List<PurchaseRequest> requests){
-        return ResponseEntity.ok(productService.purchaseProducts(requests));
+    //    find new arrivals products
+    @GetMapping(value = "/new-arrivals")
+    public ResponseEntity<Page<ProductDto>> getNewArrivals(@RequestParam(value = "page", defaultValue = "0") Integer page) {
+        log.info("get new arrival products");
+        return ResponseEntity.ok(productService.getNewArrivals(page));
     }
 
+    // find product list gender
+    @GetMapping(value = "/gender/{gender}")
+    public ResponseEntity<Page<ProductDto>> getProductsByGender(
+            @RequestParam(value = "page", defaultValue = "0") Integer page, @PathVariable("gender") String gender) {
+        log.info("get products by gender " + gender);
+        return ResponseEntity.ok(productService.findProductsByGender(page, gender));
+    }
+
+
+    //    purchase proucts
+    @PostMapping(value = "/purchase")
+    public ResponseEntity<List<PurchaseResponse>> purchaseProducts(@RequestBody List<PurchaseRequest> requests) {
+        return ResponseEntity.ok(productService.purchaseProducts(requests));
+    }
 
 
     @GetMapping(value = "/test-callback")
@@ -105,37 +148,31 @@ public class ProductController {
     }
 
     //    review
-    @PostMapping(value = "/review/add-review")
-    public ResponseEntity<String> addReview(@RequestBody Review review) {
-        log.info("Adding review {}", review);
-        reviewService.saveReview(review);
-        return ResponseEntity.ok("Review added successfully");
 
+    //brand
+    @PostMapping(value = "/brand/add-brands")
+    public ResponseEntity<String> addBrands(@RequestBody List<Brand> brands) {
+        brandRepository.saveAll(brands);
+        return ResponseEntity.ok("Brands added successfully");
     }
 
-    @PutMapping(value = "/review/{id}")
-    public ResponseEntity<String> updateReview(@PathVariable("id") Integer reviewId, @RequestBody Review review) {
-        log.info("updating review {}", review);
-        reviewService.updateReview(reviewId, review);
-        return ResponseEntity.ok("Review update successfully");
-
+    //    category
+    @PostMapping(value = "/category/add-categories")
+    public ResponseEntity<String> addCategories(@RequestBody List<Category> categories) {
+        categoryRepository.saveAll(categories);
+        return ResponseEntity.ok("categories added successfully");
     }
 
-    @DeleteMapping(value = "/review/{id}")
-    public ResponseEntity<String> deleteReview(@PathVariable("id") Integer reviewId) {
-        log.info("delete review {}", reviewId);
-        reviewService.deleteReview(reviewId);
-        return ResponseEntity.ok("delete successfully");
+    //    add product test
+    @PostMapping(value = "/add-products")
+    public ResponseEntity<Integer> addProducts(@RequestBody List<ProductRequest> products) {
 
+        log.info("Product saving ");
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProducts(products));
     }
-
-    @GetMapping(value = "/get-reviews/{productId}")
-    public ResponseEntity<Page<Review>> getReviews(@PathVariable("productId") Integer productId, @RequestParam(value = "page", required = false) Integer page) {
-        page = page == null ? 0 : page;
-        return ResponseEntity.ok(reviewService.getReviewsByProduct(page, productId));
+    @GetMapping(value = "/test1/{id}")
+    public ResponseEntity<Integer> test(@PathVariable("id") Integer id) {
+        return ResponseEntity.status(HttpStatus.OK).body(id);
     }
-
-
-
 
 }

@@ -1,11 +1,16 @@
 package com.lvtn.product.service;
 
 
+import com.lvtn.clients.product.ProductDto;
 import com.lvtn.clients.product.PurchaseRequest;
 import com.lvtn.clients.product.PurchaseResponse;
+import com.lvtn.product.dto.ProductRequest;
 import com.lvtn.product.entity.Brand;
 import com.lvtn.product.entity.Category;
+import com.lvtn.product.entity.Gender;
 import com.lvtn.product.entity.Product;
+import com.lvtn.product.repository.BrandRepository;
+import com.lvtn.product.repository.CategoryRepository;
 import com.lvtn.product.repository.ProductRepository;
 import com.lvtn.utils.exception.BaseException;
 import jakarta.servlet.ServletContext;
@@ -24,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Data
@@ -33,30 +39,34 @@ public class ProductService {
 
     private final ServletContext context;
     private final ProductMapper productMapper;
+    private final BrandRepository brandRepository;
+    private final CategoryRepository categoryRepository;
 
+    private  Integer pageSize = 8;
 
+//save product
     @Transactional
     public Integer saveProduct(Product product) {
         product = productRepository.saveAndFlush(product);
         return product.getId();
     }
-
+// update product
     public String updateProduct(Integer productId, Product product) {
 //        todo: implement update
 
         return null;
     }
-
-    public Product findById(Integer productId) {
-         return productRepository.findById(productId).orElse(null);
+// find product by id
+    public ProductDto findById(Integer productId) {
+        return productRepository.findById(productId).map(productMapper::toProductDto).orElse(null);
     }
-
-    public Product deleteProduct(Integer productId) {
+// delete product
+    public Integer deleteProduct(Integer productId) {
 //        todo: implement delete
         return null;
     }
-
-    public String saveImg(MultipartFile multipartFile){
+// save img or upload to cloud storage
+    public String saveImg(MultipartFile multipartFile) {
         String fileName = multipartFile.getOriginalFilename();
         File file = new File(this.getFolderUpload(), fileName);
         try {
@@ -74,8 +84,8 @@ public class ProductService {
         }
         return folderUpload;
     }
-
-    public Page<Product> findProducts(int page, String keyword, List<Brand> brands, List<Category> categories, Sort sort){
+//find products
+    public Page<Product> findProducts(int page, String keyword, List<Brand> brands, List<Category> categories, Sort sort) {
         return productRepository.findProducts(getPageable(page, sort), keyword, brands, categories);
 
     }
@@ -89,21 +99,20 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-
-
+// purchase products
     public List<PurchaseResponse> purchaseProducts(List<PurchaseRequest> requests) {
         var productIds = requests.stream().map(PurchaseRequest::getProductId).toList();
         List<Product> storedProducts = productRepository.findAllByIdInOrderById(productIds);
         List<PurchaseRequest> storedRequests = requests.stream().sorted(Comparator.comparing(PurchaseRequest::getProductId)).toList();
 
-        if(productIds.size() != storedProducts.size()) {
+        if (productIds.size() != storedProducts.size()) {
             throw new BaseException(200, "One or more products does not exist");
         }
         List<PurchaseResponse> purchasedProducts = new ArrayList<PurchaseResponse>();
-        for(int i = 0; i < storedProducts.size(); i++) {
+        for (int i = 0; i < storedProducts.size(); i++) {
             var product = storedProducts.get(i);
             var productRequest = storedRequests.get(i);
-            if(product.getAvailableQuantity() < productRequest.getQuantity()){
+            if (product.getAvailableQuantity() < productRequest.getQuantity()) {
                 throw new BaseException(400, "Insufficient stock quantity  for product with id: " + product.getId());
             }
             var newAvailableQuantity = product.getAvailableQuantity() - productRequest.getQuantity();
@@ -111,8 +120,59 @@ public class ProductService {
             productRepository.saveAndFlush(product);
             purchasedProducts.add(productMapper.toPurchaseResponse(product, productRequest.getQuantity()));
         }
-
-
         return purchasedProducts;
+    }
+// save products without img
+    public Integer saveProducts(List<ProductRequest> productsRaw) {
+
+        for (ProductRequest productRequest : productsRaw) {
+            Gender gender;
+            try {
+                gender = Gender.valueOf(productRequest.getGender().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new BaseException(400, "invalid gender");
+            }
+            Product product = Product.builder()
+                    .productName(productRequest.getProductName())
+                    .price(productRequest.getPrice())
+                    .gender(gender)
+                    .brand(brandRepository.findByName(productRequest.getBrand()).orElseThrow(() -> new BaseException(400, "brand not found")))
+                    .category(categoryRepository.findByName(productRequest.getCategory()).orElseThrow(() -> new BaseException(400, "category not found")))
+                    .description(productRequest.getDescription())
+                    .availableQuantity(productRequest.getAvailableQuantity())
+                    .imageUrl(productRequest.getImageUrl())
+
+                    .build();
+            productRepository.save(product);
+
+        }
+
+        return 1;
+
+
+    }
+// find new arrival produsts
+    public Page<ProductDto> getNewArrivals(Integer page) {
+        Pageable pageable = getPageable(page);
+
+        return productRepository.findAll(pageable).map(productMapper::toProductDto);
+    }
+    private Pageable getPageable(Integer page){
+        return PageRequest.of(page, pageSize);
+    }
+    private Pageable getPageable(Integer page, Sort sort){
+        return PageRequest.of(page, pageSize, sort);
+    }
+
+// find product by gender
+    public Page<ProductDto> findProductsByGender(Integer page, String genderRq) {
+        Gender gender;
+        try {
+            gender = Gender.valueOf(genderRq.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new BaseException(400, "invalid gender");
+        }
+        return productRepository.findByGender(getPageable(page), gender).map(productMapper::toProductDto);
+
     }
 }

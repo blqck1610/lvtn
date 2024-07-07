@@ -132,4 +132,21 @@ public class UserService {
                 .role(user.getRole().toString())
                 .build();
     }
+
+    public ApiResponse registerAdmin(UserRegistrationRequest request) {
+        if (isUserExists(request.getUsername())) {
+            throw new BaseException(400, "User already exists");
+        }
+        User user = User.builder()
+                .username(request.getUsername())
+                .password(request.getPassword())
+                .email(request.getEmail())
+                .role(Role.ADMIN)
+                .provider(Provider.LOCAL)
+                .build();
+        user = userRepository.saveAndFlush(user);
+       return null;
+
+
+    }
 }

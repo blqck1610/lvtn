@@ -31,6 +31,7 @@ public class AuthenticationFilter implements GatewayFilter {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
             final String token = request.getHeaders().getOrEmpty("Authorization").getFirst();
+            System.out.println(token);
 //            todo: verify token
             if (jwtService.isExpired(token)) {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);

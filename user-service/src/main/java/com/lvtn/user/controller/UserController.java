@@ -1,13 +1,11 @@
 package com.lvtn.user.controller;
 
 
-import com.lvtn.clients.user.AuthRequest;
 import com.lvtn.clients.user.UserForAuth;
 import com.lvtn.clients.user.UserRegistrationRequest;
 import com.lvtn.user.dto.UserDto;
 import com.lvtn.user.service.UserService;
 import com.lvtn.utils.ApiResponse;
-import com.lvtn.utils.exception.BaseException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +19,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping(value = "/test")
-    public ResponseEntity<String> test(){
-        String t = userService.test();
-        return  ResponseEntity.ok(t);
-    }
+//    @GetMapping(value = "/test")
+//    public ResponseEntity<String> test(){
+//        String t = userService.test();
+//        return  ResponseEntity.ok(t);
+//    }
 
     @PostMapping(value = "/create-new-user")
     public ResponseEntity<String>  register(@RequestBody @Valid UserRegistrationRequest request){
@@ -33,9 +31,15 @@ public class UserController {
         log.info("created user {}", request);
         return ResponseEntity.status(apiResponse.getCode()).body(apiResponse.getMessage());
     }
+    @PostMapping(value = "/create-new-user/admin")
+    public ResponseEntity<String>  registerAdmin(@RequestBody @Valid UserRegistrationRequest request){
+        ApiResponse apiResponse = userService.registerAdmin(request);
+        log.info("created user {}", request);
+        return ResponseEntity.status(apiResponse.getCode()).body(apiResponse.getMessage());
+    }
 
 
-    @GetMapping(value = "/{userId}")
+    @GetMapping(value = "/get-user/{userId}")
     public ResponseEntity<UserDto> getUserInfo(@PathVariable(value = "userId") Integer userId){
         return ResponseEntity.ok(userService.getUserInfo(userId));
     }
@@ -53,9 +57,9 @@ public class UserController {
         return null;
     }
     @GetMapping(value = "/auth")
-    public UserForAuth getUserForAuth(String username){
+    public ResponseEntity<UserForAuth> getUserForAuth(@RequestParam(value = "username") String username){
 
-        return userService.getUserForAuth(username);
+        return ResponseEntity.ok(userService.getUserForAuth(username));
     }
 
     @GetMapping(value = "/secured")
@@ -69,7 +73,11 @@ public class UserController {
         return ResponseEntity.ok(userService.isUserExists(username));
     }
 
+    @GetMapping(value = "/test")
+    public ResponseEntity<String> test(@RequestParam(value="test") String test){
 
+        return ResponseEntity.ok("test");
+    }
 
 
 }

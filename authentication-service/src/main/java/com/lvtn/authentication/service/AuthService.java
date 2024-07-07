@@ -35,6 +35,10 @@ public class AuthService {
         request.setPassword(CryptoUtil.encrypt(request.getPassword()));
         return userClient.register(request);
     }
+    public ResponseEntity<String> registerAdmin(UserRegistrationRequest request) {
+        request.setPassword(CryptoUtil.encrypt(request.getPassword()));
+        return userClient.registerAdmin(request);
+    }
 
     public AuthResponse authenticate(UserForAuth user) {
         String accessToken = jwtService.generateToken(user.getUsername(), user.getRole(), "ACCESS_TOKEN");
@@ -56,7 +60,7 @@ public class AuthService {
         username = jwtService.extractUsername(refreshToken);
         if (username != null) {
 
-            UserDto userDto = userClient.getUserInfo(username);
+            UserForAuth userDto = userClient.getUserForAuth(username).getBody();
             String accessToken = jwtService.generateToken(userDto.getUsername(), userDto.getRole().toString(), "ACCESS_TOKEN");
             var authResponse = new AuthResponse(accessToken, refreshToken);
             revokeAllUserTokens(userDto.getId());
@@ -89,4 +93,8 @@ public class AuthService {
 
         tokenRepository.save(token);
     }
+    public String test(){
+        return  userClient.test("test").getBody();
+    }
+
 }

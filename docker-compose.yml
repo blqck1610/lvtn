@@ -1,6 +1,5 @@
 networks:
-  postgres:
-    driver: bridge
+
   spring:
     driver: bridge
 volumes:
@@ -20,7 +19,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - postgres
+      - spring
     restart: unless-stopped
   pgadmin:
     container_name: pgadmin
@@ -34,7 +33,7 @@ services:
     ports:
       - "5050:80"
     networks:
-      - postgres
+      - spring
     restart: unless-stopped
   zipkin:
     image: openzipkin/zipkin
@@ -71,6 +70,10 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+#      KC_DB: postgres
+#      KC_DB_URL: jdbc:postgresql://localhost:5432/keycloak
+#      KC_DB_USERNAME: admin
+#      KC_DB_PASSWORD: password
     command: start-dev
     networks:
       - spring

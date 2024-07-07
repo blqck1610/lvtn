@@ -26,6 +26,8 @@ public class Product {
     @ManyToOne()
     @JoinColumn(name = "category_id")
     private Category category;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
     private String description;
     private Integer availableQuantity;
     private Double price;

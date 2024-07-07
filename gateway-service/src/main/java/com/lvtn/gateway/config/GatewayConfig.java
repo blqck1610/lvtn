@@ -28,17 +28,18 @@ public class GatewayConfig {
 
                 )
                 .route("auth-service", r -> r.path("/api/v1/auth/**")
-                        .filters(f -> f.filter(filter))
+//                        .filters(f -> f.filter(filter))
                         .uri("lb://AUTH-SERVICE")
                 )
                 .route("product-service", r -> r.path("/api/v1/product/**")
+//                        .filters(f -> f.filter(filter))
                         .uri("lb://PRODUCT-SERVICE")
                 )
                 .route("admin-service", r -> r.path("/api/v1/admin/**")
-                        .filters(f -> f.filter(new RoleAuthGateway("ADMIN")))
+//                        .filters(f -> f.filter(new RoleAuthGateway("ADMIN")))
                         .uri("lb://ADMIN-SERVICE")
                 )
-                .route("cart-service", r -> r.path("/api/v1/cart/**")
+                .route("order-service", r -> r.path("/api/v1/orders/**")
 //                        .filters(f -> f.filter(filter))
                         .uri("lb://CART-SERVICE")
 
@@ -46,6 +47,8 @@ public class GatewayConfig {
                 .route("payment-service", r -> r.path("/api/v1/payment/**")
                         .uri("lb://PAYMENT-SERVICE")
                 )
+                .route("notification-service", r -> r.path("/api/v1/notifications/**")
+                        .uri("lb://NOTIFICATION-SERVICE"))
 
                 .build();
     }

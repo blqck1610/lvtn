@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClient;
 
 @SpringBootApplication(scanBasePackages = {"com.lvtn.product",
-        "com.lvtn.exception"})
+        "com.lvtn.utils"})
 @EnableFeignClients(basePackages = {"com.lvtn.clients"})
 public class ProductApplication {
     public static void main(String[] args) {

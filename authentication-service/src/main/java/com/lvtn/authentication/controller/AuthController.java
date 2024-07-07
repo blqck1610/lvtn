@@ -1,6 +1,7 @@
 package com.lvtn.authentication.controller;
 
 
+import com.lvtn.authentication.dto.AuthResponse;
 import com.lvtn.authentication.service.AuthService;
 import com.lvtn.authentication.util.CryptoUtil;
 import com.lvtn.clients.user.*;
@@ -9,10 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/v1/auth")
@@ -24,7 +22,7 @@ public class AuthController {
 
     @PostMapping(value = "/register")
     public ResponseEntity<String> register(@Valid @RequestBody UserRegistrationRequest request){
-        UserForAuth user = userClient.getUserForAuth(request.getUsername());
+        UserForAuth user = userClient.getUserForAuth(request.getUsername()).getBody();
         if(user != null){
             throw new BaseException(400, "username already registered");
         }
@@ -34,8 +32,8 @@ public class AuthController {
 
 
     @PostMapping(value = "/authenticate")
-    public ResponseEntity<Object> authenticate(@Valid @RequestBody AuthRequest request){
-        UserForAuth user = userClient.getUserForAuth(request.getUsername());
+    public ResponseEntity<AuthResponse> authenticate(@Valid @RequestBody AuthRequest request){
+        UserForAuth user = userClient.getUserForAuth(request.getUsername()).getBody();
         if(user == null){
             throw new BaseException(400, "username does not exist");
         }
@@ -44,6 +42,19 @@ public class AuthController {
         }
         log.info("authenticated: {}", request.getUsername());
         return ResponseEntity.ok().body(authService.authenticate(user));
+    }
+    @PostMapping(value = "/register/admin")
+    public ResponseEntity<String> registerAdmin(@Valid @RequestBody UserRegistrationRequest request){
+        UserForAuth user = userClient.getUserForAuth(request.getUsername()).getBody();
+        if(user != null){
+            throw new BaseException(400, "username already registered");
+        }
+        log.info("register user {}" , user);
+        return authService.registerAdmin(request);
+    }
+    @GetMapping(value = "/test")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.ok(authService.test());
     }
 
 }

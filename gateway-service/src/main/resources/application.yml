@@ -8,6 +8,19 @@ spring:
       discovery:
         locator:
           enabled: true
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: http://localhost:5173/
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: "http://localhost:8088/reamls/demo"
 
 #
 
