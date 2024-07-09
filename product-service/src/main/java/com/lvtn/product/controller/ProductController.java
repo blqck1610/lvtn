@@ -4,13 +4,17 @@ package com.lvtn.product.controller;
 import com.lvtn.clients.product.ProductDto;
 import com.lvtn.clients.product.PurchaseRequest;
 import com.lvtn.clients.product.PurchaseResponse;
+import com.lvtn.product.dto.AddToCartRequest;
 import com.lvtn.product.dto.ProductRequest;
 import com.lvtn.product.entity.*;
 import com.lvtn.product.repository.BrandRepository;
 import com.lvtn.product.repository.CategoryRepository;
+import com.lvtn.product.service.CartService;
 import com.lvtn.product.service.ProductService;
 import com.lvtn.product.service.ReviewService;
 import com.lvtn.utils.exception.BaseException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,6 +35,7 @@ public class ProductController {
     private final ReviewService reviewService;
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
+    private final CartService cartService;
 
     //CRUD API
 //    add new product
@@ -148,6 +153,11 @@ public class ProductController {
     }
 
     //    review
+    @GetMapping(value = "/review/get-review-by-id/{id}")
+    public ResponseEntity<Page<Review>> getReviewById(@PathVariable("id") Integer id,
+                                                      @RequestParam(value = "page", defaultValue = "0") Integer page){
+        return ResponseEntity.ok(reviewService.getReviewsByProduct(page, id));
+    }
 
     //brand
     @PostMapping(value = "/brand/add-brands")
@@ -173,6 +183,11 @@ public class ProductController {
     @GetMapping(value = "/test1/{id}")
     public ResponseEntity<Integer> test(@PathVariable("id") Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(id);
+    }
+
+    @PostMapping(value = "/cart/add-to-cart")
+    public ResponseEntity<String> addToCart(@Valid @RequestBody AddToCartRequest request){
+        return ResponseEntity.ok(cartService.addToCart(request.getUsername(), request.getProductId(), request.getQuantity()));
     }
 
 }

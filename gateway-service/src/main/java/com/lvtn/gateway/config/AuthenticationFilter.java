@@ -1,6 +1,7 @@
 package com.lvtn.gateway.config;
 
 import com.lvtn.gateway.service.JwtService;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -32,6 +33,7 @@ public class AuthenticationFilter implements GatewayFilter {
             }
             final String token = request.getHeaders().getOrEmpty("Authorization").getFirst();
             System.out.println(token);
+//            populateRequestWithHeaders(exchange,token);
 //            todo: verify token
             if (jwtService.isExpired(token)) {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
@@ -49,5 +51,13 @@ public class AuthenticationFilter implements GatewayFilter {
 
     private boolean authMissing(ServerHttpRequest request) {
         return !request.getHeaders().containsKey("Authorization");
+    }
+//    exctract service get without decode; use example: public string test(@RequestHeader String userId)
+    private void populateRequestWithHeaders(ServerWebExchange exchange, String token) {
+        Claims claims = jwtService.extractAllClaims(token);
+        exchange.getRequest().mutate()
+                .header("id", String.valueOf(claims.get("id")))
+                .header("role", String.valueOf(claims.get("role")))
+                .build();
     }
 }

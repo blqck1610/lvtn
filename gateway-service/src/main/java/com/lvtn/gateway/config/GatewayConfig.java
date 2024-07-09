@@ -32,7 +32,7 @@ public class GatewayConfig {
                         .uri("lb://AUTH-SERVICE")
                 )
                 .route("product-service", r -> r.path("/api/v1/product/**")
-//                        .filters(f -> f.filter(filter))
+                        .filters(f -> f.filter(filter))
                         .uri("lb://PRODUCT-SERVICE")
                 )
                 .route("admin-service", r -> r.path("/api/v1/admin/**")

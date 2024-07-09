@@ -16,7 +16,13 @@ import java.util.List;
 @Builder
 public class Cart {
     @Id
-    private Integer id;
+    @SequenceGenerator(name = "cart_id_sequence",
+            sequenceName = "cart_id_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cart_id_sequence")
+    private  Integer id;
+    private String username;
     @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "cart")
     @JsonBackReference(value = "cart")
     private List<Item> items;

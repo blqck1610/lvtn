@@ -13,19 +13,18 @@ public class Item {
     @Id
     @SequenceGenerator(name = "item_id_sequence", sequenceName = "item_id_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_id_sequence")
-    private int id;
+    private Integer id;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference(value = "product")
     @JoinColumn(name = "product")
     private Product product;
     private Integer quantity;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference(value = "cart")
     @JoinColumn(name = "cart")
     private Cart cart;
 
-    public double getTotalPrice() {
-        return product.getPrice() * quantity;
-    }
+
 }

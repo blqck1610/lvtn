@@ -33,9 +33,9 @@ public class ReviewService {
         Page<Review> rs = reviewRepository.getReviewsByUserId(getPageable(page, Sort.unsorted()),userId);
         return  rs;
     }
-    public Page<Review> getReviewsByProduct(int page,Integer productId){
+    public Page<Review> getReviewsByProduct(int page, Integer productId){
         Page<Review> rs = reviewRepository.getReviewByProduct(getPageable(page, Sort.unsorted()) ,productId);
-        System.out.println(rs);
+//        System.out.println(rs);
         return  rs;
     }
 
