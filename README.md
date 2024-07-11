@@ -1,2 +1,2 @@
-# sơ đồ kiến trúc 
+# Architecturte
 ![](resources/image/architecture/architecture.png)
