@@ -1,6 +1,7 @@
 package com.lvtn.product.service;
 
 
+import com.lvtn.product.dto.CartResponse;
 import com.lvtn.product.entity.Cart;
 import com.lvtn.product.entity.Item;
 import com.lvtn.product.entity.Product;
@@ -37,36 +38,59 @@ public class CartService {
         if(cart == null){
             cart = createCart(username);
         }
-        Item item = itemRepository.saveAndFlush(Item.builder()
-                        .product(productRepository.findById(productId).orElseThrow(
-                        () -> new BaseException(404, "Product not found, id: " + productId)))
-                .quantity(quantity)
-                        .cart(cart)
-                .build());
-        cart.getItems().add(item);
+        if(isContainProduct(productId, cart)){
+            updateCart(username, productId, 1);
+        }
+        else {
+            Item item = itemRepository.saveAndFlush(Item.builder()
+                    .product(productRepository.findById(productId).orElseThrow(
+                            () -> new BaseException(404, "Product not found, id: " + productId)))
+                    .quantity(quantity)
+                    .cart(cart)
+                    .build());
+            cart.getItems().add(item);
+            cartRepository.saveAndFlush(cart);
+        }
         return "add to cart successfully";
 
     }
+    private Boolean isContainProduct(Integer productId, Cart cart) {
+        for(Item item : cart.getItems()) {
+            if(item.getProduct().getId().equals(productId)){
+                return true;
+            }
+        }
+        return false;
+    }
 
-    public void updateCart(int id, int productId, int quantity) {
+    public String updateCart(String username, Integer productId, Integer quantity) {
         Item i = null;
-        Cart cart = cartRepository.getReferenceById(id);
+        Cart cart = cartRepository.findByUsername(username).
+                orElseThrow(() -> new BaseException(404, "cart not found for username:" + username));
         for (Item item : cart.getItems()) {
             if (item.getProduct().getId() == productId) {
                 i = item;
             }
         }
-        if (i != null) {
+        if(i == null){
+            addToCart(username, productId, 1);
+        }
+        else  {
             i.setQuantity(i.getQuantity() + quantity);
+            itemRepository.save(i);
             if (i.getQuantity() <= 0) {
-                removeItem(id, productId);
+                removeItem(username, productId);
             }
         }
+
+        cartRepository.save(cart);
+        return "update successfully";
     }
 
-    public void removeItem(int id, int productId) {
+
+    public String removeItem(String username, int productId) {
         Item i = null;
-        Cart cart = cartRepository.getReferenceById(id);
+        Cart cart = cartRepository.findByUsername(username).orElseThrow(() -> new BaseException(404, "Couldn't find cart with username: " + username));
         for (Item item : cart.getItems()) {
             if (item.getProduct().getId() == productId) {
                 i = item;
@@ -75,8 +99,17 @@ public class CartService {
         if (i != null) {
             cart.getItems().remove(i);
         }
+        cartRepository.save(cart);
+        return "deleted item successfully";
     }
 
+
+    public CartResponse getCart(String username) {
+
+        return new ProductMapper().toCartResponse(
+                cartRepository.findByUsername(username).
+                        orElseThrow(() -> new BaseException(404, "cart not found for username:" + username)));
+    }
 
 
 }

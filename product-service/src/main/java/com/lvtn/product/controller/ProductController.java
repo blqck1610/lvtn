@@ -5,6 +5,7 @@ import com.lvtn.clients.product.ProductDto;
 import com.lvtn.clients.product.PurchaseRequest;
 import com.lvtn.clients.product.PurchaseResponse;
 import com.lvtn.product.dto.AddToCartRequest;
+import com.lvtn.product.dto.CartResponse;
 import com.lvtn.product.dto.ProductRequest;
 import com.lvtn.product.entity.*;
 import com.lvtn.product.repository.BrandRepository;
@@ -16,6 +17,7 @@ import com.lvtn.utils.exception.BaseException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -188,6 +190,26 @@ public class ProductController {
     @PostMapping(value = "/cart/add-to-cart")
     public ResponseEntity<String> addToCart(@Valid @RequestBody AddToCartRequest request){
         return ResponseEntity.ok(cartService.addToCart(request.getUsername(), request.getProductId(), request.getQuantity()));
+    }
+    @GetMapping(value = "/cart/get-cart")
+    public ResponseEntity<CartResponse> getCart(@NotNull @RequestHeader("username") String username){
+        System.out.println(username);
+        return ResponseEntity.ok(cartService.getCart(username));
+    }
+    @PostMapping(value = "/cart/update-cart")
+    public ResponseEntity<String> updateCart(@NotNull @RequestHeader("username") String username,
+                                                 @RequestParam(value = "productId") Integer productId,
+                                                 @RequestParam(value = "quantity") Integer quantity
+                                                 ){
+
+        return ResponseEntity.ok(cartService.updateCart(username, productId, quantity));
+
+    }
+    @GetMapping(value = "/cart/delete-item")
+    public ResponseEntity<String> deleteItem(@NotNull @RequestHeader("username") String username,
+                                             @RequestParam(value = "productId") Integer productId){
+        return ResponseEntity.ok(cartService.removeItem(username, productId));
+
     }
 
 }

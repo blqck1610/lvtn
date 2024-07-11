@@ -32,12 +32,14 @@ public class AuthenticationFilter implements GatewayFilter {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
             final String token = request.getHeaders().getOrEmpty("Authorization").getFirst();
-            System.out.println(token);
-//            populateRequestWithHeaders(exchange,token);
+//            System.out.println(token);
+
 //            todo: verify token
             if (jwtService.isExpired(token)) {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
+            populateRequestWithHeaders(exchange,token);
+//            System.out.println(request.getHeaders());
         }
 
         return chain.filter(exchange);
@@ -52,12 +54,19 @@ public class AuthenticationFilter implements GatewayFilter {
     private boolean authMissing(ServerHttpRequest request) {
         return !request.getHeaders().containsKey("Authorization");
     }
-//    exctract service get without decode; use example: public string test(@RequestHeader String userId)
     private void populateRequestWithHeaders(ServerWebExchange exchange, String token) {
         Claims claims = jwtService.extractAllClaims(token);
         exchange.getRequest().mutate()
-                .header("id", String.valueOf(claims.get("id")))
-                .header("role", String.valueOf(claims.get("role")))
+                .header("username", String.valueOf(claims.getSubject()))
+//                .header("role", String.valueOf(claims.get("role")))
                 .build();
     }
+//    exctract service get without decode; use example: public string test(@RequestHeader String userId)
+//    private void populateRequestWithHeaders(ServerWebExchange exchange, String token) {
+//        Claims claims = jwtService.extractAllClaims(token);
+//        exchange.getRequest().mutate()
+//                .header("id", String.valueOf(claims.get("id")))
+//                .header("role", String.valueOf(claims.get("role")))
+//                .build();
+//    }
 }

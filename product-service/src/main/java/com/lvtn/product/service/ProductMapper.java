@@ -3,10 +3,16 @@ package com.lvtn.product.service;
 import com.lvtn.clients.product.ProductDto;
 import com.lvtn.clients.product.PurchaseRequest;
 import com.lvtn.clients.product.PurchaseResponse;
+import com.lvtn.product.dto.CartResponse;
+import com.lvtn.product.dto.ItemResponse;
+import com.lvtn.product.entity.Cart;
+import com.lvtn.product.entity.Item;
 import com.lvtn.product.entity.Product;
 import com.lvtn.product.repository.BrandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +41,17 @@ public class ProductMapper {
                 .quantity(quantity)
                 .build();
     }
+    ItemResponse toItemResponse(Item item){
+        return  ItemResponse.builder()
+                .product(toProductDto(item.getProduct()))
+                .quantity(item.getQuantity())
+                .build();
+    }
+    CartResponse toCartResponse(Cart cart) {
+        return CartResponse.builder()
+                .username(cart.getUsername())
+                .items(cart.getItems().stream().map(this::toItemResponse).collect(Collectors.toList()))
+                .build();
 
+    }
 }
