@@ -24,6 +24,7 @@ public class ProductMapper {
                 .productName(product.getProductName())
                 .brandName(product.getBrand().getName())
                 .price(product.getPrice())
+                .availableQuantity(product.getAvailableQuantity())
                 .gender(product.getGender().toString())
                 .imageUrl(product.getImageUrl())
                 .categoryName(product.getCategory().getName())

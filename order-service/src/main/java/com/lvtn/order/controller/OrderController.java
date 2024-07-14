@@ -25,11 +25,11 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<PaymentResponseDTO> createOrder(
-            @RequestBody @Valid OrderRequest orderRequest
+    public ResponseEntity<?> createOrder(@RequestHeader("username") String username,
+                                                          @RequestBody @Valid OrderRequest orderRequest
     ) throws UnsupportedEncodingException {
 
-        return ResponseEntity.ok(orderService.createOrder(orderRequest));
+        return orderService.createOrder(orderRequest, username);
     }
     @GetMapping(value = "/find-all")
     public ResponseEntity<List<OrderResponse>> findAll() {
@@ -37,13 +37,21 @@ public class OrderController {
     }
 
 
-    @GetMapping(value = "/{orderId}")
-    public ResponseEntity<OrderResponse> getOrderById(@PathVariable("orderId") Integer orderId) {
-        return  ResponseEntity.ok(orderService.getOrderById(orderId));
+//    @GetMapping(value = "/{orderId}")
+//    public ResponseEntity<OrderResponse> getOrderById(@PathVariable("orderId") Integer orderId) {
+//        return  ResponseEntity.ok(orderService.getOrderById(orderId));
+//    }
+//    @GetMapping(value = "/test")
+//    public String test(HttpServletRequest request) throws UnsupportedEncodingException {
+//        return  orderService.test(request);
+//    }
+    @GetMapping(value = "/get-all-order-for-user")
+    public ResponseEntity<List<OrderResponse>> getAllOrderForUser(@RequestHeader("username") String username){
+        return ResponseEntity.ok(orderService.getAllOrderForUser(username));
     }
-    @GetMapping(value = "/test")
-    public String test(HttpServletRequest request) throws UnsupportedEncodingException {
-        return  orderService.test(request);
+    @GetMapping(value = "/get-order/{id}")
+    public ResponseEntity<OrderResponse> getOrder(@PathVariable("id") Integer id){
+        return ResponseEntity.ok(orderService.getOrder(id));
     }
 
 }

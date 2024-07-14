@@ -23,7 +23,7 @@ public class GatewayConfig {
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("user-service", r -> r.path("/api/v1/user/**")
-//                        .filters(f -> f.filter(filter))
+                        .filters(f -> f.filter(filter))
                         .uri("lb://USER-SERVICE")
 
                 )
@@ -36,12 +36,12 @@ public class GatewayConfig {
                         .uri("lb://PRODUCT-SERVICE")
                 )
                 .route("admin-service", r -> r.path("/api/v1/admin/**")
-//                        .filters(f -> f.filter(new RoleAuthGateway("ADMIN")))
+                        .filters(f -> f.filter(new RoleAuthGateway("ADMIN")))
                         .uri("lb://ADMIN-SERVICE")
                 )
                 .route("order-service", r -> r.path("/api/v1/orders/**")
-//                        .filters(f -> f.filter(filter))
-                        .uri("lb://CART-SERVICE")
+                        .filters(f -> f.filter(filter))
+                        .uri("lb://ORDER-SERVICE")
 
                 )
                 .route("payment-service", r -> r.path("/api/v1/payment/**")

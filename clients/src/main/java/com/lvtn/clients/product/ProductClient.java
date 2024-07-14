@@ -14,6 +14,9 @@ public interface ProductClient {
     @PostMapping(value = "/purchase")
     public ResponseEntity<List<PurchaseResponse >> purchaseProducts(@RequestBody List<PurchaseRequest> requests);
 
+    @PostMapping(value = "/cart/clear-cart")
+    public ResponseEntity<String> clearCart(@RequestBody String username);
+
 
 
 }

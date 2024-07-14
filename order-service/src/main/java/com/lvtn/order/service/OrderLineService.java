@@ -17,9 +17,9 @@ public class OrderLineService {
     private final Mapper mapper;
 
 
-    public Integer saveOrderLine(OrderLineRequest orderLineRequest) {
-            return orderLineRepository.saveAndFlush(mapper.toOrderLine(orderLineRequest)).getId();
-    }
+//    public Integer saveOrderLine(OrderLineRequest orderLineRequest) {
+//            return orderLineRepository.saveAndFlush(mapper.toOrderLine(orderLineRequest)).getId();
+//    }
 
     public List<OrderLineResponse> findByOrderId(Integer orderId) {
         return orderLineRepository.findAllByOrderId(orderId).stream().map(mapper::toOrderLineResponse).collect(Collectors.toList());

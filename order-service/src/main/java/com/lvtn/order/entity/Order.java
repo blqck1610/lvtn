@@ -1,6 +1,6 @@
 package com.lvtn.order.entity;
 
-import com.lvtn.utils.OrderStatus;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

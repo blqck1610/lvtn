@@ -14,5 +14,6 @@ public class ProductDto {
     private String gender;
     private String categoryName;
     private Double price;
+    private Integer availableQuantity;
     private String imageUrl;
 }

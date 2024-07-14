@@ -7,10 +7,13 @@ import com.lvtn.clients.notification.NotificationType;
 import com.lvtn.clients.product.ProductClient;
 import com.lvtn.clients.user.UserForAuth;
 import com.lvtn.clients.user.UserRegistrationRequest;
+import com.lvtn.user.dto.AddressDto;
 import com.lvtn.user.dto.UserDto;
 import com.lvtn.user.dto.UserRequest;
+import com.lvtn.user.entity.Address;
 import com.lvtn.user.entity.User;
 import com.lvtn.user.rabbitmq.config.NotificationConfig;
+import com.lvtn.user.repository.AddressRepository;
 import com.lvtn.user.repository.UserRepository;
 import com.lvtn.utils.ApiResponse;
 import com.lvtn.utils.Provider;
@@ -35,6 +38,8 @@ public class UserService {
     private final ProductClient productClient;
 
     private final UserMapper mapper;
+    private final UserMapper userMapper;
+    private final AddressRepository addressRepository;
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ApiResponse registerNewUser(UserRegistrationRequest request) {
@@ -101,6 +106,13 @@ public class UserService {
         }
         return mapper.fromUser(user);
     }
+    public UserDto findByUsername(String username) {
+        User user = userRepository.getByUsername(username);
+        if(user == null){
+            return null;
+        }
+        return mapper.fromUser(user);
+    }
 
     public List<UserDto> findAll(){
         return  userRepository.findAll().stream().map(mapper::fromUser).collect(Collectors.toList());
@@ -148,5 +160,19 @@ public class UserService {
        return null;
 
 
+    }
+
+    public String saveAddress(String username, AddressDto addressDto) {
+        User user = userRepository.getByUsername(username);
+        Address address = userMapper.fromAddressDto(addressDto);
+        address.setUserId(user.getId());
+        addressRepository.save(address);
+        return "save address successfully";
+
+    }
+
+    public List<AddressDto> getAddress(String username) {
+        User user = userRepository.getByUsername(username);
+        return addressRepository.findByUserId(user.getId()).stream().map(userMapper::fromAddress).collect(Collectors.toList());
     }
 }

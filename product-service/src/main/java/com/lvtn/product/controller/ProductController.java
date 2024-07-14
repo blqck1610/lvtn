@@ -43,9 +43,9 @@ public class ProductController {
 //    add new product
     @PostMapping(value = "/add-product")
     public ResponseEntity<Integer> addProduct(@RequestParam("productName") String productName,
-                                              @RequestParam("brandId")
-                                              Integer brandId,
-                                              @RequestParam("categoryId") Integer categoryId,
+                                              @RequestParam("brandName")
+                                              String brandName,
+                                              @RequestParam("category") String category,
                                               @RequestParam("gender") String genderRaw,
                                               @RequestParam("price") Double price,
                                               @RequestParam("file") MultipartFile image) {
@@ -55,10 +55,13 @@ public class ProductController {
         } catch (IllegalArgumentException e) {
             throw new BaseException(400, "Invalid gender");
         }
+        Brand brand = brandRepository.findByName(brandName).orElse(null);
+        Category categoryy = categoryRepository.findByName(category).orElse(null);
+
         Product product = Product.builder()
                 .productName(productName)
-                .brand(brandRepository.getReferenceById(brandId))
-                .category(categoryRepository.getReferenceById(categoryId))
+                .brand(brand)
+                .category(categoryy)
                 .price(price)
                 .imageUrl(productService.saveImg(image)).build();
         log.info("Product saving successfully {}", product);
@@ -98,15 +101,15 @@ public class ProductController {
 
     // get all products
     @GetMapping(value = "/find-all")
-    public ResponseEntity<List<Product>> findAll() {
+    public ResponseEntity<List<ProductDto>> findAll() {
         return ResponseEntity.ok(productService.findAll());
     }
 
     //find products by keyword
-    @GetMapping(value = "/search/{keyword}")
-    public ResponseEntity<List<Product>> findProductList(@RequestParam("page") Integer page, @PathVariable("keyword") String keyword, @RequestParam("brand") List<String> brandList) {
+    @GetMapping(value = "/search")
+    public ResponseEntity<List<ProductDto>> findProductList(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam("query") String query) {
 //        todo: find product list by keyword, filter ....
-        return null;
+        return ResponseEntity.ok(productService.search(query));
     }
 
     // find product list by category
@@ -146,6 +149,10 @@ public class ProductController {
     @PostMapping(value = "/purchase")
     public ResponseEntity<List<PurchaseResponse>> purchaseProducts(@RequestBody List<PurchaseRequest> requests) {
         return ResponseEntity.ok(productService.purchaseProducts(requests));
+    }
+    @PostMapping(value = "/cart/clear-cart")
+    public ResponseEntity<String> clearCart(@RequestBody String username) {
+        return ResponseEntity.ok(cartService.clearCart(username));
     }
 
 

@@ -39,7 +39,7 @@ public class AuthenticationFilter implements GatewayFilter {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
             populateRequestWithHeaders(exchange,token);
-//            System.out.println(request.getHeaders());
+            System.out.println(request.getHeaders());
         }
 
         return chain.filter(exchange);

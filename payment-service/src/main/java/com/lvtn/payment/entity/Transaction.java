@@ -29,7 +29,10 @@ public class Transaction {
     private String amount;
     private String bankCode;
     private String responseCode;
+    private String transactionStatus;
     private String orderInfo;
+    private String orderId;
+
     @CreatedDate
     private LocalDateTime createdDate;
     @LastModifiedDate

@@ -37,3 +37,11 @@ management:
 logging:
   pattern:
     level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+
+rabbitmq:
+  exchanges:
+    internal: internal.exchanges
+  queue:
+    payment: payment.queue
+  routing-keys:
+    internal-payment: internal.payment.routing-keys

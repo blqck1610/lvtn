@@ -1,5 +1,6 @@
 package com.lvtn.order.service;
 
+import com.lvtn.clients.product.PurchaseResponse;
 import com.lvtn.order.dto.OrderLineRequest;
 import com.lvtn.order.dto.OrderLineResponse;
 import com.lvtn.order.dto.OrderRequest;
@@ -10,34 +11,46 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
+import java.util.stream.Collectors;
+
 @Data
 @Builder
 @Service
 public class Mapper {
 
-    public Order toOrder(OrderRequest orderRequest) {
-        return Order.builder()
-                .id(orderRequest.getId())
-                .customerId(orderRequest.getCustomerId())
-                .reference(orderRequest.getReference())
-                .paymentMethod(orderRequest.getPaymentMethod())
-                .totalAmount(orderRequest.getAmount())
-                .build();
-    }
+//    public Order toOrder(OrderRequest orderRequest) {
+//        return Order.builder()
+////                .id(orderRequest.getId())
+////                .customerId(orderRequest.getCustomerId())
+////                .reference(orderRequest.getReference())
+//                .paymentMethod(orderRequest.getPaymentMethod())
+////                .totalAmount(orderRequest.getAmount())
+//                .build();
+//    }
 
-    public OrderLine toOrderLine(OrderLineRequest orderLineRequest) {
+    public OrderLine toOrderLine(PurchaseResponse purchaseResponse) {
         return  OrderLine.builder()
-                .id(orderLineRequest.id())
-                .order( Order.builder().id(orderLineRequest.orderId()).build())
-                .productId(orderLineRequest.productId())
-                .quantity(orderLineRequest.quantity())
 
+                .productId(purchaseResponse.getProductId())
+                .quantity(purchaseResponse.getQuantity())
+                .price(purchaseResponse.getPrice())
+                .brandName(purchaseResponse.getBrandName())
+                .productName(purchaseResponse.getProductName())
+                .categoryName(purchaseResponse.getCategoryName())
+                .description(purchaseResponse.getDescription())
+                .imageUrl(purchaseResponse.getImageUrl())
                 .build();
     }
     OrderLineResponse toOrderLineResponse(OrderLine orderLine){
         return OrderLineResponse.builder()
-                .id(orderLine.getProductId())
+                .productId(orderLine.getProductId())
                 .quantity(orderLine.getQuantity())
+                .price(orderLine.getPrice())
+                .brandName(orderLine.getBrandName())
+                .productName(orderLine.getProductName())
+                .categoryName(orderLine.getCategoryName())
+                .description(orderLine.getDescription())
+                .imageUrl(orderLine.getImageUrl())
                 .build();
 
     }
@@ -49,8 +62,9 @@ public class Mapper {
                 .userId(order.getCustomerId())
                 .id(order.getId())
                 .paymentMethod(order.getPaymentMethod())
-                .reference(order.getReference())
+                .paymentStatus(order.getPaymentStatus())
                 .totalAmount(order.getTotalAmount())
+                .items(order.getOrderLines().stream().map(this::toOrderLineResponse).collect(Collectors.toList()))
                 .build();
     }
 }

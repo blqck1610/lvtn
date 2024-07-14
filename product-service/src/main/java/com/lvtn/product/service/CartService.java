@@ -112,6 +112,14 @@ public class CartService {
     }
 
 
+    public String clearCart(String username) {
+        Cart cart = cartRepository.findByUsername(username).orElseThrow(() -> new BaseException(404, "cart not found for username:" + username));
+        cart.getItems().clear();
+        cartRepository.save(cart);
+        return "clear successfully";
+
+
+    }
 }
 
 

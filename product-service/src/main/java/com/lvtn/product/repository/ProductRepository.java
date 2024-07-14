@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
@@ -30,4 +31,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findAllByIdInOrderById(List<Integer> productIds);
 
     Page<Product> findByGender(Pageable pageable, Gender gender);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM product p  WHERE p.brand_id = (SELECT id FROM brand WHERE upper(brand.name) LIKE upper(:query)) OR upper(p.product_name) LIKE CONCAT('%', upper(:query), '%')")
+    List<Product> search(@Param("query") String query);
 }

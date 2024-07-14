@@ -12,29 +12,29 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Data
 public class OrderAMQPConfig {
-    @Value("${rabbitmq.exchanges.internal}")
-    private String internalExchange;
-    @Value("${rabbitmq.queue.notification}")
-    private String orderQueue;
-    @Value("${rabbitmq.routing-keys.internal-notification}")
-    private String internalOrderRoutingKey;
-
-    @Bean
-    public TopicExchange topicExchange(){
-        return new TopicExchange(internalExchange);
-    }
-
-    @Bean
-    public Queue queue(){
-        return new Queue(orderQueue);
-    }
-
-    @Bean
-    public Binding internalNotificationBinding(){
-        return BindingBuilder
-                .bind(queue())
-                .to(topicExchange())
-                .with(internalOrderRoutingKey);
-    }
+//    @Value("${rabbitmq.exchanges.internal}")
+//    private String internalExchange;
+//    @Value("${rabbitmq.queue.notification}")
+//    private String orderQueue;
+//    @Value("${rabbitmq.routing-keys.internal-notification}")
+//    private String internalOrderRoutingKey;
+//
+//    @Bean
+//    public TopicExchange topicExchange(){
+//        return new TopicExchange(internalExchange);
+//    }
+//
+//    @Bean
+//    public Queue queue(){
+//        return new Queue(orderQueue);
+//    }
+//
+//    @Bean
+//    public Binding internalNotificationBinding(){
+//        return BindingBuilder
+//                .bind(queue())
+//                .to(topicExchange())
+//                .with(internalOrderRoutingKey);
+//    }
 
 }

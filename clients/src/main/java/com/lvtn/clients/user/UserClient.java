@@ -15,6 +15,9 @@ public interface UserClient {
     @GetMapping(value = "/get-user/{userId}")
     public ResponseEntity<UserDto> getUserInfo(@PathVariable(value = "userId") Integer userId);
 
+    @GetMapping(value = "/find-by-username/{username}")
+    public ResponseEntity<UserDto> findByUsername(@PathVariable(value = "username") String username);
+
     @GetMapping(value = "/auth")
     public ResponseEntity<UserForAuth> getUserForAuth(@RequestParam(value = "username") String username);
 

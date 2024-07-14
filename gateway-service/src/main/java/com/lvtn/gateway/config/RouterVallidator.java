@@ -12,24 +12,30 @@ public class RouterVallidator {
 
 
     List<String> openEnpoints = List.of(
+//            user
+            "/api/v1/user/find-all",
+
 //            authentication
             "/api/v1/user/test",
             "/api/v1/auth/register",
             "/api/v1/auth/authenticate",
+//order
+            "/api/v1/orders/find-all",
 //            product
-            "/api/v1/product/product-details/*",
+            "/api/v1/product/product-details/.*",
             "/api/v1/product/find-all",
-            "/api/v1/product/search/*",
-            "/api/v1/product/category/*",
+            "/api/v1/product/add-product",
+            "/api/v1/product/search/.*",
+            "/api/v1/product/category/.*",
             "/api/v1/product/brand/*",
             "/api/v1/product/new-arrivals",
-            "/api/v1/product/gender/*",
-            "/api/v1/product/review/get-review-by-id/*"
+            "/api/v1/product/gender/.*",
+            "/api/v1/product/review/get-review-by-id/.*"
 
     );
 
 //    check if the requested endpoint is secured or open to the world
     public Predicate<ServerHttpRequest> isSecured =
-            request -> openEnpoints.stream().noneMatch(uri -> request.getURI().getPath().matches(uri));
+            request -> openEnpoints.stream().noneMatch(uri -> request.getURI().getPath().matches(uri.replace("*",".*")));
 
 }

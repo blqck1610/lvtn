@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@SpringBootApplication(scanBasePackages = {"com.lvtn.payment", "com.lvtn.utils"})
+@SpringBootApplication(scanBasePackages = {"com.lvtn.payment", "com.lvtn.utils", "com.lvtn.amqp"})
 @EnableFeignClients(basePackages = "com.lvtn.clients")
 @EnableJpaAuditing
 public class PaymentApplication {

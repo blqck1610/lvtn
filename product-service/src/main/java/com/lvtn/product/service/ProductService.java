@@ -10,6 +10,7 @@ import com.lvtn.product.entity.Category;
 import com.lvtn.product.entity.Gender;
 import com.lvtn.product.entity.Product;
 import com.lvtn.product.repository.BrandRepository;
+import com.lvtn.product.repository.CartRepository;
 import com.lvtn.product.repository.CategoryRepository;
 import com.lvtn.product.repository.ProductRepository;
 import com.lvtn.utils.exception.BaseException;
@@ -41,6 +42,7 @@ public class ProductService {
     private final ProductMapper productMapper;
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
+    private final CartRepository cartRepository;
 
     private  Integer pageSize = 8;
 
@@ -95,8 +97,8 @@ public class ProductService {
         return PageRequest.of(page, pageSize, sort);
     }
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public List<ProductDto> findAll() {
+        return productRepository.findAll().stream().map(productMapper::toProductDto).collect(Collectors.toList());
     }
 
 // purchase products
@@ -174,5 +176,10 @@ public class ProductService {
         }
         return productRepository.findByGender(getPageable(page), gender).map(productMapper::toProductDto);
 
+    }
+
+
+    public List<ProductDto> search(String query) {
+        return productRepository.search(query).stream().map(productMapper::toProductDto).collect(Collectors.toList());
     }
 }
