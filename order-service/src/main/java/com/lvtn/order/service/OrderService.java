@@ -42,9 +42,9 @@ public class OrderService {
 
     private final PaymentClient paymentClient;
 
-    public ResponseEntity<?> createOrder(OrderRequest orderRequest, String username) throws UnsupportedEncodingException {
+    public Object createOrder(OrderRequest orderRequest, String username) throws UnsupportedEncodingException {
 //        check the user --> openfeign
-        UserDto userDto = userClient.findByUsername(username).getBody();
+        UserDto userDto = userClient.findByUsername(username);
         if(userDto == null){
             throw new BaseException(200, "cannot create order :: No customer exists for with the provided id: " + username);
         }
@@ -77,7 +77,7 @@ public class OrderService {
             orderRepository.saveAndFlush(order);
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create("http://localhost:5173/confirm"));
-            return new ResponseEntity<>(headers, HttpStatus.FOUND);
+            return headers;
         }
 
 
@@ -168,7 +168,7 @@ public class OrderService {
     }
 
     public List<OrderResponse> getAllOrderForUser(String username) {
-        UserDto userDto = userClient.findByUsername(username).getBody();
+        UserDto userDto = userClient.findByUsername(username);
         assert userDto != null;
         List<OrderResponse> orderResponses = orderRepository.findAllByCustomerId(userDto.getId()).stream()
                 .map(mapper::toOrderResponse).collect(Collectors.toList());

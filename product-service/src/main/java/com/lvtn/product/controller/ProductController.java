@@ -42,7 +42,7 @@ public class ProductController {
     //CRUD API
 //    add new product
     @PostMapping(value = "/add-product")
-    public ResponseEntity<Integer> addProduct(@RequestParam("productName") String productName,
+    public Integer addProduct(@RequestParam("productName") String productName,
                                               @RequestParam("brandName")
                                               String brandName,
                                               @RequestParam("category") String category,
@@ -65,56 +65,56 @@ public class ProductController {
                 .price(price)
                 .imageUrl(productService.saveImg(image)).build();
         log.info("Product saving successfully {}", product);
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(product));
+        return productService.saveProduct(product);
     }
 
     @PostMapping(value = "/test")
-    public ResponseEntity<String> testSaveImg(@RequestParam("file") MultipartFile file) {
+    public String testSaveImg(@RequestParam("file") MultipartFile file) {
         log.info("save img {} ", productService.saveImg(file));
 
-        return ResponseEntity.ok("ok");
+        return "ok";
     }
 
     // update product
     @PutMapping(value = "/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable(value = "id") Integer productId, @RequestBody Product product) {
+    public String updateProduct(@PathVariable(value = "id") Integer productId, @RequestBody Product product) {
         // todo: update product
 
-        return ResponseEntity.ok("ok");
+        return "ok";
     }
 
     // delete product
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable(value = "id") Integer productId) {
+    public String deleteProduct(@PathVariable(value = "id") Integer productId) {
         // todo: delete product
 
-        return ResponseEntity.ok("ok");
+        return "ok";
     }
 
     //find product by id
     @GetMapping(value = "/product-details/{id}")
-    public ResponseEntity<ProductDto> findById(@PathVariable(value = "id") Integer productId) {
+    public ProductDto findById(@PathVariable(value = "id") Integer productId) {
 
-        return ResponseEntity.ok(productService.findById(productId));
+        return productService.findById(productId);
     }
 
 
     // get all products
     @GetMapping(value = "/find-all")
-    public ResponseEntity<List<ProductDto>> findAll() {
-        return ResponseEntity.ok(productService.findAll());
+    public List<ProductDto> findAll() {
+        return productService.findAll();
     }
 
     //find products by keyword
     @GetMapping(value = "/search")
-    public ResponseEntity<List<ProductDto>> findProductList(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam("query") String query) {
+    public List<ProductDto> findProductList(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam("query") String query) {
 //        todo: find product list by keyword, filter ....
-        return ResponseEntity.ok(productService.search(query));
+        return productService.search(query);
     }
 
     // find product list by category
     @GetMapping(value = "/category/{categoryName}")
-    public ResponseEntity<List<Product>> findProductListByCategory(@RequestParam("page") Integer page, @PathVariable("categoryName") String categoryName) {
+    public List<Product> findProductListByCategory(@RequestParam("page") Integer page, @PathVariable("categoryName") String categoryName) {
 //        todo: find product list by category ....
         page = page == null ? 0 : page;
         Category category = categoryRepository.findByName(categoryName).orElseThrow();
@@ -124,98 +124,98 @@ public class ProductController {
 
     //find products by brand
     @GetMapping(value = "/brand/{brandName}")
-    public ResponseEntity<List<Product>> findProductListByBrand(@RequestParam("page") Integer page, @PathVariable("brandName") String brandName) {
+    public List<Product> findProductListByBrand(@RequestParam("page") Integer page, @PathVariable("brandName") String brandName) {
 //        todo: find product list by brand ....
         return null;
     }
 
     //    find new arrivals products
     @GetMapping(value = "/new-arrivals")
-    public ResponseEntity<Page<ProductDto>> getNewArrivals(@RequestParam(value = "page", defaultValue = "0") Integer page) {
+    public Page<ProductDto> getNewArrivals(@RequestParam(value = "page", defaultValue = "0") Integer page) {
         log.info("get new arrival products");
-        return ResponseEntity.ok(productService.getNewArrivals(page));
+        return productService.getNewArrivals(page);
     }
 
     // find product list gender
     @GetMapping(value = "/gender/{gender}")
-    public ResponseEntity<Page<ProductDto>> getProductsByGender(
+    public Page<ProductDto> getProductsByGender(
             @RequestParam(value = "page", defaultValue = "0") Integer page, @PathVariable("gender") String gender) {
         log.info("get products by gender " + gender);
-        return ResponseEntity.ok(productService.findProductsByGender(page, gender));
+        return productService.findProductsByGender(page, gender);
     }
 
 
     //    purchase proucts
     @PostMapping(value = "/purchase")
-    public ResponseEntity<List<PurchaseResponse>> purchaseProducts(@RequestBody List<PurchaseRequest> requests) {
-        return ResponseEntity.ok(productService.purchaseProducts(requests));
+    public List<PurchaseResponse> purchaseProducts(@RequestBody List<PurchaseRequest> requests) {
+        return productService.purchaseProducts(requests);
     }
     @PostMapping(value = "/cart/clear-cart")
-    public ResponseEntity<String> clearCart(@RequestBody String username) {
-        return ResponseEntity.ok(cartService.clearCart(username));
+    public String clearCart(@RequestBody String username) {
+        return cartService.clearCart(username);
     }
 
 
     @GetMapping(value = "/test-callback")
-    public ResponseEntity<String> testCall() {
-        return ResponseEntity.ok("ok");
+    public String testCall() {
+        return "ok";
     }
 
     //    review
     @GetMapping(value = "/review/get-review-by-id/{id}")
-    public ResponseEntity<Page<Review>> getReviewById(@PathVariable("id") Integer id,
+    public Page<Review> getReviewById(@PathVariable("id") Integer id,
                                                       @RequestParam(value = "page", defaultValue = "0") Integer page){
-        return ResponseEntity.ok(reviewService.getReviewsByProduct(page, id));
+        return reviewService.getReviewsByProduct(page, id);
     }
 
     //brand
     @PostMapping(value = "/brand/add-brands")
-    public ResponseEntity<String> addBrands(@RequestBody List<Brand> brands) {
+    public String addBrands(@RequestBody List<Brand> brands) {
         brandRepository.saveAll(brands);
-        return ResponseEntity.ok("Brands added successfully");
+        return "Brands added successfully";
     }
 
     //    category
     @PostMapping(value = "/category/add-categories")
-    public ResponseEntity<String> addCategories(@RequestBody List<Category> categories) {
+    public String addCategories(@RequestBody List<Category> categories) {
         categoryRepository.saveAll(categories);
-        return ResponseEntity.ok("categories added successfully");
+        return "categories added successfully";
     }
 
     //    add product test
     @PostMapping(value = "/add-products")
-    public ResponseEntity<Integer> addProducts(@RequestBody List<ProductRequest> products) {
+    public Integer addProducts(@RequestBody List<ProductRequest> products) {
 
         log.info("Product saving ");
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProducts(products));
+        return productService.saveProducts(products);
     }
     @GetMapping(value = "/test1/{id}")
-    public ResponseEntity<Integer> test(@PathVariable("id") Integer id) {
-        return ResponseEntity.status(HttpStatus.OK).body(id);
+    public Integer test(@PathVariable("id") Integer id) {
+        return id;
     }
 
     @PostMapping(value = "/cart/add-to-cart")
-    public ResponseEntity<String> addToCart(@Valid @RequestBody AddToCartRequest request){
-        return ResponseEntity.ok(cartService.addToCart(request.getUsername(), request.getProductId(), request.getQuantity()));
+    public String addToCart(@Valid @RequestBody AddToCartRequest request){
+        return cartService.addToCart(request.getUsername(), request.getProductId(), request.getQuantity());
     }
     @GetMapping(value = "/cart/get-cart")
-    public ResponseEntity<CartResponse> getCart(@NotNull @RequestHeader("username") String username){
+    public CartResponse getCart(@NotNull @RequestHeader("username") String username){
         System.out.println(username);
-        return ResponseEntity.ok(cartService.getCart(username));
+        return cartService.getCart(username);
     }
     @PostMapping(value = "/cart/update-cart")
-    public ResponseEntity<String> updateCart(@NotNull @RequestHeader("username") String username,
+    public String updateCart(@NotNull @RequestHeader("username") String username,
                                                  @RequestParam(value = "productId") Integer productId,
                                                  @RequestParam(value = "quantity") Integer quantity
                                                  ){
 
-        return ResponseEntity.ok(cartService.updateCart(username, productId, quantity));
+        return cartService.updateCart(username, productId, quantity);
 
     }
     @GetMapping(value = "/cart/delete-item")
-    public ResponseEntity<String> deleteItem(@NotNull @RequestHeader("username") String username,
+    public String deleteItem(@NotNull @RequestHeader("username") String username,
                                              @RequestParam(value = "productId") Integer productId){
-        return ResponseEntity.ok(cartService.removeItem(username, productId));
+        return cartService.removeItem(username, productId);
 
     }
 

@@ -30,12 +30,12 @@ public class PaymentController {
 
 
     @PostMapping(value = "/create-payment/vnpay")
-    public ResponseEntity<PaymentResponseDTO> createVNPayPayment(HttpServletRequest request, @RequestBody PaymentRequest paymentRequest) throws UnsupportedEncodingException {
-        return ResponseEntity.ok(vnpayservice.createVNPayPayment(request, paymentRequest));
+    public PaymentResponseDTO createVNPayPayment(HttpServletRequest request, @RequestBody PaymentRequest paymentRequest) throws UnsupportedEncodingException {
+        return vnpayservice.createVNPayPayment(request, paymentRequest);
     }
 
     @GetMapping("/transaction-info/vnpay")
-    public ResponseEntity<?> transactionVNPay(
+    public Object transactionVNPay(
             @RequestParam(value = "vnp_Amount", required = false) String amount,
             @RequestParam(value = "vnp_BankCode", required = false) String bankCode,
             @RequestParam(value = "vnp_ResponseCode", required = false) String responseCode,
@@ -69,6 +69,6 @@ public class PaymentController {
         }
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("http://localhost:5173/payment-successful"));
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        return headers;
     }
 }

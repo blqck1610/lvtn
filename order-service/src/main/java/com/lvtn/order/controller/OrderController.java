@@ -25,7 +25,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<?> createOrder(@RequestHeader("username") String username,
+    public Object createOrder(@RequestHeader("username") String username,
                                                           @RequestBody @Valid OrderRequest orderRequest
     ) throws UnsupportedEncodingException {
 
@@ -46,12 +46,12 @@ public class OrderController {
 //        return  orderService.test(request);
 //    }
     @GetMapping(value = "/get-all-order-for-user")
-    public ResponseEntity<List<OrderResponse>> getAllOrderForUser(@RequestHeader("username") String username){
-        return ResponseEntity.ok(orderService.getAllOrderForUser(username));
+    public List<OrderResponse> getAllOrderForUser(@RequestHeader("username") String username){
+        return orderService.getAllOrderForUser(username);
     }
     @GetMapping(value = "/get-order/{id}")
-    public ResponseEntity<OrderResponse> getOrder(@PathVariable("id") Integer id){
-        return ResponseEntity.ok(orderService.getOrder(id));
+    public OrderResponse getOrder(@PathVariable("id") Integer id){
+        return orderService.getOrder(id);
     }
 
 }

@@ -23,6 +23,7 @@ public class RouterVallidator {
             "/api/v1/orders/find-all",
 //            product
             "/api/v1/product/product-details/.*",
+            "/api/v1/product/search",
             "/api/v1/product/find-all",
             "/api/v1/product/add-product",
             "/api/v1/product/search/.*",
