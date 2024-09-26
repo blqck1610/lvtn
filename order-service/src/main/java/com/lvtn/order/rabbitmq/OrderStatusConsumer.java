@@ -1,8 +1,8 @@
 package com.lvtn.order.rabbitmq;
 
 
-import com.lvtn.clients.payment.PaymentStatusResponse;
 import com.lvtn.order.service.OrderService;
+import com.lvtn.utils.dto.payment.PaymentStatusResponse;
 import io.micrometer.observation.annotation.Observed;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

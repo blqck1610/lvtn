@@ -1,6 +1,7 @@
 package com.lvtn.clients.payment;
 
 import com.lvtn.utils.dto.payment.PaymentRequest;
+import com.lvtn.utils.dto.payment.PaymentResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

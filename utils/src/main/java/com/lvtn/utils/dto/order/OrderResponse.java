@@ -1,8 +1,7 @@
 package com.lvtn.utils.dto.order;
 
-import com.lvtn.order.entity.OrderLine;
-import com.lvtn.order.entity.PaymentMethod;
-import com.lvtn.order.entity.PaymentStatus;
+import com.lvtn.utils.PaymentMethod;
+import com.lvtn.utils.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

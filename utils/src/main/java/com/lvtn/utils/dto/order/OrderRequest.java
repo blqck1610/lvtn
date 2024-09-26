@@ -1,7 +1,7 @@
 package com.lvtn.utils.dto.order;
 
-import com.lvtn.clients.product.PurchaseRequest;
-import com.lvtn.order.entity.PaymentMethod;
+
+import com.lvtn.utils.dto.product.PurchaseRequest;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
