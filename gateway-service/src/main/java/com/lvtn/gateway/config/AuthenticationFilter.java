@@ -27,7 +27,6 @@ public class AuthenticationFilter implements GatewayFilter {
         ServerHttpRequest request = exchange.getRequest();
 
         if (validator.isSecured.test(request)) {
-
             if (authMissing(request)) {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
@@ -38,6 +37,7 @@ public class AuthenticationFilter implements GatewayFilter {
             if (jwtService.isExpired(token)) {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
+//            todo: check token match db
             populateRequestWithHeaders(exchange,token);
             System.out.println(request.getHeaders());
         }
@@ -58,7 +58,7 @@ public class AuthenticationFilter implements GatewayFilter {
         Claims claims = jwtService.extractAllClaims(token);
         exchange.getRequest().mutate()
                 .header("username", String.valueOf(claims.getSubject()))
-//                .header("role", String.valueOf(claims.get("role")))
+                .header("role", String.valueOf(claims.get("role")))
                 .build();
     }
 //    exctract service get without decode; use example: public string test(@RequestHeader String userId)

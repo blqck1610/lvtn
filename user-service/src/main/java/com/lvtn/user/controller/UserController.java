@@ -1,12 +1,13 @@
 package com.lvtn.user.controller;
 
 
-import com.lvtn.clients.user.UserV0;
-import com.lvtn.clients.user.UserRegistrationRequest;
+
 import com.lvtn.utils.dto.user.AddressDto;
 import com.lvtn.utils.dto.user.UserDto;
 import com.lvtn.user.service.UserService;
 
+import com.lvtn.utils.dto.user.UserRegistrationRequest;
+import com.lvtn.utils.dto.user.UserV0;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

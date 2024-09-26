@@ -43,10 +43,8 @@ public class AuthController {
         if(user == null){
             throw new BaseException(400, "username does not exist");
         }
-//        if(!CryptoUtil.encrypt(request.getPassword()).equals(user.getPassword())){
-//            throw new BaseException(400, "password does not match");
-//        }
         if(BCrypt.checkpw(request.getPassword(), user.getPassword()))
+
         log.info("authenticated: {}", request.getUsername());
         return authService.authenticate(user);
     }

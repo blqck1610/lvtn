@@ -21,11 +21,16 @@ public class Token {
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "token_id_sequence")
     private Integer id;
-    private String token;
+    private String accessToken;
+    private String refreshToken;
+
 
     @Enumerated(EnumType.STRING)
     private TokenType type;
-    private boolean expired;
+
+    private boolean accessExpired;
+    private boolean refreshExpired;
+
     private boolean revoked;
     private int userId;
 }

@@ -10,7 +10,10 @@ import java.util.Optional;
 
 public interface TokenRepository extends JpaRepository<Token, Integer> {
 
-    @Query("SELECT t FROM Token t WHERE t.userId = :userId AND (t.expired = false  or t.revoked = false )")
+    @Query("SELECT t FROM Token t WHERE t.userId = :userId AND (t.accessExpired = false  or t.revoked = false )")
     List<Token> findAllValidTokensByUser(@Param("userId") Integer userId);
-    Optional<Token> findByToken(String token);
+
+    Optional<Token> findByAccessToken(String token);
+
+    Optional<Token> findByRefreshToken(String refreshToken);
 }
