@@ -1,10 +1,8 @@
 package com.lvtn.order.service;
 
-import com.lvtn.clients.product.PurchaseResponse;
-import com.lvtn.order.dto.OrderLineRequest;
-import com.lvtn.order.dto.OrderLineResponse;
-import com.lvtn.order.dto.OrderRequest;
-import com.lvtn.order.dto.OrderResponse;
+import com.lvtn.utils.dto.product.PurchaseResponse;
+import com.lvtn.utils.dto.order.OrderLineResponse;
+import com.lvtn.utils.dto.order.OrderResponse;
 import com.lvtn.order.entity.Order;
 import com.lvtn.order.entity.OrderLine;
 import lombok.Builder;

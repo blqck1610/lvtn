@@ -1,7 +1,7 @@
 package com.lvtn.notification.entity;
 
 
-import com.lvtn.clients.notification.NotificationType;
+import com.lvtn.utils.dto.notification.NotificationType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

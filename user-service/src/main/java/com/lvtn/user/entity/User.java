@@ -1,7 +1,7 @@
 package com.lvtn.user.entity;
 
 import com.lvtn.utils.Provider;
-import com.lvtn.utils.Role;
+import com.lvtn.utils.dto.user.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

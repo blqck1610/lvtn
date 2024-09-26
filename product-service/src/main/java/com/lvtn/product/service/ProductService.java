@@ -1,10 +1,10 @@
 package com.lvtn.product.service;
 
 
-import com.lvtn.clients.product.ProductDto;
-import com.lvtn.clients.product.PurchaseRequest;
-import com.lvtn.clients.product.PurchaseResponse;
-import com.lvtn.product.dto.ProductRequest;
+import com.lvtn.utils.dto.product.ProductDto;
+import com.lvtn.utils.dto.product.PurchaseRequest;
+import com.lvtn.utils.dto.product.PurchaseResponse;
+import com.lvtn.utils.dto.product.ProductRequest;
 import com.lvtn.product.entity.Brand;
 import com.lvtn.product.entity.Category;
 import com.lvtn.product.entity.Gender;

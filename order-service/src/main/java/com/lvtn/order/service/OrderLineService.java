@@ -1,8 +1,6 @@
 package com.lvtn.order.service;
 
-import com.lvtn.order.dto.OrderLineRequest;
-import com.lvtn.order.dto.OrderLineResponse;
-import com.lvtn.order.entity.OrderLine;
+import com.lvtn.utils.dto.order.OrderLineResponse;
 import com.lvtn.order.repository.OrderLineRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,9 @@
 package com.lvtn.product.service;
 
 
-import com.lvtn.product.dto.CartResponse;
+import com.lvtn.utils.dto.product.CartResponse;
 import com.lvtn.product.entity.Cart;
 import com.lvtn.product.entity.Item;
-import com.lvtn.product.entity.Product;
 import com.lvtn.product.repository.CartRepository;
 import com.lvtn.product.repository.ItemRepository;
 import com.lvtn.product.repository.ProductRepository;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 
 @Service

@@ -1,21 +1,21 @@
 package com.lvtn.user.service;
 
 import com.lvtn.amqp.RabbitMQMessageProducer;
-import com.lvtn.clients.notification.NotificationRequest;
-import com.lvtn.clients.notification.NotificationType;
+import com.lvtn.utils.dto.notification.NotificationRequest;
+import com.lvtn.utils.dto.notification.NotificationType;
 import com.lvtn.clients.product.ProductClient;
-import com.lvtn.clients.user.UserAuthResponse;
+import com.lvtn.clients.user.UserV0;
 import com.lvtn.clients.user.UserRegistrationRequest;
-import com.lvtn.user.dto.AddressDto;
-import com.lvtn.user.dto.UserDto;
-import com.lvtn.user.dto.UserRequest;
+import com.lvtn.utils.dto.user.AddressDto;
+import com.lvtn.utils.dto.user.UserDto;
+import com.lvtn.utils.dto.user.UserRequest;
 import com.lvtn.user.entity.Address;
 import com.lvtn.user.entity.User;
 import com.lvtn.user.rabbitmq.config.NotificationConfig;
 import com.lvtn.user.repository.AddressRepository;
 import com.lvtn.user.repository.UserRepository;
 import com.lvtn.utils.Provider;
-import com.lvtn.utils.Role;
+import com.lvtn.utils.dto.user.Role;
 import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class UserService {
     private final AddressRepository addressRepository;
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public UserDto registerNewUser(UserRegistrationRequest request) {
+    public UserV0 registerNewUser(UserRegistrationRequest request) {
         if (isUserExists(request.getUsername())) {
             throw new BaseException(400, "User already exists");
         }
@@ -68,7 +68,7 @@ public class UserService {
                 notificationConfig.getInternalNotificationRoutingKey());
 
 
-        return  mapper.fromUser(user);
+        return  mapper.fromUserToV0(user);
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
@@ -124,12 +124,12 @@ public class UserService {
         return user != null;
     }
 
-    public UserAuthResponse getUserForAuth(String username) {
+    public UserV0 getUserForAuth(String username) {
         User user = userRepository.getByUsername(username);
         if (user == null) {
             return null;
         }
-        return UserAuthResponse.builder()
+        return UserV0.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())

@@ -1,6 +1,5 @@
 package com.lvtn.product.repository;
 
-import com.lvtn.clients.product.ProductDto;
 import com.lvtn.product.entity.Brand;
 import com.lvtn.product.entity.Category;
 import com.lvtn.product.entity.Gender;
@@ -12,7 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 

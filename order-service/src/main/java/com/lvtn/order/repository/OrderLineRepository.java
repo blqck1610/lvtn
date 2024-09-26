@@ -1,7 +1,5 @@
 package com.lvtn.order.repository;
 
-import com.lvtn.order.dto.OrderLineResponse;
-import com.lvtn.order.entity.Order;
 import com.lvtn.order.entity.OrderLine;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,7 +1,7 @@
 package com.lvtn.payment.controller;
 
-import com.lvtn.clients.payment.PaymentRequest;
-import com.lvtn.payment.dto.PaymentResponseDTO;
+import com.lvtn.utils.dto.payment.PaymentRequest;
+import com.lvtn.utils.dto.payment.PaymentResponseDTO;
 import com.lvtn.payment.entity.Transaction;
 import com.lvtn.payment.service.PaymentService;
 import com.lvtn.payment.vnpay.service.VNPayService;
@@ -9,8 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;

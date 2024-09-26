@@ -1,15 +1,11 @@
 package com.lvtn.order.controller;
 
 
-import com.lvtn.clients.payment.PaymentResponseDTO;
-import com.lvtn.order.dto.OrderRequest;
-import com.lvtn.order.dto.OrderResponse;
-import com.lvtn.order.entity.Order;
+import com.lvtn.utils.dto.order.OrderRequest;
+import com.lvtn.utils.dto.order.OrderResponse;
 import com.lvtn.order.service.OrderService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

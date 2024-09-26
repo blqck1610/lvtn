@@ -1,7 +1,7 @@
 package com.lvtn.notification.service;
 
 
-import com.lvtn.clients.notification.NotificationRequest;
+import com.lvtn.utils.dto.notification.NotificationRequest;
 import com.lvtn.notification.email.EmailDetails;
 import com.lvtn.notification.email.EmailService;
 import com.lvtn.notification.entity.Notification;

@@ -1,14 +1,12 @@
 package com.lvtn.product.service;
 
-import com.lvtn.clients.product.ProductDto;
-import com.lvtn.clients.product.PurchaseRequest;
-import com.lvtn.clients.product.PurchaseResponse;
-import com.lvtn.product.dto.CartResponse;
-import com.lvtn.product.dto.ItemResponse;
+import com.lvtn.utils.dto.product.ProductDto;
+import com.lvtn.utils.dto.product.PurchaseResponse;
+import com.lvtn.utils.dto.product.CartResponse;
+import com.lvtn.utils.dto.product.ItemResponse;
 import com.lvtn.product.entity.Cart;
 import com.lvtn.product.entity.Item;
 import com.lvtn.product.entity.Product;
-import com.lvtn.product.repository.BrandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

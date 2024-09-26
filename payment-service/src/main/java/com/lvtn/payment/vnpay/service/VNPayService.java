@@ -1,7 +1,7 @@
 package com.lvtn.payment.vnpay.service;
 
-import com.lvtn.clients.payment.PaymentRequest;
-import com.lvtn.payment.dto.PaymentResponseDTO;
+import com.lvtn.utils.dto.payment.PaymentRequest;
+import com.lvtn.utils.dto.payment.PaymentResponseDTO;
 import com.lvtn.payment.service.PaymentService;
 import com.lvtn.payment.vnpay.config.Config;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,6 +1,9 @@
 package com.lvtn.clients.user;
 
 
+import com.lvtn.utils.dto.user.UserDto;
+import com.lvtn.utils.dto.user.UserRegistrationRequest;
+import com.lvtn.utils.dto.user.UserV0;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +19,10 @@ public interface UserClient {
     public UserDto findByUsername(@PathVariable(value = "username") String username);
 
     @GetMapping(value = "/auth")
-    public UserAuthResponse getUserForAuth(@RequestParam(value = "username") String username);
+    public UserV0 getUserForAuth(@RequestParam(value = "username") String username);
 
     @PostMapping(value = "/create-new-user")
-    public UserDto register(@RequestBody @Valid UserRegistrationRequest request);
+    public UserV0 register(@RequestBody @Valid UserRegistrationRequest request);
 
     @PostMapping(value = "/create-new-user/admin")
     public UserDto  registerAdmin(@RequestBody @Valid UserRegistrationRequest request);

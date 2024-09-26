@@ -3,17 +3,20 @@ package com.lvtn.authentication.service;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lvtn.utils.dto.authenticate.AuthResponse;
 import com.lvtn.authentication.entity.Token;
 import com.lvtn.authentication.entity.TokenType;
 import com.lvtn.authentication.repository.TokenRepository;
-import com.lvtn.authentication.util.CryptoUtil;
 import com.lvtn.clients.user.*;
+import com.lvtn.utils.dto.user.UserDto;
+import com.lvtn.utils.dto.user.UserRegistrationRequest;
+import com.lvtn.utils.dto.user.UserV0;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,24 +31,27 @@ public class AuthService {
 
     private final TokenRepository tokenRepository;
 
-    public String register(UserRegistrationRequest request) {
-        request.setPassword(CryptoUtil.encrypt(request.getPassword()));
-        UserDto userDto = userClient.register(request);
+    public AuthResponse register(UserRegistrationRequest request) {
+//        request.setPassword(CryptoUtil.encrypt(request.getPassword()));
+        request.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
+        UserV0 userV0 = userClient.register(request);
 
-        return "register successfully";
+        String accessToken = jwtService.generateToken(userV0.getUsername(), userV0.getRole(), TokenType.BEARER.toString());
+        String refreshToken = jwtService.generateToken(userV0.getUsername(), userV0.getRole(), TokenType.BEARER.toString());
+        return new AuthResponse(accessToken, refreshToken);
     }
 
     public UserDto registerAdmin(UserRegistrationRequest request) {
-        request.setPassword(CryptoUtil.encrypt(request.getPassword()));
+        request.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
         return userClient.registerAdmin(request);
     }
 
-    public com.lvtn.authentication.dto.AuthResponse authenticate(UserAuthResponse user) {
+    public AuthResponse authenticate(UserV0 user) {
         String accessToken = jwtService.generateToken(user.getUsername(), user.getRole(), "ACCESS_TOKEN");
         String refreshToken = jwtService.generateToken(user.getUsername(), user.getRole(), "REFRESH_TOKEN");
         revokeAllUserTokens(user.getId());
         saveUserToken(user.getId(), refreshToken);
-        return new com.lvtn.authentication.dto.AuthResponse(accessToken, refreshToken);
+        return new AuthResponse(accessToken, refreshToken);
     }
 // todo: fix refresh token
     public void refreshToken(HttpServletRequest request, HttpServletResponse response)
@@ -60,9 +66,9 @@ public class AuthService {
         username = jwtService.extractUsername(refreshToken);
         if (username != null) {
 
-            UserAuthResponse userDto = userClient.getUserForAuth(username);
+            UserV0 userDto = userClient.getUserForAuth(username);
             String accessToken = jwtService.generateToken(userDto.getUsername(), userDto.getRole().toString(), "ACCESS_TOKEN");
-            var authResponse = new com.lvtn.authentication.dto.AuthResponse(accessToken, refreshToken);
+            var authResponse = new AuthResponse(accessToken, refreshToken);
             revokeAllUserTokens(userDto.getId());
             saveUserToken(userDto.getId(), accessToken);
             new ObjectMapper().writeValue(response.getOutputStream(), authResponse);

@@ -1,8 +1,9 @@
 package com.lvtn.user.service;
 
 
-import com.lvtn.user.dto.AddressDto;
-import com.lvtn.user.dto.UserDto;
+import com.lvtn.clients.user.UserV0;
+import com.lvtn.utils.dto.user.AddressDto;
+import com.lvtn.utils.dto.user.UserDto;
 import com.lvtn.user.entity.Address;
 import com.lvtn.user.entity.User;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,14 @@ public class UserMapper {
                 .email(user.getEmail())
                 .role(user.getRole())
                 .address(user.getAddress())
+                .build();
+    }
+    public UserV0 fromUserToV0(User user) {
+        return UserV0.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .role(user.getRole().toString())
+                .password(user.getPassword())
                 .build();
     }
 

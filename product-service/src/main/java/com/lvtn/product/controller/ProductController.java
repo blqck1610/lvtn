@@ -1,12 +1,12 @@
 package com.lvtn.product.controller;
 
 
-import com.lvtn.clients.product.ProductDto;
-import com.lvtn.clients.product.PurchaseRequest;
-import com.lvtn.clients.product.PurchaseResponse;
-import com.lvtn.product.dto.AddToCartRequest;
-import com.lvtn.product.dto.CartResponse;
-import com.lvtn.product.dto.ProductRequest;
+import com.lvtn.utils.dto.product.ProductDto;
+import com.lvtn.utils.dto.product.PurchaseRequest;
+import com.lvtn.utils.dto.product.PurchaseResponse;
+import com.lvtn.utils.dto.product.AddToCartRequest;
+import com.lvtn.utils.dto.product.CartResponse;
+import com.lvtn.utils.dto.product.ProductRequest;
 import com.lvtn.product.entity.*;
 import com.lvtn.product.repository.BrandRepository;
 import com.lvtn.product.repository.CategoryRepository;
@@ -17,12 +17,9 @@ import com.lvtn.utils.exception.BaseException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
