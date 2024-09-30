@@ -1,5 +1,7 @@
 package com.lvtn.gateway.config;
 
+//import com.lvtn.clients.authentication.AuthenticationClient;
+import com.lvtn.clients.authentication.AuthenticationClient;
 import com.lvtn.gateway.service.JwtService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 
 @RefreshScope
 @Component
@@ -21,6 +25,7 @@ public class AuthenticationFilter implements GatewayFilter {
 
     private final RouterVallidator validator;
     private final JwtService jwtService;
+    private final AuthenticationClient authenticationClient;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -30,16 +35,19 @@ public class AuthenticationFilter implements GatewayFilter {
             if (authMissing(request)) {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
-            final String token = request.getHeaders().getOrEmpty("Authorization").getFirst();
+            String token = request.getHeaders().getOrEmpty("Authorization").getFirst();
+//            token = token.substring(7);
 //            System.out.println(token);
-
+//            Map<String, Object> claims = authenticationClient.extractAllClaim(token);
+//            System.out.println(claims);
 //            todo: verify token
             if (jwtService.isExpired(token)) {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
 //            todo: check token match db
+
             populateRequestWithHeaders(exchange,token);
-            System.out.println(request.getHeaders());
+//            System.out.println(request.getHeaders());
         }
 
         return chain.filter(exchange);

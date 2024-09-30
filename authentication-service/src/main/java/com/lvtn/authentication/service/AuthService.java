@@ -8,6 +8,7 @@ import com.lvtn.authentication.entity.TokenType;
 import com.lvtn.authentication.repository.TokenRepository;
 import com.lvtn.clients.user.UserClient;
 import com.lvtn.utils.dto.authenticate.AuthResponse;
+import com.lvtn.utils.dto.authenticate.TokenDto;
 import com.lvtn.utils.dto.user.UserDto;
 import com.lvtn.utils.dto.user.UserRegistrationRequest;
 import com.lvtn.utils.dto.user.UserV0;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +34,17 @@ public class AuthService {
     private final UserClient userClient;
 
     private final TokenRepository tokenRepository;
+    private final TokenMapper tokenMapper;
+
+    public  TokenDto findTokenByToken(String token, String tokenType) {
+        Optional<Token> t;
+        if(tokenType.equals("ACCESS_TOKEN")){
+            t = tokenRepository.findByAccessToken(token);
+
+        }
+        else t = tokenRepository.findByRefreshToken(token);
+        return t.map(tokenMapper::fromToken).orElse(null);
+    }
 
     public AuthResponse register(UserRegistrationRequest request) {
 //        request.setPassword(CryptoUtil.encrypt(request.getPassword()));
@@ -56,9 +69,9 @@ public class AuthService {
         return new AuthResponse(accessToken, refreshToken);
     }
 
-    // todo: fix refresh token --
+    // todo: fix refresh token -- refresh token add on header
     public void refreshToken(HttpServletRequest request, HttpServletResponse response)
-            throws StreamWriteException, DatabindException, IOException {
+            throws IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String refreshToken;
         String username;
@@ -72,7 +85,7 @@ public class AuthService {
             UserV0 userDto = userClient.getUserForAuth(username);
 //             check token match db
             tokenRepository.findByRefreshToken(refreshToken)
-                    .orElseThrow(() -> new BaseException(Integer.parseInt(HttpStatus.UNAUTHORIZED.toString()), "refreshToken invalid"));
+                    .orElseThrow(() -> new BaseException(HttpStatus.UNAUTHORIZED, "refreshToken invalid"));
 
             String accessToken = jwtService.generateToken(userDto.getUsername(), userDto.getRole(), "ACCESS_TOKEN");
             refreshToken = jwtService.generateToken(userDto.getUsername(), userDto.getRole(), "REFRESH_TOKEN");
@@ -104,9 +117,9 @@ public class AuthService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .type(TokenType.BEARER)
-                .accessExpired(false)
-                .refreshExpired(false)
-                .revoked(false)
+                .isAccessExpired(false)
+                .isRefreshExpired(false)
+                .isRevoked(false)
                 .userId(userId)
                 .build();
 

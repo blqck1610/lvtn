@@ -1,18 +1,19 @@
 package com.lvtn.user.service;
 
 import com.lvtn.amqp.RabbitMQMessageProducer;
-import com.lvtn.utils.dto.notification.NotificationRequest;
-import com.lvtn.utils.dto.notification.NotificationType;
 import com.lvtn.clients.product.ProductClient;
-import com.lvtn.utils.dto.user.*;
 import com.lvtn.user.entity.Address;
 import com.lvtn.user.entity.User;
 import com.lvtn.user.rabbitmq.config.NotificationConfig;
 import com.lvtn.user.repository.AddressRepository;
 import com.lvtn.user.repository.UserRepository;
 import com.lvtn.utils.Provider;
+import com.lvtn.utils.dto.notification.NotificationRequest;
+import com.lvtn.utils.dto.notification.NotificationType;
+import com.lvtn.utils.dto.user.*;
 import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +38,7 @@ public class UserService {
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public UserV0 registerNewUser(UserRegistrationRequest request) {
         if (isUserExists(request.getUsername())) {
-            throw new BaseException(400, "User already exists");
+            throw new BaseException(HttpStatus.BAD_REQUEST, "User already exists");
         }
         User user = User.builder()
                 .username(request.getUsername())
@@ -63,14 +64,14 @@ public class UserService {
                 notificationConfig.getInternalNotificationRoutingKey());
 
 
-        return  mapper.fromUserToV0(user);
+        return mapper.fromUserToV0(user);
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public String deleteUser(Integer userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(404, "user not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "user not found"));
         userRepository.delete(user);
-        return  "User id: + " + userId + " deleted";
+        return "User id: + " + userId + " deleted";
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
@@ -81,7 +82,7 @@ public class UserService {
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public UserDto update(Integer userId, UserRequest userRequest) {
 //        todo: implement update user
-        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(404, "user not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "user not found"));
         mergerUser(user, userRequest);
         user = userRepository.saveAndFlush(user);
         return mapper.fromUser(user);
@@ -92,20 +93,20 @@ public class UserService {
 
 
     public UserDto getUserInfo(Integer userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(404, "user not found for id: " + userId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "user not found for id: " + userId));
         return mapper.fromUser(user);
     }
 
     public UserDto findByUsername(String username) {
         User user = userRepository.getByUsername(username);
         if (user == null) {
-            throw new BaseException(404, "user not found for username: " + username);
+            throw new BaseException(HttpStatus.BAD_REQUEST, "user not found for username: " + username);
         }
         return mapper.fromUser(user);
     }
 
     public List<UserDto> findAll() {
-        return  userRepository.findAll().stream().map(mapper::fromUser).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(mapper::fromUser).collect(Collectors.toList());
 
     }
 
@@ -134,7 +135,7 @@ public class UserService {
 
     public UserDto registerAdmin(UserRegistrationRequest request) {
         if (isUserExists(request.getUsername())) {
-            throw new BaseException(400, "User already exists");
+            throw new BaseException(HttpStatus.BAD_REQUEST, "User already exists");
         }
         User user = User.builder()
                 .username(request.getUsername())

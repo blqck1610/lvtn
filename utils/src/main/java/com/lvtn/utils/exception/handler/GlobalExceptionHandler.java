@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<String> handlerBaseException(BaseException e) {
         System.out.println("exception: " + e.getMessage());
-        return ResponseEntity.status(HttpStatusCode.valueOf(e.getCode())).body(e.getMessage());
+        return ResponseEntity.status(e.getCode()).body(e.getMessage());
     }
 
 
@@ -25,7 +25,8 @@ public class GlobalExceptionHandler {
         if (e.getBindingResult().hasErrors()) {
             errorMessage = e.getBindingResult().getAllErrors().getFirst().getDefaultMessage();
         }
-        return ResponseEntity.badRequest().body(e.getMessage() );
+
+        return ResponseEntity.badRequest().body(errorMessage );
 
     }
 }

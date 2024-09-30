@@ -1,11 +1,16 @@
 package com.lvtn.authentication.service;
 
 
+import com.lvtn.utils.exception.BaseException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -15,6 +20,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
+    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
     @Value("${application.security.jwt.expiration}")
@@ -28,7 +34,12 @@ public class JwtService {
     }
 
     public Claims extractAllClaims(String token) {
-        return Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token).getPayload();
+        try {
+            return Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token).getPayload();
+        } catch (JwtException e) {
+            log.error(e.getMessage());
+            throw new BaseException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
     }
     // extract to specific claim
     public <T> T extractClaims(String Token, Function<Claims, T> claimsResolver) {
@@ -65,10 +76,9 @@ public class JwtService {
     }
 
 
-    public boolean isTokenValid(String jwtToken, String username) {
-
-        return (extractUsername(jwtToken).equals(username) && !isExpired(jwtToken));
-    }
+//    public boolean isTokenValid(String jwtToken, String username) {
+//        return (extractUsername(jwtToken).equals(username) && !isExpired(jwtToken));
+//    }
 
 
 

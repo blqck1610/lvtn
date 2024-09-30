@@ -2,12 +2,11 @@ package com.lvtn.gateway;
 
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@SpringBootApplication
+@EnableFeignClients(basePackages = {"com.lvtn.clients"})
+@SpringBootApplication(scanBasePackages = {"com.lvtn.gateway", "com.lvtn.utils"})
 public class GatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(GatewayApplication.class, args);

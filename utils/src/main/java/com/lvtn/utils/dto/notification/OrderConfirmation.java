@@ -1,6 +1,7 @@
 package com.lvtn.utils.dto.notification;
 
-import com.lvtn.clients.product.PurchaseResponse;
+
+import com.lvtn.utils.dto.product.PurchaseResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

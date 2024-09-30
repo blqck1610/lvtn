@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -108,14 +109,14 @@ public class ProductService {
         List<PurchaseRequest> storedRequests = requests.stream().sorted(Comparator.comparing(PurchaseRequest::getProductId)).toList();
 
         if (productIds.size() != storedProducts.size()) {
-            throw new BaseException(200, "One or more products does not exist");
+            throw new BaseException(HttpStatus.BAD_REQUEST, "One or more products does not exist");
         }
         List<PurchaseResponse> purchasedProducts = new ArrayList<PurchaseResponse>();
         for (int i = 0; i < storedProducts.size(); i++) {
             var product = storedProducts.get(i);
             var productRequest = storedRequests.get(i);
             if (product.getAvailableQuantity() < productRequest.getQuantity()) {
-                throw new BaseException(400, "Insufficient stock quantity  for product with id: " + product.getId());
+                throw new BaseException(HttpStatus.BAD_REQUEST, "Insufficient stock quantity  for product with id: " + product.getId());
             }
             var newAvailableQuantity = product.getAvailableQuantity() - productRequest.getQuantity();
             product.setAvailableQuantity(newAvailableQuantity);
@@ -132,14 +133,14 @@ public class ProductService {
             try {
                 gender = Gender.valueOf(productRequest.getGender().toUpperCase());
             } catch (IllegalArgumentException e) {
-                throw new BaseException(400, "invalid gender");
+                throw new BaseException(HttpStatus.BAD_REQUEST, "invalid gender");
             }
             Product product = Product.builder()
                     .productName(productRequest.getProductName())
                     .price(productRequest.getPrice())
                     .gender(gender)
-                    .brand(brandRepository.findByName(productRequest.getBrand()).orElseThrow(() -> new BaseException(400, "brand not found")))
-                    .category(categoryRepository.findByName(productRequest.getCategory()).orElseThrow(() -> new BaseException(400, "category not found")))
+                    .brand(brandRepository.findByName(productRequest.getBrand()).orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "brand not found")))
+                    .category(categoryRepository.findByName(productRequest.getCategory()).orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "category not found")))
                     .description(productRequest.getDescription())
                     .availableQuantity(productRequest.getAvailableQuantity())
                     .imageUrl(productRequest.getImageUrl())
@@ -172,7 +173,7 @@ public class ProductService {
         try {
             gender = Gender.valueOf(genderRq.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new BaseException(400, "invalid gender");
+            throw new BaseException(HttpStatus.BAD_REQUEST, "invalid gender");
         }
         return productRepository.findByGender(getPageable(page), gender).map(productMapper::toProductDto);
 

@@ -9,9 +9,11 @@ import com.lvtn.product.repository.ItemRepository;
 import com.lvtn.product.repository.ProductRepository;
 import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 
@@ -22,7 +24,7 @@ public class CartService {
     private final ProductRepository productRepository;
     private final ItemRepository itemRepository;
 
-    @Transactional
+    @Transactional(rollbackFor = {SQLException.class})
     public Cart createCart(String username) {
         Cart cart = Cart.builder()
                 .username(username)
@@ -42,7 +44,7 @@ public class CartService {
         else {
             Item item = itemRepository.saveAndFlush(Item.builder()
                     .product(productRepository.findById(productId).orElseThrow(
-                            () -> new BaseException(404, "Product not found, id: " + productId)))
+                            () -> new BaseException(HttpStatus.BAD_REQUEST, "Product not found, id: " + productId)))
                     .quantity(quantity)
                     .cart(cart)
                     .build());
@@ -64,7 +66,7 @@ public class CartService {
     public String updateCart(String username, Integer productId, Integer quantity) {
         Item i = null;
         Cart cart = cartRepository.findByUsername(username).
-                orElseThrow(() -> new BaseException(404, "cart not found for username:" + username));
+                orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "cart not found for username:" + username));
         for (Item item : cart.getItems()) {
             if (item.getProduct().getId() == productId) {
                 i = item;
@@ -88,7 +90,7 @@ public class CartService {
 
     public String removeItem(String username, int productId) {
         Item i = null;
-        Cart cart = cartRepository.findByUsername(username).orElseThrow(() -> new BaseException(404, "Couldn't find cart with username: " + username));
+        Cart cart = cartRepository.findByUsername(username).orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "Couldn't find cart with username: " + username));
         for (Item item : cart.getItems()) {
             if (item.getProduct().getId() == productId) {
                 i = item;
@@ -106,12 +108,12 @@ public class CartService {
 
         return new ProductMapper().toCartResponse(
                 cartRepository.findByUsername(username).
-                        orElseThrow(() -> new BaseException(404, "cart not found for username:" + username)));
+                        orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "cart not found for username:" + username)));
     }
 
 
     public String clearCart(String username) {
-        Cart cart = cartRepository.findByUsername(username).orElseThrow(() -> new BaseException(404, "cart not found for username:" + username));
+        Cart cart = cartRepository.findByUsername(username).orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "cart not found for username:" + username));
         cart.getItems().clear();
         cartRepository.save(cart);
         return "clear successfully";

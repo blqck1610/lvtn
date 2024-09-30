@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,7 +51,7 @@ public class ProductController {
         try {
             gender = Gender.valueOf(genderRaw.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new BaseException(400, "Invalid gender");
+            throw new BaseException(HttpStatus.BAD_REQUEST, "Invalid gender");
         }
         Brand brand = brandRepository.findByName(brandName).orElse(null);
         Category categoryy = categoryRepository.findByName(category).orElse(null);

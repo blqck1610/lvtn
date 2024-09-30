@@ -2,6 +2,7 @@ package com.lvtn.gateway.config;
 
 import com.lvtn.gateway.service.JwtService;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +19,16 @@ import reactor.core.publisher.Mono;
 
 @RefreshScope
 @Component
-@NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
+@Data
 public class RoleAuthGateway implements GatewayFilter {
     @Autowired
     private  RouterVallidator validator;
     @Autowired
     private  JwtService jwtService;
 
-    private String role;
+    private  String role;
 
     public RoleAuthGateway(String role) {
         this.role = role;

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 import java.io.Serial;
 import java.util.function.Supplier;
@@ -15,7 +16,7 @@ import java.util.function.Supplier;
 public class BaseException extends RuntimeException  {
     @Serial
     private static final long serialVersionUID = 1L;
-    private Integer code;
+    private HttpStatus code;
     private String message;
 
 

@@ -28,9 +28,9 @@ public class Token {
     @Enumerated(EnumType.STRING)
     private TokenType type;
 
-    private boolean accessExpired;
-    private boolean refreshExpired;
+    private boolean isAccessExpired;
+    private boolean isRefreshExpired;
 
-    private boolean revoked;
+    private boolean isRevoked;
     private int userId;
 }
