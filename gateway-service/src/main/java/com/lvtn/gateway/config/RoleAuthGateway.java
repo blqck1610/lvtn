@@ -1,21 +1,22 @@
 package com.lvtn.gateway.config;
 
-import com.lvtn.gateway.service.JwtService;
+import com.lvtn.clients.authentication.AuthenticationClient;
+import com.lvtn.utils.exception.BaseException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.util.Map;
 
 @RefreshScope
 @Component
@@ -24,11 +25,12 @@ import reactor.core.publisher.Mono;
 @Data
 public class RoleAuthGateway implements GatewayFilter {
     @Autowired
-    private  RouterVallidator validator;
+    private RouterVallidator validator;
     @Autowired
-    private  JwtService jwtService;
+    private  AuthenticationClient authenticationClient;
 
-    private  String role;
+
+    private String role;
 
     public RoleAuthGateway(String role) {
         this.role = role;
@@ -43,9 +45,22 @@ public class RoleAuthGateway implements GatewayFilter {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
             final String token = request.getHeaders().getOrEmpty("Authorization").getFirst();
-//            todo: verify token
-            if (jwtService.isExpired(token) && !jwtService.extractRoles(token).equals(role)) {
-                return onError(exchange, HttpStatus.UNAUTHORIZED);
+//
+//            token = token.substring(7);
+//            System.out.println(token);
+
+
+            if(!authenticationClient.isTokenValid(token)){
+                throw new BaseException(HttpStatus.UNAUTHORIZED, "Invalid token");
+            }
+
+            Map<String, Object> claims = authenticationClient.extractAllClaims(token);
+            if (authenticationClient.isTokenExpired(token) ) {
+//                return onError(exchange, HttpStatus.UNAUTHORIZED);
+                throw new BaseException(HttpStatus.UNAUTHORIZED, "expired token");
+            }
+            if(!claims.get("role").equals(role)){
+                throw new BaseException(HttpStatus.UNAUTHORIZED, "unauthorized");
             }
         }
 

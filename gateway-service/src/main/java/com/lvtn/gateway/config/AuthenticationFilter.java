@@ -1,9 +1,9 @@
 package com.lvtn.gateway.config;
 
 //import com.lvtn.clients.authentication.AuthenticationClient;
+
 import com.lvtn.clients.authentication.AuthenticationClient;
-import com.lvtn.gateway.service.JwtService;
-import io.jsonwebtoken.Claims;
+import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -24,7 +24,6 @@ import java.util.Map;
 public class AuthenticationFilter implements GatewayFilter {
 
     private final RouterVallidator validator;
-    private final JwtService jwtService;
     private final AuthenticationClient authenticationClient;
 
     @Override
@@ -33,39 +32,46 @@ public class AuthenticationFilter implements GatewayFilter {
 
         if (validator.isSecured.test(request)) {
             if (authMissing(request)) {
-                return onError(exchange, HttpStatus.UNAUTHORIZED);
+//                return onError(exchange, HttpStatus.UNAUTHORIZED);
+                throw new BaseException(HttpStatus.UNAUTHORIZED, "token missing");
             }
             String token = request.getHeaders().getOrEmpty("Authorization").getFirst();
 //            token = token.substring(7);
 //            System.out.println(token);
-//            Map<String, Object> claims = authenticationClient.extractAllClaim(token);
-//            System.out.println(claims);
-//            todo: verify token
-            if (jwtService.isExpired(token)) {
-                return onError(exchange, HttpStatus.UNAUTHORIZED);
-            }
-//            todo: check token match db
 
-            populateRequestWithHeaders(exchange,token);
+
+            if (!authenticationClient.isTokenValid(token)) {
+                throw new BaseException(HttpStatus.UNAUTHORIZED, "Invalid token");
+            }
+//            todo: verify token
+            if (authenticationClient.isTokenExpired(token)) {
+//                return onError(exchange, HttpStatus.UNAUTHORIZED);
+                throw new BaseException(HttpStatus.UNAUTHORIZED, "Expired token");
+            }
+
+            populateRequestWithHeaders(exchange, token);
 //            System.out.println(request.getHeaders());
         }
 
         return chain.filter(exchange);
     }
 
-    private Mono<Void> onError(ServerWebExchange exchange, HttpStatus httpStatus) {
+    private Mono<Void> onError(ServerWebExchange exchange, String message, HttpStatus httpStatus) {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
-        return response.setComplete();
+
+        return response.writeWith(Mono.just(response.bufferFactory().wrap(message.getBytes())));
+
     }
 
     private boolean authMissing(ServerHttpRequest request) {
         return !request.getHeaders().containsKey("Authorization");
     }
+
     private void populateRequestWithHeaders(ServerWebExchange exchange, String token) {
-        Claims claims = jwtService.extractAllClaims(token);
+        Map<String, Object> claims = authenticationClient.extractAllClaims(token);
         exchange.getRequest().mutate()
-                .header("username", String.valueOf(claims.getSubject()))
+                .header("username", String.valueOf(claims.get("username")))
                 .header("role", String.valueOf(claims.get("role")))
                 .build();
     }

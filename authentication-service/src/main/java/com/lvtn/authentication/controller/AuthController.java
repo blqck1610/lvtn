@@ -74,8 +74,8 @@ public class AuthController {
     }
 
     @GetMapping(value = "/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("ok");
+    public String test() {
+        return "ok";
     }
 
     @GetMapping(value = "/find-token-by-access-token")
@@ -95,9 +95,17 @@ public class AuthController {
     }
 
 
-    @GetMapping(value = "/extract-all-claim")
-    public Map<String, Object> extractAllClaim(@RequestParam(value = "token")  String token){
+    @GetMapping(value = "/extract-all-claims")
+    public Map<String, Object> extractAllClaims(@RequestParam(value = "token")  String token){
         return (Map<String, Object>) new HashMap<String, Object>(jwtService.extractAllClaims(token));
+    }
+    @GetMapping(value = "/is-token-valid")
+    public Boolean isTokenValid(@RequestParam(value = "token")  String token){
+        return authService.isTokenValid(token, "ACCESS_TOKEN");
+    }
+    @GetMapping(value = "/is-token-expired")
+    public Boolean isTokenExpired(@RequestParam(value = "token")  String token){
+        return true;
     }
 
 }

@@ -1,8 +1,8 @@
 package com.lvtn.authentication.service;
 
 
-import com.lvtn.utils.exception.BaseException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -10,7 +10,6 @@ import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -28,44 +27,56 @@ public class JwtService {
     @Value("${application.security.jwt.refresh-token.expiration}")
     private Long refreshTokenExpiration;
 
-    public SecretKey getKey(){
+    public SecretKey getKey() {
         byte[] key = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(key);
     }
 
     public Claims extractAllClaims(String token) {
+        Claims claims = null;
         try {
-            return Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token).getPayload();
+            claims = Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token).getPayload();
+        } catch (ExpiredJwtException expiredJwtException) {
+            claims = expiredJwtException.getClaims();
         } catch (JwtException e) {
             log.error(e.getMessage());
-            throw new BaseException(HttpStatus.UNAUTHORIZED, e.getMessage());
+//            throw new BaseException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
+
+        return claims;
     }
+
     // extract to specific claim
     public <T> T extractClaims(String Token, Function<Claims, T> claimsResolver) {
         Claims claims = extractAllClaims(Token);
+//        if(claims == null) return null;
         return claimsResolver.apply(claims);
     }
+
     public String extractUsername(String token) {
         return extractClaims(token, Claims::getSubject);
     }
-    public Date extractExpired(String token){
+
+    public Date extractExpired(String token) {
         return extractClaims(token, Claims::getExpiration);
     }
+
     public Boolean isExpired(String token) {
         return extractExpired(token).before(new Date());
 
     }
-    public String generateToken(String username, String role , String tokenType) {
+
+    public String generateToken(String username, String role, String tokenType) {
         Map<String, String> claims = Map.of(
-                "username", username , "role", role
+                "username", username, "role", role
         );
         if (tokenType.equals("ACCESS_TOKEN"))
-            return buildToken(claims , accessTokenExpiration);
-        else return buildToken(claims , refreshTokenExpiration);
+            return buildToken(claims, accessTokenExpiration);
+        else return buildToken(claims, refreshTokenExpiration);
 
     }
-    private String buildToken(Map<String, String> claims, Long expiration ) {
+
+    private String buildToken(Map<String, String> claims, Long expiration) {
         return Jwts.builder()
                 .claims(claims)
                 .subject(claims.get("username"))
@@ -76,10 +87,11 @@ public class JwtService {
     }
 
 
+
+
 //    public boolean isTokenValid(String jwtToken, String username) {
 //        return (extractUsername(jwtToken).equals(username) && !isExpired(jwtToken));
 //    }
-
 
 
 }

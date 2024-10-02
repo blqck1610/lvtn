@@ -52,7 +52,7 @@ public class OrderService {
 //        check the user --> openfeign
         UserDto userDto = userClient.findByUsername(username);
         if(userDto == null){
-            throw new BaseException(200, "cannot create order :: No customer exists for with the provided id: " + username);
+            throw new BaseException(HttpStatus.BAD_REQUEST, "cannot create order :: No customer exists for with the provided id: " + username);
         }
 
         List<PurchaseResponse> purchasedProducts = productClient.purchaseProducts(orderRequest.getProducts()).getBody();
@@ -127,7 +127,7 @@ public class OrderService {
     }
 
     public OrderResponse getOrderById(Integer orderId) {
-        return orderRepository.findById(orderId).map(mapper::toOrderResponse).orElseThrow(() -> new BaseException(404, "Order not found with id " + orderId));
+        return orderRepository.findById(orderId).map(mapper::toOrderResponse).orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "Order not found with id " + orderId));
     }
 
     public String test(HttpServletRequest request) throws UnsupportedEncodingException {
@@ -176,13 +176,12 @@ public class OrderService {
     public List<OrderResponse> getAllOrderForUser(String username) {
         UserDto userDto = userClient.findByUsername(username);
         assert userDto != null;
-        List<OrderResponse> orderResponses = orderRepository.findAllByCustomerId(userDto.getId()).stream()
+        return orderRepository.findAllByCustomerId(userDto.getId()).stream()
                 .map(mapper::toOrderResponse).collect(Collectors.toList());
-        return orderResponses;
     }
 
     public OrderResponse getOrder(Integer id) {
-        return mapper.toOrderResponse(orderRepository.findById(id).orElseThrow(() -> new BaseException(404, "Order not found for id " + id)));
+        return mapper.toOrderResponse(orderRepository.findById(id).orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "Order not found for id " + id)));
     }
 }
 

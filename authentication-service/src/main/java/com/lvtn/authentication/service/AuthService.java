@@ -130,4 +130,13 @@ public class AuthService {
         return userClient.test("test").getBody();
     }
 
+    public Boolean isTokenValid(String token, String tokenType) {
+        Optional<Token> t;
+        if(tokenType.equals("ACCESS_TOKEN")){
+            t = tokenRepository.findByAccessToken(token);
+
+        }
+        else t = tokenRepository.findByRefreshToken(token);
+        return t.isPresent() && !t.get().isRevoked();
+    }
 }

@@ -19,8 +19,15 @@ import java.util.Map;
 @FeignClient(value = "AUTH-SERVICE", path = "/api/v1/auth")
 public interface AuthenticationClient {
 
-    @GetMapping(value = "/extract-all-claim")
-    public Map<String, Object> extractAllClaim(@RequestParam(value = "token") String token);
+    @GetMapping(value = "/extract-all-claims")
+    Map<String, Object> extractAllClaims(@RequestParam(value = "token") String token);
 
+    @GetMapping(value = "/test")
+    public String test();
 
+    @GetMapping(value = "/is-token-valid")
+    public Boolean isTokenValid(@RequestParam(value = "token")  String token);
+
+    @GetMapping(value = "/is-token-expired")
+    public Boolean isTokenExpired(@RequestParam(value = "token")  String token);
 }
