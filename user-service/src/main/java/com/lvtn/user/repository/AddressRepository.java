@@ -1,6 +1,5 @@
 package com.lvtn.user.repository;
 
-import com.lvtn.user.entity.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

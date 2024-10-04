@@ -1,17 +1,16 @@
 package com.lvtn.authentication.service;
 
-import com.fasterxml.jackson.core.exc.StreamWriteException;
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lvtn.authentication.entity.Token;
 import com.lvtn.authentication.entity.TokenType;
 import com.lvtn.authentication.repository.TokenRepository;
 import com.lvtn.clients.user.UserClient;
+import com.lvtn.utils.dto.ApiResponse;
+import com.lvtn.utils.dto.authenticate.AuthRequest;
 import com.lvtn.utils.dto.authenticate.AuthResponse;
 import com.lvtn.utils.dto.authenticate.TokenDto;
 import com.lvtn.utils.dto.user.UserDto;
 import com.lvtn.utils.dto.user.UserRegistrationRequest;
-import com.lvtn.utils.dto.user.UserV0;
 import com.lvtn.utils.exception.BaseException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,7 +31,6 @@ import java.util.Optional;
 public class AuthService {
     private final JwtService jwtService;
     private final UserClient userClient;
-
     private final TokenRepository tokenRepository;
     private final TokenMapper tokenMapper;
 
@@ -40,33 +38,45 @@ public class AuthService {
         Optional<Token> t;
         if(tokenType.equals("ACCESS_TOKEN")){
             t = tokenRepository.findByAccessToken(token);
-
         }
         else t = tokenRepository.findByRefreshToken(token);
         return t.map(tokenMapper::fromToken).orElse(null);
     }
 
-    public AuthResponse register(UserRegistrationRequest request) {
-//        request.setPassword(CryptoUtil.encrypt(request.getPassword()));
+    public ApiResponse<AuthResponse> registerNewUser(UserRegistrationRequest request) {
         request.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
-        UserV0 userV0 = userClient.register(request);
-
-        String accessToken = jwtService.generateToken(userV0.getUsername(), userV0.getRole(), TokenType.BEARER.toString());
-        String refreshToken = jwtService.generateToken(userV0.getUsername(), userV0.getRole(), TokenType.BEARER.toString());
-        return new AuthResponse(accessToken, refreshToken);
+        ApiResponse<UserDto> response = userClient.register(request);
+        check(response);
+        UserDto user = response.getData();
+        String accessToken = jwtService.generateToken(user.getUsername(), user.getRole().toString(), TokenType.BEARER.toString());
+        String refreshToken = jwtService.generateToken(user.getUsername(), user.getRole().toString(), TokenType.BEARER.toString());
+        return ApiResponse.<AuthResponse>builder()
+                .code(HttpStatus.CREATED)
+                .message(response.getMessage())
+                .data(new AuthResponse(accessToken, refreshToken))
+                .build();
     }
 
-    public UserDto registerAdmin(UserRegistrationRequest request) {
-        request.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
-        return userClient.registerAdmin(request);
+
+
+    public ApiResponse<AuthResponse> getToken(AuthRequest request) {
+        ApiResponse<UserDto> response = userClient.authenticate(request);
+        check(response);
+        String accessToken = jwtService.generateToken(response.getData().getUsername(), response.getData().getRole().toString(), "ACCESS_TOKEN");
+        String refreshToken = jwtService.generateToken(response.getData().getUsername(), response.getData().getRole().toString(), "REFRESH_TOKEN");
+        revokeAllUserTokens(response.getData().getId());
+        saveUserToken(response.getData().getId(), accessToken, refreshToken);
+        return ApiResponse.<AuthResponse>builder()
+                .code(response.getCode())
+                .message(response.getMessage())
+                .data(new AuthResponse(accessToken, refreshToken))
+                .build();
     }
 
-    public AuthResponse authenticate(UserV0 user) {
-        String accessToken = jwtService.generateToken(user.getUsername(), user.getRole(), "ACCESS_TOKEN");
-        String refreshToken = jwtService.generateToken(user.getUsername(), user.getRole(), "REFRESH_TOKEN");
-        revokeAllUserTokens(user.getId());
-        saveUserToken(user.getId(), accessToken, refreshToken);
-        return new AuthResponse(accessToken, refreshToken);
+    private static void check(ApiResponse<UserDto> response) {
+        if(response.getCode().equals(HttpStatus.BAD_REQUEST) || response.getData() == null){
+            throw new BaseException(response.getCode(), response.getMessage());
+        }
     }
 
     // todo: fix refresh token -- refresh token add on header
@@ -82,17 +92,19 @@ public class AuthService {
         username = jwtService.extractUsername(refreshToken);
         if (username != null) {
 
-            UserV0 userDto = userClient.getUserForAuth(username);
+            ApiResponse<UserDto> user = userClient.getByUsername(username);
+            check(user);
 //             check token match db
-            tokenRepository.findByRefreshToken(refreshToken)
-                    .orElseThrow(() -> new BaseException(HttpStatus.UNAUTHORIZED, "refreshToken invalid"));
+            if(!isTokenValid(refreshToken, "REFRESH_TOKEN")){
+                throw new BaseException(HttpStatus.UNAUTHORIZED,"Invalid refresh token");
+            }
 
-            String accessToken = jwtService.generateToken(userDto.getUsername(), userDto.getRole(), "ACCESS_TOKEN");
-            refreshToken = jwtService.generateToken(userDto.getUsername(), userDto.getRole(), "REFRESH_TOKEN");
+            String accessToken = jwtService.generateToken(user.getData().getUsername(), user.getData().getRole().toString(), "ACCESS_TOKEN");
+            refreshToken = jwtService.generateToken(user.getData().getUsername(), user.getData().getRole().toString(), "REFRESH_TOKEN");
             AuthResponse authResponse = new AuthResponse(accessToken, refreshToken);
 
-            revokeAllUserTokens(userDto.getId());
-            saveUserToken(userDto.getId(), accessToken, refreshToken);
+            revokeAllUserTokens(user.getData().getId());
+            saveUserToken(user.getData().getId(), accessToken, refreshToken);
             new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
         }
     }

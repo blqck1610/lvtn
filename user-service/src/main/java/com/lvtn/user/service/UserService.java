@@ -2,24 +2,27 @@ package com.lvtn.user.service;
 
 import com.lvtn.amqp.RabbitMQMessageProducer;
 import com.lvtn.clients.product.ProductClient;
-import com.lvtn.user.entity.Address;
 import com.lvtn.user.entity.User;
 import com.lvtn.user.rabbitmq.config.NotificationConfig;
 import com.lvtn.user.repository.AddressRepository;
 import com.lvtn.user.repository.UserRepository;
 import com.lvtn.utils.Provider;
+import com.lvtn.utils.dto.ApiResponse;
+import com.lvtn.utils.dto.authenticate.AuthRequest;
 import com.lvtn.utils.dto.notification.NotificationRequest;
 import com.lvtn.utils.dto.notification.NotificationType;
 import com.lvtn.utils.dto.user.*;
 import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,9 +39,13 @@ public class UserService {
     private final AddressRepository addressRepository;
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public UserV0 registerNewUser(UserRegistrationRequest request) {
+    public ApiResponse<UserDto> registerNewUser(UserRegistrationRequest request) {
         if (isUserExists(request.getUsername())) {
-            throw new BaseException(HttpStatus.BAD_REQUEST, "User already exists");
+            return ApiResponse.<UserDto>builder()
+                    .code(HttpStatus.BAD_REQUEST)
+                    .message("username already exists")
+                    .data(null)
+                    .build();
         }
         User user = User.builder()
                 .username(request.getUsername())
@@ -64,7 +71,11 @@ public class UserService {
                 notificationConfig.getInternalNotificationRoutingKey());
 
 
-        return mapper.fromUserToV0(user);
+        return ApiResponse.<UserDto>builder()
+                .code(HttpStatus.CREATED)
+                .message("created")
+                .data(mapper.fromUser(user))
+                .build();
     }
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
@@ -97,12 +108,20 @@ public class UserService {
         return mapper.fromUser(user);
     }
 
-    public UserDto findByUsername(String username) {
-        User user = userRepository.getByUsername(username);
-        if (user == null) {
-            throw new BaseException(HttpStatus.BAD_REQUEST, "user not found for username: " + username);
+    public ApiResponse<UserDto> getByUsername(String username) {
+        Optional<User> user = userRepository.getByUsername(username);
+        if (user.isEmpty()) {
+            return ApiResponse.<UserDto>builder()
+                    .code(HttpStatus.BAD_REQUEST)
+                    .message("user not found for username: " + username)
+                    .data(null)
+                    .build();
         }
-        return mapper.fromUser(user);
+        return ApiResponse.<UserDto>builder()
+                .code(HttpStatus.OK)
+                .message("ok")
+                .data(mapper.fromUser(user.get()))
+                .build();
     }
 
     public List<UserDto> findAll() {
@@ -116,22 +135,11 @@ public class UserService {
     }
 
     public Boolean isUserExists(String username) {
-        User user = userRepository.getByUsername(username);
-        return user != null;
+        return userRepository.getByUsername(username).isPresent();
+
     }
 
-    public UserV0 getUserForAuth(String username) {
-        User user = userRepository.getByUsername(username);
-        if (user == null) {
-            return null;
-        }
-        return UserV0.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .role(user.getRole().toString())
-                .build();
-    }
+
 
     public UserDto registerAdmin(UserRegistrationRequest request) {
         if (isUserExists(request.getUsername())) {
@@ -150,21 +158,31 @@ public class UserService {
 
     }
 
-    @Transactional(rollbackFor = {SQLException.class, Exception.class})
-    public AddressDto saveAddress(String username, AddressDto addressDto) {
-        // todo : implement add address
-        User user = userRepository.getByUsername(username);
-        Address address = userMapper.fromAddressDto(addressDto);
-        address.setUserId(user.getId());
-        addressRepository.save(address);
-        return addressDto;
 
-    }
 
-    public List<AddressDto> getAddress(String username) {
-        User user = userRepository.getByUsername(username);
-        return
-                addressRepository.findByUserId(user.getId()).stream().map(userMapper::fromAddress)
-                        .collect(Collectors.toList());
+
+
+    public ApiResponse<UserDto> authenticate(AuthRequest request) {
+        Optional<User> user = userRepository.getByUsername(request.getUsername());
+        if (user.isEmpty()) {
+            return ApiResponse.<UserDto>builder()
+                    .code(HttpStatus.BAD_REQUEST)
+                    .message("Username is not exist")
+                    .data(null)
+                    .build();
+        }
+        if(!BCrypt.checkpw( request.getPassword(),user.get().getPassword())){
+            return ApiResponse.<UserDto>builder()
+                    .code(HttpStatus.BAD_REQUEST)
+                    .message("Password is incorrect")
+                    .data(null)
+                    .build();
+        }
+        return  ApiResponse.<UserDto>builder()
+                .code(HttpStatus.OK)
+                .message("ok")
+                .data(mapper.fromUser(user.get()))
+                .build();
+
     }
 }

@@ -8,15 +8,16 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @Service
-public class RouterVallidator {
+public class RouterValidator {
 
-
-    List<String> openEnpoints = List.of(
+//use /.* instead of /*
+    List<String> openEndpoints = List.of(
 //            user
             "/api/v1/user/find-all",
 
 //            authentication
-            "/api/v1/user/test",
+            "/api/v1/auth/test",
+            "/api/v1/auth/testa/.*",
             "/api/v1/auth/register",
             "/api/v1/auth/authenticate",
 //order
@@ -28,15 +29,14 @@ public class RouterVallidator {
             "/api/v1/product/add-product",
             "/api/v1/product/search/.*",
             "/api/v1/product/category/.*",
-            "/api/v1/product/brand/*",
+            "/api/v1/product/brand/.*",
             "/api/v1/product/new-arrivals",
             "/api/v1/product/gender/.*",
             "/api/v1/product/review/get-review-by-id/.*"
 
     );
 
-//    check if the requested endpoint is secured or open to the world
     public Predicate<ServerHttpRequest> isSecured =
-            request -> openEnpoints.stream().noneMatch(uri -> request.getURI().getPath().matches(uri.replace("*",".*")));
+    request -> openEndpoints.stream().noneMatch(uri -> request.getURI().getPath().matches(uri));
 
 }

@@ -26,8 +26,8 @@ public interface AuthenticationClient {
     public String test();
 
     @GetMapping(value = "/is-token-valid")
-    public Boolean isTokenValid(@RequestParam(value = "token")  String token);
+    Boolean isTokenValid(@RequestParam(value = "token")  String token);
 
     @GetMapping(value = "/is-token-expired")
-    public Boolean isTokenExpired(@RequestParam(value = "token")  String token);
+    Boolean isTokenExpired(@RequestParam(value = "token")  String token);
 }

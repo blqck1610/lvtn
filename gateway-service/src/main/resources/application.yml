@@ -21,6 +21,7 @@ spring:
             allowedMethods:
               - GET
               - POST
+
 #  security:
 #    oauth2:
 #      resourceserver:

@@ -3,7 +3,6 @@ package com.lvtn.gateway.config;
 //import com.lvtn.clients.authentication.AuthenticationClient;
 
 import com.lvtn.clients.authentication.AuthenticationClient;
-import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -23,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthenticationFilter implements GatewayFilter {
 
-    private final RouterVallidator validator;
+    private final RouterValidator validator;
     private final AuthenticationClient authenticationClient;
 
     @Override
@@ -32,8 +31,8 @@ public class AuthenticationFilter implements GatewayFilter {
 
         if (validator.isSecured.test(request)) {
             if (authMissing(request)) {
-//                return onError(exchange, HttpStatus.UNAUTHORIZED);
-                throw new BaseException(HttpStatus.UNAUTHORIZED, "token missing");
+                return onError(exchange,"unauthenticated", HttpStatus.UNAUTHORIZED);
+//                throw new BaseException(HttpStatus.UNAUTHORIZED, "token missing");
             }
             String token = request.getHeaders().getOrEmpty("Authorization").getFirst();
 //            token = token.substring(7);
@@ -41,25 +40,25 @@ public class AuthenticationFilter implements GatewayFilter {
 
 
             if (!authenticationClient.isTokenValid(token)) {
-                throw new BaseException(HttpStatus.UNAUTHORIZED, "Invalid token");
+//                throw new BaseException(HttpStatus.UNAUTHORIZED, "Invalid token");
+                return onError(exchange,"invalid token", HttpStatus.UNAUTHORIZED);
             }
 //            todo: verify token
             if (authenticationClient.isTokenExpired(token)) {
-//                return onError(exchange, HttpStatus.UNAUTHORIZED);
-                throw new BaseException(HttpStatus.UNAUTHORIZED, "Expired token");
+                return onError(exchange,"expired token", HttpStatus.UNAUTHORIZED);
+//                throw new BaseException(HttpStatus.UNAUTHORIZED, "Expired token");
             }
 
             populateRequestWithHeaders(exchange, token);
 //            System.out.println(request.getHeaders());
         }
 
-        return chain.filter(exchange);
+        return chain.filter(exchange).onErrorResume(throwable -> onError(exchange, throwable.toString(), HttpStatus.UNAUTHORIZED));
     }
 
     private Mono<Void> onError(ServerWebExchange exchange, String message, HttpStatus httpStatus) {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
-
         return response.writeWith(Mono.just(response.bufferFactory().wrap(message.getBytes())));
 
     }
