@@ -7,6 +7,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,8 +19,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@Slf4j
 public class JwtService {
-    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
+
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
     @Value("${application.security.jwt.expiration}")
@@ -49,6 +51,7 @@ public class JwtService {
     // extract to specific claim
     public <T> T extractClaims(String Token, Function<Claims, T> claimsResolver) {
         Claims claims = extractAllClaims(Token);
+
 //        if(claims == null) return null;
         return claimsResolver.apply(claims);
     }
@@ -73,7 +76,6 @@ public class JwtService {
         if (tokenType.equals("ACCESS_TOKEN"))
             return buildToken(claims, accessTokenExpiration);
         else return buildToken(claims, refreshTokenExpiration);
-
     }
 
     private String buildToken(Map<String, String> claims, Long expiration) {

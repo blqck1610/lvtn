@@ -19,36 +19,36 @@ public class UserMapper {
 //                .address(user.getAddress())
                 .build();
     }
-    public UserV0 fromUserToV0(User user) {
-        return UserV0.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .role(user.getRole().toString())
-                .password(user.getPassword())
-                .build();
-    }
-
-    public AddressDto fromAddress(Address address) {
-        return AddressDto.builder()
-//                .userId(address.getUserId())
-                .id(address.getId())
-                .city(address.getCity())
-                .country(address.getCountry())
-                .firstName(address.getFirstName())
-                .lastName(address.getLastName())
-                .phoneNumber(address.getPhoneNumber())
-                .streetAddress(address.getStreetAddress())
-                .build();
-    }
-    public Address fromAddressDto(AddressDto address) {
-        return Address.builder()
-//                .userId(address.getUserId())
-                .city(address.getCity())
-                .country(address.getCountry())
-                .firstName(address.getFirstName())
-                .lastName(address.getLastName())
-                .phoneNumber(address.getPhoneNumber())
-                .streetAddress(address.getStreetAddress())
-                .build();
-    }
+//    public UserV0 fromUserToV0(User user) {
+//        return UserV0.builder()
+//                .id(user.getId())
+//                .username(user.getUsername())
+//                .role(user.getRole().toString())
+//                .password(user.getPassword())
+//                .build();
+//    }
+//
+//    public AddressDto fromAddress(Address address) {
+//        return AddressDto.builder()
+////                .userId(address.getUserId())
+//                .id(address.getId())
+//                .city(address.getCity())
+//                .country(address.getCountry())
+//                .firstName(address.getFirstName())
+//                .lastName(address.getLastName())
+//                .phoneNumber(address.getPhoneNumber())
+//                .streetAddress(address.getStreetAddress())
+//                .build();
+//    }
+//    public Address fromAddressDto(AddressDto address) {
+//        return Address.builder()
+////                .userId(address.getUserId())
+//                .city(address.getCity())
+//                .country(address.getCountry())
+//                .firstName(address.getFirstName())
+//                .lastName(address.getLastName())
+//                .phoneNumber(address.getPhoneNumber())
+//                .streetAddress(address.getStreetAddress())
+//                .build();
+//    }
 }

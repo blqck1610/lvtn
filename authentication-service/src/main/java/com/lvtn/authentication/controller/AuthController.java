@@ -38,7 +38,6 @@ public class AuthController {
         return authService.registerNewUser(request);
     }
 
-
     @PostMapping(value = "/authenticate")
     public ApiResponse<AuthResponse> getToken(@Valid @RequestBody AuthRequest request) {
         log.info("authenticated: {}", request.getUsername());
@@ -59,7 +58,6 @@ public class AuthController {
     public ResponseEntity<TokenDto> findTokenByAcessToken(String token) {
         return ResponseEntity.ok(authService.findTokenByToken(token, "ACCESS_TOKEN"));
     }
-
 
     @GetMapping(value = "/refresh-Token")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {

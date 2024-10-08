@@ -4,7 +4,6 @@ import com.lvtn.amqp.RabbitMQMessageProducer;
 import com.lvtn.clients.product.ProductClient;
 import com.lvtn.user.entity.User;
 import com.lvtn.user.rabbitmq.config.NotificationConfig;
-import com.lvtn.user.repository.AddressRepository;
 import com.lvtn.user.repository.UserRepository;
 import com.lvtn.utils.Provider;
 import com.lvtn.utils.dto.ApiResponse;
@@ -36,7 +35,7 @@ public class UserService {
 
     private final UserMapper mapper;
     private final UserMapper userMapper;
-    private final AddressRepository addressRepository;
+//    private final AddressRepository addressRepository;
 
     @Transactional(rollbackFor = {SQLException.class, Exception.class})
     public ApiResponse<UserDto> registerNewUser(UserRegistrationRequest request) {
