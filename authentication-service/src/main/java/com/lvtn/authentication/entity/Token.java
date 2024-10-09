@@ -23,14 +23,8 @@ public class Token {
     private Integer id;
     private String accessToken;
     private String refreshToken;
-
-
     @Enumerated(EnumType.STRING)
     private TokenType type;
-
-    private boolean isAccessExpired;
-    private boolean isRefreshExpired;
-
     private boolean isRevoked;
     private int userId;
 }

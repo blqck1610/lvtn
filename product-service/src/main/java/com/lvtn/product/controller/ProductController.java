@@ -51,7 +51,7 @@ public class ProductController {
         try {
             gender = Gender.valueOf(genderRaw.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new BaseException(HttpStatus.BAD_REQUEST, "Invalid gender");
+            throw new BaseException(HttpStatus.BAD_REQUEST, "invalid-gender");
         }
         Brand brand = brandRepository.findByName(brandName).orElse(null);
         Category categoryy = categoryRepository.findByName(category).orElse(null);

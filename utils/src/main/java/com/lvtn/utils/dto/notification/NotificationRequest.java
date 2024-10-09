@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,7 +16,7 @@ public class NotificationRequest {
 
     private String message;
     private String customerEmail;
-    private Integer customerId;
+    private UUID customerId;
     private NotificationType type;
 
 }

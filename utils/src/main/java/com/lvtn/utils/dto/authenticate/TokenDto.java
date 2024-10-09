@@ -22,7 +22,5 @@ import lombok.NoArgsConstructor;
 public class TokenDto {
     private String accessToken;
     private String refreshToken;
-    private boolean isAccessExpires;
-    private boolean isRefreshExpires;
     private boolean isRevoked;
 }

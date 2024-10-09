@@ -24,8 +24,6 @@ public class TokenMapper {
         return TokenDto.builder()
                 .refreshToken(token.getRefreshToken())
                 .accessToken(token.getAccessToken())
-                .isAccessExpires(token.isAccessExpired())
-                .isRefreshExpires(token.isRefreshExpired())
                 .isRevoked(token.isRevoked())
                 .build();
 

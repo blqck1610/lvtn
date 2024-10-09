@@ -2,7 +2,6 @@ package com.lvtn.user.service;
 
 
 import com.lvtn.user.entity.User;
-import com.lvtn.utils.dto.user.AddressDto;
 import com.lvtn.utils.dto.user.UserDto;
 import org.springframework.stereotype.Service;
 

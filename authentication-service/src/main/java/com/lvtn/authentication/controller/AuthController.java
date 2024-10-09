@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,36 +36,26 @@ public class AuthController {
     @PostMapping(value = "/register")
     public ApiResponse<AuthResponse> register(@Valid @RequestBody UserRegistrationRequest request) {
         log.info("register user {}", request);
-        return authService.registerNewUser(request);
+        return ApiResponse.<AuthResponse>builder()
+                .code(HttpStatus.CREATED)
+                .message("register new user successfully")
+                .data(authService.registerNewUser(request))
+                .build();
     }
 
     @PostMapping(value = "/authenticate")
     public ApiResponse<AuthResponse> getToken(@Valid @RequestBody AuthRequest request) {
         log.info("authenticated: {}", request.getUsername());
-        return authService.getToken(request);
+        return ApiResponse.<AuthResponse>builder()
+                .code(HttpStatus.OK)
+                .message("authenticated")
+                .data(authService.getToken(request))
+                .build();
     }
-
-    @GetMapping(value = "/secured")
-    public ResponseEntity<String> testSecured() {
-        return ResponseEntity.ok("ok--secured");
-    }
-
-    @GetMapping(value = "/test")
-    public String test() {
-        return "ok";
-    }
-
-    @GetMapping(value = "/find-token-by-access-token")
-    public ResponseEntity<TokenDto> findTokenByAcessToken(String token) {
-        return ResponseEntity.ok(authService.findTokenByToken(token, "ACCESS_TOKEN"));
-    }
-
     @GetMapping(value = "/refresh-Token")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         authService.refreshToken(request, response);
     }
-
     @GetMapping(value = "/extract-all-claims")
     public Map<String, Object> extractAllClaims(@RequestParam(value = "token")  String token){
         return (Map<String, Object>) new HashMap<String, Object>(jwtService.extractAllClaims(token));
@@ -73,11 +64,15 @@ public class AuthController {
     public Boolean isTokenValid(@RequestParam(value = "token")  String token, @RequestParam(value = "tokenType") String tokenType){
         return authService.isTokenValid(token, tokenType);
     }
-    
-    
     @GetMapping(value = "/is-token-expired")
     public Boolean isTokenExpired(@RequestParam(value = "token")  String token){
         return true;
     }
+
+    @GetMapping(value = "/test")
+    public String test() {
+        return "ok";
+    }
+
 
 }

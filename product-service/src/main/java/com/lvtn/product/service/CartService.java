@@ -44,7 +44,7 @@ public class CartService {
         else {
             Item item = itemRepository.saveAndFlush(Item.builder()
                     .product(productRepository.findById(productId).orElseThrow(
-                            () -> new BaseException(HttpStatus.BAD_REQUEST, "Product not found, id: " + productId)))
+                            () -> new BaseException(HttpStatus.BAD_REQUEST, "product-not-found")))
                     .quantity(quantity)
                     .cart(cart)
                     .build());
@@ -66,7 +66,7 @@ public class CartService {
     public String updateCart(String username, Integer productId, Integer quantity) {
         Item i = null;
         Cart cart = cartRepository.findByUsername(username).
-                orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "cart not found for username:" + username));
+                orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "cart-not-found"));
         for (Item item : cart.getItems()) {
             if (item.getProduct().getId() == productId) {
                 i = item;
@@ -108,7 +108,7 @@ public class CartService {
 
         return new ProductMapper().toCartResponse(
                 cartRepository.findByUsername(username).
-                        orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "cart not found for username:" + username)));
+                        orElseThrow(() -> new BaseException(HttpStatus.BAD_REQUEST, "cart-not-found")));
     }
 
 
