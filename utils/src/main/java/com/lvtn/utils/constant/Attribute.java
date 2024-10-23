@@ -15,4 +15,5 @@ public class Attribute {
     public static final String ID = "id";
     public static final String ROLE = "role";
     public static final String USERNAME = "username";
+    public static final String AUTHORIZATION = "Authorization";
 }
