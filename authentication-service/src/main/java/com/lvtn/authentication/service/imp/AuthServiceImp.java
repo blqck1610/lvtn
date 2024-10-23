@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,24 +45,18 @@ public class AuthServiceImp implements AuthService {
         return getAuthResponse(response);
     }
 
-    private AuthResponse getAuthResponse(ApiResponse<UserResponse> response) {
-        String accessToken = jwtService.generateToken(response.getData().getUsername(), response.getData().getRole().toString(), TokenType.ACCESS_TOKEN);
-        String refreshToken = jwtService.generateToken(response.getData().getUsername(), response.getData().getRole().toString(), TokenType.REFRESH_TOKEN);
-        revokeAllTokens(response.getData().getId());
-        saveToken(response.getData().getId(), accessToken, refreshToken);
-        return new AuthResponse(accessToken, refreshToken);
-    }
-
-    private void check(ApiResponse<UserResponse> response) {
-        if (ObjectUtils.isEmpty(response.getData())) {
-            throw new BaseException(response.getCode(), response.getMessage());
-        }
+    @Override
+    public Boolean isTokenValid(String token, TokenType tokenType) {
+        Optional<Token> t;
+        if (tokenType.equals(TokenType.ACCESS_TOKEN)) {
+            t = tokenRepository.findByAccessToken(token);
+        } else t = tokenRepository.findByRefreshToken(token);
+        return t.isPresent() && !t.get().isRevoked();
     }
 
     @Override
     @Transactional
-    public AuthResponse refreshToken(HttpServletRequest request)
-            throws IOException {
+    public AuthResponse refreshToken(HttpServletRequest request) {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String refreshToken;
         String username;
@@ -84,6 +77,12 @@ public class AuthServiceImp implements AuthService {
         return getAuthResponse(userResponse);
     }
 
+    private void check(ApiResponse<UserResponse> response) {
+        if (ObjectUtils.isEmpty(response.getData())) {
+            throw new BaseException(response.getCode(), response.getMessage());
+        }
+    }
+
     private void revokeAllTokens(UUID userId) {
         List<Token> validTokens = tokenRepository.findAllValidTokensByUser(userId);
         if (validTokens.isEmpty()) {
@@ -91,7 +90,6 @@ public class AuthServiceImp implements AuthService {
         }
         validTokens.forEach(token -> token.setRevoked(true));
         tokenRepository.saveAll(validTokens);
-
     }
 
     private void saveToken(UUID userId, String accessToken, String refreshToken) {
@@ -105,12 +103,12 @@ public class AuthServiceImp implements AuthService {
         tokenRepository.save(token);
     }
 
-    @Override
-    public Boolean isTokenValid(String token, TokenType tokenType) {
-        Optional<Token> t;
-        if (tokenType.equals(TokenType.ACCESS_TOKEN)) {
-            t = tokenRepository.findByAccessToken(token);
-        } else t = tokenRepository.findByRefreshToken(token);
-        return t.isPresent() && !t.get().isRevoked();
+
+    private AuthResponse getAuthResponse(ApiResponse<UserResponse> response) {
+        String accessToken = jwtService.generateToken(response.getData().getUsername(), response.getData().getRole().toString(), TokenType.ACCESS_TOKEN);
+        String refreshToken = jwtService.generateToken(response.getData().getUsername(), response.getData().getRole().toString(), TokenType.REFRESH_TOKEN);
+        revokeAllTokens(response.getData().getId());
+        saveToken(response.getData().getId(), accessToken, refreshToken);
+        return new AuthResponse(accessToken, refreshToken);
     }
 }

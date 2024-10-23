@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import static com.lvtn.utils.constant.ApiEndpoint.*;
+
 /**
  * InternalController
  * Version 1.0
@@ -20,13 +22,13 @@ import org.springframework.web.bind.annotation.*;
  * 03/10/2024        NGUYEN             create
  */
 @RestController
-@RequestMapping(value = "/api/v1/internal/user")
+@RequestMapping(value = BASE_API + INTERNAL + USER)
 @Slf4j
 @RequiredArgsConstructor
 public class InternalController {
     private final UserService userService;
 
-    @PostMapping(value = "/authenticate")
+    @PostMapping(value = AUTHENTICATE)
     public ApiResponse<UserResponse> authenticate(@RequestBody AuthRequest request) {
         return userService.authenticate(request);
     }
@@ -36,7 +38,7 @@ public class InternalController {
         return userService.register(request);
     }
 
-    @GetMapping(value = "/get-by-username")
+    @GetMapping(value = GET_BY_USERNAME)
     public ApiResponse<UserResponse> findByUsername(@RequestParam String username) {
         return userService.getByUsername(username);
     }

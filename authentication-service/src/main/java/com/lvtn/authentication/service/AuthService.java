@@ -17,8 +17,7 @@ public interface AuthService {
     AuthResponse getToken(AuthRequest request);
 
     @Transactional
-    AuthResponse refreshToken(HttpServletRequest request)
-            throws IOException;
+    AuthResponse refreshToken(HttpServletRequest request);
 
     Boolean isTokenValid(String token, TokenType tokenType);
 }
