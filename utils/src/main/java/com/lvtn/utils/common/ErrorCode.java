@@ -1,4 +1,4 @@
-package com.lvtn.utils;
+package com.lvtn.utils.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,10 +12,7 @@ public enum ErrorCode {
     USER_ALREADY_EXIST(400, "user-already-exist", HttpStatus.BAD_REQUEST),
     TOKEN_INVALID(403, "token-invalid", HttpStatus.FORBIDDEN),
     TOKEN_EXPIRED(401, "token-expired", HttpStatus.UNAUTHORIZED)
-
     ;
-
-
     private final int code;
     private final String message;
     private final HttpStatus status;

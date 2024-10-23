@@ -1,4 +1,4 @@
-package com.lvtn.utils.dto.authenticate;
+package com.lvtn.utils.dto.response.authenticate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +22,4 @@ import lombok.NoArgsConstructor;
 public class TokenDto {
     private String accessToken;
     private String refreshToken;
-    private boolean isRevoked;
 }

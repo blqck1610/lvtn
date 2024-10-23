@@ -35,8 +35,6 @@ public class NotificationService {
         emailDetails.setSubject("Customer created");
         emailService.sendSimpleEmail(emailDetails);
 
-
-
     }
 
     public void test(){

@@ -1,4 +1,4 @@
-package com.lvtn.utils.dto.authenticate;
+package com.lvtn.utils.dto.response.authenticate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

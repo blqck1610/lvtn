@@ -2,15 +2,15 @@ package com.lvtn.user.service;
 
 
 import com.lvtn.user.entity.User;
-import com.lvtn.utils.dto.user.UserDto;
+import com.lvtn.utils.dto.response.user.UserResponse;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserMapper {
 
 
-    public UserDto fromUser(User user) {
-        return UserDto.builder()
+    public UserResponse fromUser(User user) {
+        return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())

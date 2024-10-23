@@ -1,17 +1,18 @@
 package com.lvtn.user.service;
 
 import com.lvtn.utils.dto.ApiResponse;
-import com.lvtn.utils.dto.authenticate.AuthRequest;
-import com.lvtn.utils.dto.user.UserDto;
-import com.lvtn.utils.dto.user.UserRegistrationRequest;
+import com.lvtn.utils.dto.request.authenticate.AuthRequest;
+import com.lvtn.utils.dto.response.user.UserResponse;
+import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService {
 
-    ApiResponse<UserDto> authenticate(AuthRequest request);
+    ApiResponse<UserResponse> authenticate(AuthRequest request);
 
-    ApiResponse<UserDto> registerNewUser(UserRegistrationRequest request);
+    ApiResponse<UserResponse> register(RegisterRequest request);
 
-    ApiResponse<UserDto> getByUsername(String username);
+    ApiResponse<UserResponse> getByUsername(String username);
+
 }

@@ -2,30 +2,29 @@ package com.lvtn.authentication.controller;
 
 
 import com.lvtn.authentication.service.AuthService;
-import com.lvtn.authentication.service.JwtService;
+import com.lvtn.authentication.service.imp.JwtService;
 import com.lvtn.clients.user.UserClient;
-
+import com.lvtn.utils.common.SuccessMessage;
 import com.lvtn.utils.dto.ApiResponse;
-import com.lvtn.utils.dto.authenticate.AuthRequest;
-import com.lvtn.utils.dto.authenticate.AuthResponse;
-import com.lvtn.utils.dto.authenticate.TokenDto;
-import com.lvtn.utils.dto.user.UserRegistrationRequest;
-
+import com.lvtn.utils.dto.request.authenticate.AuthRequest;
+import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
+import com.lvtn.utils.dto.response.authenticate.AuthResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.lvtn.utils.constant.ApiEndpoint.*;
+
 @RestController
-@RequestMapping(value = "/api/v1/auth")
+@RequestMapping(value = BASE_API + AUTH)
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
@@ -33,46 +32,32 @@ public class AuthController {
     private final UserClient userClient;
     private final JwtService jwtService;
 
-    @PostMapping(value = "/register")
-    public ApiResponse<AuthResponse> register(@Valid @RequestBody UserRegistrationRequest request) {
-        log.info("register user {}", request);
+    @PostMapping(value = REGISTER)
+    public ApiResponse<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+        authService.register(request);
         return ApiResponse.<AuthResponse>builder()
-                .code(HttpStatus.CREATED)
-                .message("register new user successfully")
-                .data(authService.registerNewUser(request))
+                .code(HttpStatus.CREATED.value())
+                .message(SuccessMessage.CREATED_SUCCESS.getMessage())
+                .data(null)
                 .build();
     }
 
-    @PostMapping(value = "/authenticate")
+    @PostMapping(value = AUTHENTICATE)
     public ApiResponse<AuthResponse> getToken(@Valid @RequestBody AuthRequest request) {
-        log.info("authenticated: {}", request.getUsername());
         return ApiResponse.<AuthResponse>builder()
-                .code(HttpStatus.OK)
-                .message("authenticated")
+                .code(HttpStatus.OK.value())
+                .message(SuccessMessage.AUTHENTICATE_SUCCESS.getMessage())
                 .data(authService.getToken(request))
                 .build();
     }
-    @GetMapping(value = "/refresh-Token")
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        authService.refreshToken(request, response);
-    }
-    @GetMapping(value = "/extract-all-claims")
-    public Map<String, Object> extractAllClaims(@RequestParam(value = "token")  String token){
+
+//    @PostMapping(value = REFRESH_TOKEN)
+//    public ApiResponse<AuthResponse> refreshToken(HttpServletRequest request) throws IOException {
+//        return ApiResponse.
+//    }
+
+    @GetMapping(value = EXTRACT_ALL_CLAIMS)
+    public Map<String, Object> extractAllClaims(@RequestParam(value = "token") String token) {
         return (Map<String, Object>) new HashMap<String, Object>(jwtService.extractAllClaims(token));
     }
-    @GetMapping(value = "/is-token-valid")
-    public Boolean isTokenValid(@RequestParam(value = "token")  String token, @RequestParam(value = "tokenType") String tokenType){
-        return authService.isTokenValid(token, tokenType);
-    }
-    @GetMapping(value = "/is-token-expired")
-    public Boolean isTokenExpired(@RequestParam(value = "token")  String token){
-        return true;
-    }
-
-    @GetMapping(value = "/test")
-    public String test() {
-        return "ok";
-    }
-
-
 }

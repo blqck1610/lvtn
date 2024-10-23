@@ -1,15 +1,12 @@
 package com.lvtn.user.controller;
 
 import com.lvtn.user.service.UserService;
-import com.lvtn.utils.ErrorCode;
 import com.lvtn.utils.dto.ApiResponse;
-import com.lvtn.utils.dto.authenticate.AuthRequest;
-import com.lvtn.utils.dto.user.UserDto;
-import com.lvtn.utils.dto.user.UserRegistrationRequest;
-import jakarta.validation.Valid;
+import com.lvtn.utils.dto.request.authenticate.AuthRequest;
+import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
+import com.lvtn.utils.dto.response.user.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -30,21 +27,17 @@ public class InternalController {
     private final UserService userService;
 
     @PostMapping(value = "/authenticate")
-    public ApiResponse<UserDto> authenticate(@RequestBody AuthRequest request) {
-
-        return new ApiResponse<>(HttpStatus.OK, userService.authenticate(request));
+    public ApiResponse<UserResponse> authenticate(@RequestBody AuthRequest request) {
+        return userService.authenticate(request);
     }
 
-    @PostMapping(value = "/create-new-user")
-    public ApiResponse<UserDto> register(@RequestBody @Valid UserRegistrationRequest request) {
-        return new ApiResponse<>(HttpStatus.OK, "register new user successfully", userService.registerNewUser(request));
+    @PostMapping
+    public ApiResponse<UserResponse> register(@RequestBody RegisterRequest request) {
+        return userService.register(request);
     }
 
     @GetMapping(value = "/get-by-username")
-    public ApiResponse<UserDto> findByUsername(@RequestParam(value = "username") String username) {
-
-        return new ApiResponse<>(HttpStatus.OK, "OK", userService.getByUsername(username));
+    public ApiResponse<UserResponse> findByUsername(@RequestParam String username) {
+        return userService.getByUsername(username);
     }
-
-
 }

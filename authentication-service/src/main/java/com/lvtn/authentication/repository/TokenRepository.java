@@ -7,11 +7,12 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface TokenRepository extends JpaRepository<Token, Integer> {
 
     @Query("SELECT t FROM Token t WHERE t.userId = :userId AND  t.isRevoked = false ")
-    List<Token> findAllValidTokensByUser(@Param("userId") Integer userId);
+    List<Token> findAllValidTokensByUser(@Param("userId") UUID userId);
 
     Optional<Token> findByAccessToken(String token);
 

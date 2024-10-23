@@ -1,10 +1,8 @@
-package com.lvtn.authentication.service;
+package com.lvtn.authentication.service.imp;
 
 import com.lvtn.authentication.entity.Token;
-import com.lvtn.utils.dto.authenticate.TokenDto;
+import com.lvtn.utils.dto.response.authenticate.TokenDto;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**

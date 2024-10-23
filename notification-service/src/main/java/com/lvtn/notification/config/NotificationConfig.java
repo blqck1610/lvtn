@@ -18,8 +18,6 @@ public class NotificationConfig {
     private String notificationQueue;
     @Value("${rabbitmq.routing-keys.internal-notification}")
     private String internalNotificationRoutingKey;
-
-
     @Value("${rabbitmq.queue.order}")
     private String orderQueue;
     @Value("${rabbitmq.routing-keys.internal-order}")

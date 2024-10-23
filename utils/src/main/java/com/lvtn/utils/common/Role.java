@@ -1,4 +1,4 @@
-package com.lvtn.utils.dto.user;
+package com.lvtn.utils.common;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

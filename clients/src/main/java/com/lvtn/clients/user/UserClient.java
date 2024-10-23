@@ -2,24 +2,22 @@ package com.lvtn.clients.user;
 
 
 import com.lvtn.utils.dto.ApiResponse;
-import com.lvtn.utils.dto.authenticate.AuthRequest;
-import com.lvtn.utils.dto.user.UserDto;
-import com.lvtn.utils.dto.user.UserRegistrationRequest;
+import com.lvtn.utils.dto.request.authenticate.AuthRequest;
+import com.lvtn.utils.dto.response.user.UserResponse;
+import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @FeignClient(value = "USER-SERVICE", path = "/api/v1/internal/user")
 public interface UserClient {
 
-    @PostMapping(value = "/create-new-user")
-    public ApiResponse<UserDto> register(@RequestBody @Valid UserRegistrationRequest request);
-
-    @GetMapping(value = "/get-by-username")
-    public ApiResponse<UserDto> getByUsername(@RequestParam(value = "username") String username);
+    @PostMapping
+    public ApiResponse<UserResponse> register(@RequestBody @Valid RegisterRequest request);
 
     @PostMapping(value = "/authenticate")
-    public ApiResponse<UserDto> authenticate(@RequestBody AuthRequest request);
+    public ApiResponse<UserResponse> authenticate(@RequestBody AuthRequest request);
 
+    @GetMapping(value = "/get-by-username")
+    ApiResponse<UserResponse> getByUsername(@RequestParam String username);
 }

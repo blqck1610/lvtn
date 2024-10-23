@@ -1,9 +1,9 @@
 package com.lvtn.order.entity;
 
 
-import com.lvtn.utils.OrderStatus;
-import com.lvtn.utils.PaymentMethod;
-import com.lvtn.utils.PaymentStatus;
+import com.lvtn.utils.common.OrderStatus;
+import com.lvtn.utils.common.PaymentMethod;
+import com.lvtn.utils.common.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

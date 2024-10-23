@@ -1,7 +1,6 @@
 package com.lvtn.user.entity;
 
-import com.lvtn.utils.Provider;
-import com.lvtn.utils.dto.user.Role;
+import com.lvtn.utils.common.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +12,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 @Data
