@@ -14,7 +14,9 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
     @Query("SELECT t FROM Token t WHERE t.userId = :userId AND  t.isRevoked = false ")
     List<Token> findAllValidTokensByUser(@Param("userId") UUID userId);
 
-    Optional<Token> findByAccessToken(String token);
+    @Query("SELECT t FROM Token t WHERE t.accessToken = :token AND t.isRevoked != true ")
+    Optional<Token> findByAccessToken(@Param("token") String token);
 
-    Optional<Token> findByRefreshToken(String refreshToken);
+    @Query("SELECT t FROM Token t WHERE t.refreshToken = :token AND t.isRevoked != true ")
+    Optional<Token> findByRefreshToken(@Param("token") String refreshToken);
 }

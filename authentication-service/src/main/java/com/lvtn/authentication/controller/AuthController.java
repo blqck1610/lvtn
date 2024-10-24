@@ -53,9 +53,4 @@ public class AuthController {
                 .build();
     }
 
-
-//    @GetMapping(value = EXTRACT_ALL_CLAIMS)
-//    public Map<String, Object> extractAllClaims(@RequestParam(value = "token") String token) {
-//        return (Map<String, Object>) new HashMap<String, Object>(jwtService.extractAllClaims(token));
-//    }
 }
