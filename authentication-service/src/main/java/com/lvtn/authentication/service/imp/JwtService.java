@@ -70,7 +70,7 @@ public class JwtService {
 
     public String generateToken(String username, String role, TokenType tokenType) {
         Map<String, String> claims = Map.of(
-                Attribute.EMAIL, username, Attribute.ROLE, role
+                Attribute.USERNAME, username, Attribute.ROLE, role
         );
         if (tokenType.equals(TokenType.ACCESS_TOKEN))
             return buildToken(claims, accessTokenExpiration);

@@ -7,13 +7,13 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
-    USER_NOT_FOUND(400, "user-not-found", HttpStatus.BAD_REQUEST),
-    WRONG_PASSWORD(400, "wrong-password", HttpStatus.BAD_REQUEST),
-    USER_ALREADY_EXIST(400, "user-already-exist", HttpStatus.BAD_REQUEST),
-    TOKEN_INVALID(403, "token-invalid", HttpStatus.FORBIDDEN),
-    TOKEN_EXPIRED(401, "token-expired", HttpStatus.UNAUTHORIZED)
-    ;
+    USER_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "user-not-found"),
+    WRONG_PASSWORD(HttpStatus.BAD_REQUEST.value(), "wrong-password"),
+    USER_ALREADY_EXIST(400, "user-already-exist"),
+    TOKEN_INVALID(HttpStatus.FORBIDDEN.value(), "token-invalid"),
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED.value(), "token-expired"),
+    DIRECTION_NOT_CORRECT(HttpStatus.BAD_REQUEST.value(), "direction-not-found");
+
     private final int code;
     private final String message;
-    private final HttpStatus status;
 }

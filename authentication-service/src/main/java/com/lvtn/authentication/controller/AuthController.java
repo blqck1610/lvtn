@@ -5,6 +5,7 @@ import com.lvtn.authentication.service.AuthService;
 import com.lvtn.utils.common.SuccessMessage;
 import com.lvtn.utils.dto.ApiResponse;
 import com.lvtn.utils.dto.request.authenticate.AuthRequest;
+import com.lvtn.utils.dto.request.authenticate.RefreshTokenRequest;
 import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
 import com.lvtn.utils.dto.response.authenticate.AuthResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,14 +41,14 @@ public class AuthController {
     }
 
     @PostMapping(value = REFRESH_TOKEN)
-    public ApiResponse<AuthResponse> refreshToken(HttpServletRequest request) throws IOException {
+    public ApiResponse<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request) throws IOException {
         return getApiResponse(HttpStatus.OK.value(), SuccessMessage.OK.getMessage(), authService.refreshToken(request));
     }
 
     private <T> ApiResponse<T> getApiResponse(int code, String message, T data) {
         return ApiResponse.<T>builder()
-                .code(HttpStatus.OK.value())
-                .message(SuccessMessage.AUTHENTICATE_SUCCESS.getMessage())
+                .code(code)
+                .message(message)
                 .data(data)
                 .build();
     }

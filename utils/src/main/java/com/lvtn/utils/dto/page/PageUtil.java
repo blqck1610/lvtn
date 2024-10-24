@@ -1,8 +1,8 @@
 package com.lvtn.utils.dto.page;
 
-import com.tma.demo.common.ErrorCode;
-import com.tma.demo.constant.CommonConstant;
-import com.tma.demo.exception.BaseException;
+import com.lvtn.utils.common.ErrorCode;
+import com.lvtn.utils.constant.Common;
+import com.lvtn.utils.exception.BaseException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,13 +30,12 @@ public class PageUtil {
 
     public static List<Sort.Order> getOrderList(String[] sort) {
         List<Sort.Order> orders = new ArrayList<>();
-        if(sort[0].contains(CommonConstant.COMMA)){
+        if (sort[0].contains(Common.COMMA)) {
             for (String sortOrder : sort) {
-                String[] _sort = sortOrder.split(CommonConstant.COMMA);
+                String[] _sort = sortOrder.split(Common.COMMA);
                 orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
             }
-        }
-        else orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
+        } else orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
         return orders;
     }
 
@@ -45,7 +44,7 @@ public class PageUtil {
         try {
             direction = Sort.Direction.fromString(s);
         } catch (Exception e) {
-            throw new BaseException(ErrorCode.DIRECTION_INVALID);
+            throw new BaseException(ErrorCode.DIRECTION_NOT_CORRECT.getCode(), ErrorCode.DIRECTION_NOT_CORRECT.getMessage());
         }
         return direction;
     }

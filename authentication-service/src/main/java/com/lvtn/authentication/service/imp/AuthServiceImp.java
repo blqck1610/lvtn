@@ -8,14 +8,13 @@ import com.lvtn.clients.user.UserClient;
 import com.lvtn.utils.common.ErrorCode;
 import com.lvtn.utils.dto.ApiResponse;
 import com.lvtn.utils.dto.request.authenticate.AuthRequest;
+import com.lvtn.utils.dto.request.authenticate.RefreshTokenRequest;
 import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
 import com.lvtn.utils.dto.response.authenticate.AuthResponse;
 import com.lvtn.utils.dto.response.user.UserResponse;
 import com.lvtn.utils.exception.BaseException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -56,14 +55,9 @@ public class AuthServiceImp implements AuthService {
 
     @Override
     @Transactional
-    public AuthResponse refreshToken(HttpServletRequest request) {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String refreshToken;
+    public AuthResponse refreshToken(RefreshTokenRequest request) {
         String username;
-        if (ObjectUtils.isEmpty(authHeader)) {
-            throw new BaseException(ErrorCode.TOKEN_INVALID.getCode(), ErrorCode.TOKEN_INVALID.getMessage());
-        }
-        refreshToken = authHeader.substring(7);
+        String refreshToken = request.getToken();
         try {
             username = jwtService.extractUsername(refreshToken);
         } catch (Exception e) {

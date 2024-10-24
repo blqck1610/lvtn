@@ -16,7 +16,7 @@ public class ApiEndpoint {
 
     //    User
     public static final String USER = "/user";
-    public static final String GET_BY_USERNAME = "/get-by-username";
+    public static final String GET_BY_USERNAME = "/get-by-username/{username}";
 
     //    auth
     public static final String AUTH = "/auth";

@@ -104,6 +104,7 @@ public class UserServiceImp implements UserService {
             return getApiResponse(ErrorCode.USER_ALREADY_EXIST.getCode(), ErrorCode.USER_ALREADY_EXIST.getMessage(), null);
         }
         User user = User.builder()
+                .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())
                 .role(Role.USER)

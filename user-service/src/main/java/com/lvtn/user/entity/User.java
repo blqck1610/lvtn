@@ -1,6 +1,7 @@
 package com.lvtn.user.entity;
 
 import com.lvtn.utils.common.Role;
+import com.lvtn.utils.constant.TableName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,12 +20,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = TableName.USER)
 @EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    private String username;
     private String email;
     private String firstName;
     private String lastName;

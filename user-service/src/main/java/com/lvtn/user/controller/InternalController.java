@@ -1,6 +1,7 @@
 package com.lvtn.user.controller;
 
 import com.lvtn.user.service.UserService;
+import com.lvtn.utils.constant.Attribute;
 import com.lvtn.utils.dto.ApiResponse;
 import com.lvtn.utils.dto.request.authenticate.AuthRequest;
 import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
@@ -39,7 +40,7 @@ public class InternalController {
     }
 
     @GetMapping(value = GET_BY_USERNAME)
-    public ApiResponse<UserResponse> findByUsername(@RequestParam String username) {
+    public ApiResponse<UserResponse> findByUsername(@PathVariable(Attribute.USERNAME) String username) {
         return userService.getByUsername(username);
     }
 }

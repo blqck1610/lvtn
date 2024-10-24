@@ -22,7 +22,6 @@ public class TokenMapper {
         return TokenDto.builder()
                 .refreshToken(token.getRefreshToken())
                 .accessToken(token.getAccessToken())
-                .isRevoked(token.isRevoked())
                 .build();
 
     }

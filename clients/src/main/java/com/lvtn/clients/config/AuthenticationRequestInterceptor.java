@@ -34,13 +34,4 @@ public class AuthenticationRequestInterceptor implements RequestInterceptor {
         }
     }
 }
-//import org.springframework.cloud.openfeign.EnableFeignClients;
-//import org.springframework.context.annotation.Bean;
-//
-//@EnableFeignClients
-//public class FeignConfig {
-//
-//    @Bean
-//    public RequestInterceptor authenticationRequestInterceptor() {
-//        return new AuthenticationRequestInterceptor();
-//
+
