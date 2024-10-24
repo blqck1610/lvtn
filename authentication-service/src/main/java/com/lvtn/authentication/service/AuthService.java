@@ -14,4 +14,6 @@ public interface AuthService {
     AuthResponse refreshToken(RefreshTokenRequest request);
 
     Boolean isTokenValid(String token, TokenType tokenType);
+
+    void revokeAllTokens(String userId);
 }

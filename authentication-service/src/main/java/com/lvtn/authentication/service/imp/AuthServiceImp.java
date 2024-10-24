@@ -55,6 +55,17 @@ public class AuthServiceImp implements AuthService {
 
     @Override
     @Transactional
+    public void revokeAllTokens(String userId) {
+        List<Token> validTokens = tokenRepository.findAllValidTokensByUser(UUID.fromString(userId));
+        if (validTokens.isEmpty()) {
+            return;
+        }
+        validTokens.forEach(token -> token.setRevoked(true));
+        tokenRepository.saveAll(validTokens);
+    }
+
+    @Override
+    @Transactional
     public AuthResponse refreshToken(RefreshTokenRequest request) {
         String username;
         String refreshToken = request.getToken();
@@ -75,15 +86,6 @@ public class AuthServiceImp implements AuthService {
         if (ObjectUtils.isEmpty(response.getData())) {
             throw new BaseException(response.getCode(), response.getMessage());
         }
-    }
-
-    private void revokeAllTokens(UUID userId) {
-        List<Token> validTokens = tokenRepository.findAllValidTokensByUser(userId);
-        if (validTokens.isEmpty()) {
-            return;
-        }
-        validTokens.forEach(token -> token.setRevoked(true));
-        tokenRepository.saveAll(validTokens);
     }
 
     private void saveToken(UUID userId, String accessToken, String refreshToken) {

@@ -45,7 +45,4 @@ public class AuthController {
     public ApiResponse<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request) throws IOException {
         return getApiResponse(HttpStatus.OK.value(), SuccessMessage.OK.getMessage(), authService.refreshToken(request));
     }
-
-
-
 }

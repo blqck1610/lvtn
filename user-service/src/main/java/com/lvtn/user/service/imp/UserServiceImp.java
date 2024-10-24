@@ -1,6 +1,7 @@
 package com.lvtn.user.service.imp;
 
 import com.lvtn.amqp.RabbitMQMessageProducer;
+import com.lvtn.clients.authentication.AuthenticationClient;
 import com.lvtn.user.entity.User;
 import com.lvtn.user.rabbitmq.config.NotificationConfig;
 import com.lvtn.user.repository.UserRepository;
@@ -14,6 +15,7 @@ import com.lvtn.utils.dto.notification.NotificationRequest;
 import com.lvtn.utils.dto.notification.NotificationType;
 import com.lvtn.utils.dto.request.authenticate.AuthRequest;
 import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
+import com.lvtn.utils.dto.request.user.UpdatePasswordRequest;
 import com.lvtn.utils.dto.request.user.UpdateUserRequest;
 import com.lvtn.utils.dto.response.user.UserResponse;
 import com.lvtn.utils.exception.BaseException;
@@ -38,6 +40,7 @@ public class UserServiceImp implements UserService {
     private final RabbitMQMessageProducer producer;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper mapper;
+    private final AuthenticationClient authenticationClient;
 
     @Override
     public UserResponse getUserResponse() {
@@ -55,6 +58,24 @@ public class UserServiceImp implements UserService {
         user = userRepository.saveAndFlush(user);
         System.out.println(user);
         return mapper.fromUser(user);
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(UpdatePasswordRequest request) {
+        User user = getUser();
+        if(!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())){
+            throw new BaseException(ErrorCode.WRONG_PASSWORD.getCode(), ErrorCode.WRONG_PASSWORD.getMessage());
+        }
+        if(request.getCurrentPassword().equals(request.getNewPassword())){
+            throw new BaseException(ErrorCode.NEW_PASSWORD_EQUALS_CURRENT_PASSWORD.getCode(), ErrorCode.NEW_PASSWORD_EQUALS_CURRENT_PASSWORD.getMessage());
+        }
+        if(!request.getConfirmNewPassword().equals(request.getNewPassword())){
+            throw new BaseException(ErrorCode.CONFIRM_PASSWORD_NOT_MATCH.getCode(), ErrorCode.CONFIRM_PASSWORD_NOT_MATCH.getMessage());
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        authenticationClient.revokeAllTokens(user.getId().toString());
     }
 
     @Override

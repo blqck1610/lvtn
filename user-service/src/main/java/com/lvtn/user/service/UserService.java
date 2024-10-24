@@ -2,6 +2,7 @@ package com.lvtn.user.service;
 
 import com.lvtn.utils.dto.ApiResponse;
 import com.lvtn.utils.dto.request.authenticate.AuthRequest;
+import com.lvtn.utils.dto.request.user.UpdatePasswordRequest;
 import com.lvtn.utils.dto.request.user.UpdateUserRequest;
 import com.lvtn.utils.dto.response.user.UserResponse;
 import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
@@ -23,4 +24,6 @@ public interface UserService {
     UserResponse getUserResponse();
 
     UserResponse update(UpdateUserRequest request);
+
+    void changePassword(UpdatePasswordRequest request);
 }
