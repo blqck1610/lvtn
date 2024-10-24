@@ -13,7 +13,8 @@ public enum SuccessMessage {
     GET_SUCCESS("get-data-successful"),
     DELETE_SUCCESS("delete-data-successful"),
     AUTHENTICATE_SUCCESS("authenticate-success"),
-    OK("ok");
+    OK("ok"),
+    ;
     private final String message;
 
 }

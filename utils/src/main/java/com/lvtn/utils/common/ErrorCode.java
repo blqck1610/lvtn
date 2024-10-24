@@ -12,7 +12,8 @@ public enum ErrorCode {
     USER_ALREADY_EXIST(400, "user-already-exist"),
     TOKEN_INVALID(HttpStatus.FORBIDDEN.value(), "token-invalid"),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED.value(), "token-expired"),
-    DIRECTION_NOT_CORRECT(HttpStatus.BAD_REQUEST.value(), "direction-not-found");
+    DIRECTION_NOT_CORRECT(HttpStatus.BAD_REQUEST.value(), "direction-not-found"),
+    UNAUTHENTICATED(HttpStatus.UNAUTHORIZED.value(), "unauthenticated"),;
 
     private final int code;
     private final String message;

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 import static com.lvtn.utils.constant.ApiEndpoint.*;
+import static com.lvtn.utils.util.ResponseUtil.getApiResponse;
 
 @RestController
 @RequestMapping(value = BASE_API + AUTH)
@@ -45,12 +46,6 @@ public class AuthController {
         return getApiResponse(HttpStatus.OK.value(), SuccessMessage.OK.getMessage(), authService.refreshToken(request));
     }
 
-    private <T> ApiResponse<T> getApiResponse(int code, String message, T data) {
-        return ApiResponse.<T>builder()
-                .code(code)
-                .message(message)
-                .data(data)
-                .build();
-    }
+
 
 }

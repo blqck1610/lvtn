@@ -34,6 +34,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     private Date dateOfBirth;
+    private String avatarUrl;
     private boolean isDelete;
     @CreatedDate
     private LocalDateTime creatAt;

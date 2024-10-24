@@ -1,7 +1,6 @@
 package com.lvtn.user.service.imp;
 
 import com.lvtn.amqp.RabbitMQMessageProducer;
-import com.lvtn.clients.product.ProductClient;
 import com.lvtn.user.entity.User;
 import com.lvtn.user.rabbitmq.config.NotificationConfig;
 import com.lvtn.user.repository.UserRepository;
@@ -17,59 +16,71 @@ import com.lvtn.utils.dto.request.authenticate.AuthRequest;
 import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
 import com.lvtn.utils.dto.request.user.UpdateUserRequest;
 import com.lvtn.utils.dto.response.user.UserResponse;
+import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static com.lvtn.utils.util.ResponseUtil.getApiResponse;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImp implements UserService {
-
     private final UserRepository userRepository;
     private final NotificationConfig notificationConfig;
     private final RabbitMQMessageProducer producer;
-    private final ProductClient productClient;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper mapper;
-    private final UserMapper userMapper;
 
+    @Override
+    public UserResponse getUserResponse() {
+        return mapper.fromUser(getUser());
+    }
 
+    @Override
     @Transactional
-    public String deleteUser(Integer userId) {
-//       todo: delete user
-        return null;
+    public UserResponse update(UpdateUserRequest request) {
+        User user = getUser();
+        user.setEmail(request.getEmail());
+        user.setFirstName(request.getFirstName());
+        user.setDateOfBirth(request.getDateOfBirth());
+        user.setLastName(request.getLastName());
+        user = userRepository.saveAndFlush(user);
+        System.out.println(user);
+        return mapper.fromUser(user);
+    }
+
+    @Override
+    @Transactional
+    public void delete() {
+        User user = getUser();
+        user.setDelete(true);
+        userRepository.save(user);
     }
 
     @Transactional
     public void changePassword(String password) {
     }
 
-    @Transactional
-    public UserResponse update(Integer userId, UpdateUserRequest userRequest) {
-        return null;
-    }
-
-
-    public List<UserResponse> findAll() {
-        return userRepository.findAll().stream().map(mapper::fromUser).collect(Collectors.toList());
-
-    }
-
-    public String test() {
-        return System.getProperty("user.dir");
-    }
-
     public Boolean isUserExists(String username) {
         return userRepository.getByUsername(username).isPresent();
+    }
 
+    private User getUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated()) {
+            String username = authentication.getName();
+            return userRepository.getByUsername(username)
+                    .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND.getCode(), ErrorCode.USER_NOT_FOUND.getMessage()));
+        }
+        throw new BaseException(ErrorCode.UNAUTHENTICATED.getCode(), ErrorCode.UNAUTHENTICATED.getMessage());
     }
 
     //    INTERNAL
@@ -87,14 +98,6 @@ public class UserServiceImp implements UserService {
             return getApiResponse(ErrorCode.USER_NOT_FOUND.getCode(), ErrorCode.USER_NOT_FOUND.getMessage(), null);
         }
 
-    }
-
-    private static ApiResponse<UserResponse> getApiResponse(int code, String message, UserResponse data) {
-        return ApiResponse.<UserResponse>builder()
-                .code(code)
-                .message(message)
-                .data(data)
-                .build();
     }
 
     @Override
@@ -119,7 +122,7 @@ public class UserServiceImp implements UserService {
         return getApiResponse(HttpStatus.OK.value(), SuccessMessage.OK.getMessage(), mapper.fromUser(user));
     }
 
-//    TODO: implement publish notification
+    //    TODO: implement publish notification
     private void publishNotification(User user) {
         NotificationRequest notificationRequest = NotificationRequest.builder()
                 .customerEmail(user.getEmail())
