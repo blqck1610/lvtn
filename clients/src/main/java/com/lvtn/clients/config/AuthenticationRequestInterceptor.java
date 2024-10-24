@@ -1,10 +1,10 @@
 package com.lvtn.clients.config;
 
+import com.lvtn.utils.constant.Attribute;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -20,17 +20,18 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 // use bean for all clients
 //    add atributes configuration for one client: such as :
-//@FeignClient(value = "NOTIFICATION-SERVICE", path = "/api/v1/notification", configuration = {AuthenticationRequestIntercepter.class})
+//@FeignClient(value = "NOTIFICATION-SERVICE", path = "/api/v1/notification", configuration = {AuthenticationRequestInterceptor.class})
 //public interface NotificationClient {
 
-    @Component
-public class AuthenticationRequestIntercepter implements RequestInterceptor {
+@Component
+public class AuthenticationRequestInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate requestTemplate) {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        var token = requestAttributes.getRequest().getHeader("Authorization");
-        if(StringUtils.hasText(token)){
-            requestTemplate.header("Authorization", token);
+        String token = requestAttributes.getRequest().getHeader(Attribute.AUTHORIZATION);
+        if (!ObjectUtils.isEmpty(token)) {
+            requestTemplate.header(Attribute.AUTHORIZATION, token);
         }
     }
 }
+

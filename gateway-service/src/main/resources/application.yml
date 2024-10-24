@@ -21,15 +21,6 @@ spring:
             allowedMethods:
               - GET
               - POST
-
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: "http://localhost:8088/reamls/demo"
-
-#
-
 eureka:
   client:
     service-url:
@@ -40,15 +31,7 @@ management:
     sampling:
       probability: 1.0
     enabled: true
-
-
 # traceID and spanId are predefined MDC keys - we want the logs to include them
 logging:
   pattern:
     level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
-
-
-application:
-  security:
-    jwt:
-      secret-key: bb49931b1b6e4cd6529c2f21bcbce342c46d5dfe6b8b829237dceff8afb4d1cf

@@ -16,44 +16,30 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class GatewayConfig {
 
-
-    private final AuthenticationFilter filter;
-
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("user-service", r -> r.path("/api/v1/user/**")
-                        .filters(f -> f.filter(filter))
                         .uri("lb://USER-SERVICE")
-
                 )
                 .route("auth-service", r ->
-                        r
-                                .path("/api/v1/auth/**")
-                        .filters(f -> f.filter(filter))
+                        r.path("/api/v1/auth/**")
                         .uri("lb://AUTH-SERVICE")
-
-
                 )
                 .route("product-service", r -> r.path("/api/v1/product/**")
-                        .filters(f -> f.filter(filter))
                         .uri("lb://PRODUCT-SERVICE")
                 )
                 .route("admin-service", r -> r.path("/api/v1/admin/**")
-                        .filters(f -> f.filter(new RoleAuthGateway("ADMIN")))
                         .uri("lb://ADMIN-SERVICE")
                 )
                 .route("order-service", r -> r.path("/api/v1/orders/**")
-                        .filters(f -> f.filter(filter))
                         .uri("lb://ORDER-SERVICE")
-
                 )
                 .route("payment-service", r -> r.path("/api/v1/payment/**")
                         .uri("lb://PAYMENT-SERVICE")
                 )
                 .route("notification-service", r -> r.path("/api/v1/notifications/**")
                         .uri("lb://NOTIFICATION-SERVICE"))
-
                 .build();
     }
 

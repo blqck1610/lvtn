@@ -1,10 +1,10 @@
 package com.lvtn.clients.authentication;
 
+import com.lvtn.utils.constant.ServiceName;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Map;
+import static com.lvtn.utils.constant.ApiEndpoint.AUTH;
+import static com.lvtn.utils.constant.ApiEndpoint.BASE_API;
 
 /**
  * AuthenticationClient
@@ -16,18 +16,7 @@ import java.util.Map;
  * ------------------------------------------------
  * 26/09/2024        NGUYEN             create
  */
-@FeignClient(value = "AUTH-SERVICE", path = "/api/v1/auth")
+@FeignClient(value = ServiceName.AUTH_SERVICE, path = BASE_API + AUTH)
 public interface AuthenticationClient {
 
-    @GetMapping(value = "/extract-all-claims")
-    Map<String, Object> extractAllClaims(@RequestParam(value = "token") String token);
-
-    @GetMapping(value = "/test")
-    public String test();
-
-    @GetMapping(value = "/is-token-valid")
-    Boolean isTokenValid(@RequestParam(value = "token")  String token);
-
-    @GetMapping(value = "/is-token-expired")
-    Boolean isTokenExpired(@RequestParam(value = "token")  String token);
 }

@@ -17,6 +17,7 @@
 // * ------------------------------------------------
 // * 01/10/2024        NGUYEN             create
 // */
+//
 //@Configuration
 //public class FeignConfig {
 //

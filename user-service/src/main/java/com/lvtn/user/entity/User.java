@@ -1,7 +1,7 @@
 package com.lvtn.user.entity;
 
-import com.lvtn.utils.Provider;
-import com.lvtn.utils.dto.user.Role;
+import com.lvtn.utils.common.Role;
+import com.lvtn.utils.constant.TableName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,37 +11,32 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.UUID;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "_user")
+@Table(name = TableName.USER)
 @EntityListeners(AuditingEntityListener.class)
-public class User  {
+public class User {
     @Id
-    @SequenceGenerator(
-            name = "user_id_sequence",
-            sequenceName = "user_id_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_sequence")
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String username;
     private String email;
+    private String firstName;
+    private String lastName;
     private String password;
-
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    private Provider provider;
-//    todo: 2fa authenticate
+    private Date dateOfBirth;
+    private boolean isDelete;
     @CreatedDate
     private LocalDateTime creatAt;
-
     @LastModifiedDate
     private LocalDateTime lastModified;
 

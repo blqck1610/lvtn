@@ -1,24 +1,15 @@
 package com.lvtn.utils.exception;
 
+import com.lvtn.utils.common.ErrorCode;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
-
-import java.io.Serial;
 
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseException extends RuntimeException  {
-    @Serial
-    private static final long serialVersionUID = 1L;
-    private HttpStatus code;
+public class BaseException extends RuntimeException {
+    private int code;
     private String message;
-
-
-
 }

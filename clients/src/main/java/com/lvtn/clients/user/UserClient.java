@@ -1,28 +1,31 @@
 package com.lvtn.clients.user;
 
 
+import com.lvtn.clients.config.AuthenticationRequestInterceptor;
+import com.lvtn.utils.constant.ApiEndpoint;
+import com.lvtn.utils.constant.Attribute;
 import com.lvtn.utils.dto.ApiResponse;
-import com.lvtn.utils.dto.authenticate.AuthRequest;
-import com.lvtn.utils.dto.user.UserDto;
-import com.lvtn.utils.dto.user.UserRegistrationRequest;
-import jakarta.validation.Valid;
+import com.lvtn.utils.dto.request.authenticate.AuthRequest;
+import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
+import com.lvtn.utils.dto.response.user.UserResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(value = "USER-SERVICE", path = "/api/v1/user")
+import static com.lvtn.utils.constant.ApiEndpoint.*;
+import static com.lvtn.utils.constant.ServiceName.USER_SERVICE;
+
+@FeignClient(value = USER_SERVICE, path = BASE_API + INTERNAL + USER)
 public interface UserClient {
 
-    @PostMapping(value = "/create-new-user")
-    public ApiResponse<UserDto> register(@RequestBody @Valid UserRegistrationRequest request);
+    @PostMapping
+    public ApiResponse<UserResponse> register(@RequestBody RegisterRequest request);
 
-    @GetMapping(value = "/test")
-    public ResponseEntity<String> test(@RequestParam(value = "test") String test);
+    @PostMapping(value = AUTHENTICATE)
+    public ApiResponse<UserResponse> authenticate(@RequestBody AuthRequest request);
 
-    @GetMapping(value = "/get-by-username")
-    public ApiResponse<UserDto> getByUsername(@RequestParam(value = "username") String username);
-
-    @PostMapping(value = "/authenticate")
-    public ApiResponse<UserDto> authenticate(@RequestBody AuthRequest request);
-
+    @GetMapping(value = GET_BY_USERNAME)
+    ApiResponse<UserResponse> getByUsername(@PathVariable(Attribute.USERNAME) String username);
 }

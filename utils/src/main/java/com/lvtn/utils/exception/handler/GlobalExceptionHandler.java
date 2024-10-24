@@ -1,10 +1,9 @@
 package com.lvtn.utils.exception.handler;
 
 
-
+import com.lvtn.utils.dto.ApiResponse;
 import com.lvtn.utils.exception.BaseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -12,25 +11,23 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
     @ExceptionHandler(BaseException.class)
-    public ResponseEntity<String> handlerBaseException(BaseException e) {
+    public ResponseEntity<ApiResponse<Object>> handlerBaseException(BaseException e) {
         log.error(e.getMessage());
-        return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        return ResponseEntity.status(HttpStatusCode.valueOf(e.getCode()))
+                .body(new ApiResponse<>(e.getCode(), e.getMessage(), null));
     }
 
-
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<String> handlerBindException(BindException e) {
+    public ResponseEntity<ApiResponse<Object>> handlerBindException(BindException e) {
         String errorMessage = "invalid request!";
         if (e.getBindingResult().hasErrors()) {
             errorMessage = e.getBindingResult().getAllErrors().getFirst().getDefaultMessage();
         }
 
-        return ResponseEntity.badRequest().body(errorMessage );
-
+        return ResponseEntity.badRequest().body(new ApiResponse<>(400, errorMessage, null));
     }
 }
