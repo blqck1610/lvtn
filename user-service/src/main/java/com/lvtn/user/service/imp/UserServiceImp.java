@@ -1,7 +1,7 @@
 package com.lvtn.user.service.imp;
 
 import com.lvtn.amqp.RabbitMQMessageProducer;
-import com.lvtn.clients.product.ProductClient;
+import com.lvtn.clients.authentication.AuthenticationClient;
 import com.lvtn.user.entity.User;
 import com.lvtn.user.rabbitmq.config.NotificationConfig;
 import com.lvtn.user.repository.UserRepository;
@@ -15,61 +15,97 @@ import com.lvtn.utils.dto.notification.NotificationRequest;
 import com.lvtn.utils.dto.notification.NotificationType;
 import com.lvtn.utils.dto.request.authenticate.AuthRequest;
 import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
+import com.lvtn.utils.dto.request.user.UpdatePasswordRequest;
 import com.lvtn.utils.dto.request.user.UpdateUserRequest;
 import com.lvtn.utils.dto.response.user.UserResponse;
+import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static com.lvtn.utils.util.ResponseUtil.getApiResponse;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImp implements UserService {
-
     private final UserRepository userRepository;
     private final NotificationConfig notificationConfig;
     private final RabbitMQMessageProducer producer;
-    private final ProductClient productClient;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper mapper;
-    private final UserMapper userMapper;
+    private final AuthenticationClient authenticationClient;
 
+    @Override
+    public UserResponse getUserResponse() {
+        return mapper.fromUser(getUser());
+    }
 
+    @Override
     @Transactional
-    public String deleteUser(Integer userId) {
-//       todo: delete user
-        return null;
+    public UserResponse update(UpdateUserRequest request) {
+        User user = getUser();
+        user.setEmail(request.getEmail());
+        user.setFirstName(request.getFirstName());
+        user.setDateOfBirth(request.getDateOfBirth());
+        user.setLastName(request.getLastName());
+        user = userRepository.saveAndFlush(user);
+        System.out.println(user);
+        return mapper.fromUser(user);
     }
 
+    @Override
     @Transactional
-    public void changePassword(String password) {
+    public void changePassword(UpdatePasswordRequest request) {
+        User user = getUser();
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new BaseException(ErrorCode.WRONG_PASSWORD.getCode(), ErrorCode.WRONG_PASSWORD.getMessage());
+        }
+        if (request.getCurrentPassword().equals(request.getNewPassword())) {
+            throw new BaseException(ErrorCode.NEW_PASSWORD_EQUALS_CURRENT_PASSWORD.getCode(), ErrorCode.NEW_PASSWORD_EQUALS_CURRENT_PASSWORD.getMessage());
+        }
+        if (!request.getConfirmNewPassword().equals(request.getNewPassword())) {
+            throw new BaseException(ErrorCode.CONFIRM_PASSWORD_NOT_MATCH.getCode(), ErrorCode.CONFIRM_PASSWORD_NOT_MATCH.getMessage());
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        authenticationClient.revokeAllTokens(user.getId().toString());
     }
 
+    @Override
     @Transactional
-    public UserResponse update(Integer userId, UpdateUserRequest userRequest) {
-        return null;
+    public void changeAvatar(String imageFile) {
+        User user = getUser();
+        user.setAvatar(imageFile);
+        userRepository.save(user);
     }
 
-
-    public List<UserResponse> findAll() {
-        return userRepository.findAll().stream().map(mapper::fromUser).collect(Collectors.toList());
-
+    @Override
+    @Transactional
+    public void delete() {
+        User user = getUser();
+        user.setDelete(true);
+        userRepository.save(user);
     }
 
-    public String test() {
-        return System.getProperty("user.dir");
-    }
-
-    public Boolean isUserExists(String username) {
+    private Boolean isUserExists(String username) {
         return userRepository.getByUsername(username).isPresent();
+    }
 
+    private User getUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated()) {
+            String username = authentication.getName();
+            return userRepository.getByUsername(username)
+                    .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND.getCode(), ErrorCode.USER_NOT_FOUND.getMessage()));
+        }
+        throw new BaseException(ErrorCode.UNAUTHENTICATED.getCode(), ErrorCode.UNAUTHENTICATED.getMessage());
     }
 
     //    INTERNAL
@@ -89,14 +125,6 @@ public class UserServiceImp implements UserService {
 
     }
 
-    private static ApiResponse<UserResponse> getApiResponse(int code, String message, UserResponse data) {
-        return ApiResponse.<UserResponse>builder()
-                .code(code)
-                .message(message)
-                .data(data)
-                .build();
-    }
-
     @Override
     @Transactional
     public ApiResponse<UserResponse> register(RegisterRequest request) {
@@ -111,15 +139,10 @@ public class UserServiceImp implements UserService {
                 .isDelete(false)
                 .build();
         user = userRepository.saveAndFlush(user);
-        //todo: publish notification
-//        publishNotification(user);
-
-//        todo: create shopping cart
-//        productClient.createCart(user.getId());
+        publishNotification(user);
         return getApiResponse(HttpStatus.OK.value(), SuccessMessage.OK.getMessage(), mapper.fromUser(user));
     }
 
-//    TODO: implement publish notification
     private void publishNotification(User user) {
         NotificationRequest notificationRequest = NotificationRequest.builder()
                 .customerEmail(user.getEmail())

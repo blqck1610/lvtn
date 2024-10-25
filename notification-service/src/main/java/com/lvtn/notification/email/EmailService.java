@@ -1,5 +1,7 @@
 package com.lvtn.notification.email;
 
+import com.lvtn.utils.common.ErrorCode;
+import com.lvtn.utils.common.SuccessMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -21,23 +23,15 @@ public class EmailService {
             mailMessage.setTo(emailDetails.getRecipient());
             mailMessage.setText(emailDetails.getMsgBody());
             mailMessage.setSubject(emailDetails.getSubject());
-
-
             javaMailSender.send(mailMessage);
-            System.out.println("test done");
-            return "mail sent successfully";
+            return SuccessMessage.OK.getMessage();
         }
         catch (Exception e){
-            e.printStackTrace();
-            return "mail sent error";
+            return ErrorCode.ERROR.getMessage();
         }
 
     }
-
     public String sendEmailWithAttachments(EmailDetails emailDetails){
         return  null;
     }
-
-
-
 }

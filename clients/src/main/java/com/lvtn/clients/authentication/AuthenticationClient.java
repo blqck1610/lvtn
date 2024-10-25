@@ -1,10 +1,14 @@
 package com.lvtn.clients.authentication;
 
-import com.lvtn.utils.constant.ServiceName;
+import com.lvtn.utils.dto.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import static com.lvtn.utils.constant.ApiEndpoint.AUTH;
-import static com.lvtn.utils.constant.ApiEndpoint.BASE_API;
+import java.util.Map;
+
+import static com.lvtn.utils.constant.ApiEndpoint.*;
+import static com.lvtn.utils.constant.ServiceName.AUTH_SERVICE;
 
 /**
  * AuthenticationClient
@@ -16,7 +20,12 @@ import static com.lvtn.utils.constant.ApiEndpoint.BASE_API;
  * ------------------------------------------------
  * 26/09/2024        NGUYEN             create
  */
-@FeignClient(value = ServiceName.AUTH_SERVICE, path = BASE_API + AUTH)
+@FeignClient(value = AUTH_SERVICE, path = BASE_API + INTERNAL + AUTH)
 public interface AuthenticationClient {
 
+    @PostMapping(value = REVOKE_ALL_TOKEN)
+    public void revokeAllTokens(@RequestBody String userId);
+
+    @PostMapping(value = EXTRACT_ALL_CLAIMS)
+    public ApiResponse<Map<String, Object>> getAllClaims(@RequestBody String token);
 }

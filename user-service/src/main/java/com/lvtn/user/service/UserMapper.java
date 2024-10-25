@@ -15,6 +15,7 @@ public class UserMapper {
                 .username(user.getUsername())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
+                .dateOfBirth(user.getDateOfBirth())
                 .email(user.getEmail())
                 .role(user.getRole())
                 .build();

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
 import java.util.UUID;
 
 @Data
@@ -19,5 +20,7 @@ public class UserResponse {
     private String email;
     private String firstName;
     private String lastName;
+    private Date dateOfBirth;
+    private String avatarUrl;
     private Role role;
 }

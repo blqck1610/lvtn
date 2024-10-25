@@ -1,20 +1,18 @@
 package com.lvtn.user.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lvtn.utils.common.ErrorCode;
+import com.lvtn.utils.constant.Common;
 import com.lvtn.utils.dto.ApiResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.text.ParseException;
 
 /**
  * JwtAuthenticationEntryPoint
@@ -26,20 +24,19 @@ import java.text.ParseException;
  * ------------------------------------------------
  * 04/10/2024        NGUYEN             create
  */
+@Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationEntryPoint.class);
-
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response,  AuthenticationException authException) throws IOException, ServletException {
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        response.setStatus(HttpStatus.FORBIDDEN.value());
+        response.setContentType(Common.JSON_CONTENT_TYPE);
         ApiResponse<?> apiResponse = ApiResponse.builder()
-                .code(HttpStatus.UNAUTHORIZED.value())
-                .message("unauthorized")
+                .code(ErrorCode.FORBIDDEN.getCode())
+                .message(ErrorCode.FORBIDDEN.getMessage())
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
         response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
-        response.flushBuffer();
+//        response.flushBuffer();
+        response.getWriter().flush();
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface TokenRepository extends JpaRepository<Token, Integer> {
+public interface TokenRepository extends JpaRepository<Token, UUID> {
 
     @Query("SELECT t FROM Token t WHERE t.userId = :userId AND  t.isRevoked = false ")
     List<Token> findAllValidTokensByUser(@Param("userId") UUID userId);

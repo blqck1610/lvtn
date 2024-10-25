@@ -1,4 +1,4 @@
-package com.lvtn.utils.dto.page;
+package com.lvtn.utils.dto.request.page;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
