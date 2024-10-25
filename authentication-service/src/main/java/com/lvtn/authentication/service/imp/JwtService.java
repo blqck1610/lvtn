@@ -41,9 +41,8 @@ public class JwtService {
         try {
             claims = Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token).getPayload();
         } catch (ExpiredJwtException expiredJwtException) {
-            claims = expiredJwtException.getClaims();
+            throw new BaseException(ErrorCode.TOKEN_EXPIRED.getCode(), ErrorCode.TOKEN_EXPIRED.getMessage());
         } catch (JwtException e) {
-            log.error(e.getMessage());
             throw new BaseException(ErrorCode.TOKEN_INVALID.getCode(), ErrorCode.TOKEN_INVALID.getMessage());
         }
         return claims;

@@ -6,6 +6,7 @@ import com.lvtn.authentication.repository.TokenRepository;
 import com.lvtn.authentication.service.AuthService;
 import com.lvtn.clients.user.UserClient;
 import com.lvtn.utils.common.ErrorCode;
+import com.lvtn.utils.common.SuccessMessage;
 import com.lvtn.utils.dto.ApiResponse;
 import com.lvtn.utils.dto.request.authenticate.AuthRequest;
 import com.lvtn.utils.dto.request.authenticate.RefreshTokenRequest;
@@ -13,15 +14,18 @@ import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
 import com.lvtn.utils.dto.response.authenticate.AuthResponse;
 import com.lvtn.utils.dto.response.user.UserResponse;
 import com.lvtn.utils.exception.BaseException;
+import com.lvtn.utils.util.ResponseUtil;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+
+import static com.lvtn.utils.util.ResponseUtil.getApiResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +42,7 @@ public class AuthServiceImp implements AuthService {
     }
 
     @Override
+    @Transactional
     public AuthResponse getToken(AuthRequest request) {
         ApiResponse<UserResponse> response = userClient.authenticate(request);
         check(response);
@@ -62,6 +67,20 @@ public class AuthServiceImp implements AuthService {
         }
         validTokens.forEach(token -> token.setRevoked(true));
         tokenRepository.saveAll(validTokens);
+    }
+
+    @Override
+    public ApiResponse<Map<String, Object>> getAllClaims(String token) {
+        if(!isTokenValid(token, TokenType.ACCESS_TOKEN)){
+            return getApiResponse(ErrorCode.TOKEN_INVALID.getCode(), ErrorCode.TOKEN_INVALID.getMessage(), null);
+        }
+        try {
+            Claims claims = jwtService.extractAllClaims(token);
+            return getApiResponse(HttpStatus.OK.value(), SuccessMessage.OK.getMessage(), claims);
+        }
+        catch (BaseException e){
+            return getApiResponse(ErrorCode.TOKEN_INVALID.getCode(), ErrorCode.TOKEN_INVALID.getMessage(), null);
+        }
     }
 
     @Override
@@ -99,11 +118,11 @@ public class AuthServiceImp implements AuthService {
         tokenRepository.save(token);
     }
 
-
-    private AuthResponse getAuthResponse(ApiResponse<UserResponse> response) {
+    @Transactional
+    protected AuthResponse getAuthResponse(ApiResponse<UserResponse> response) {
         String accessToken = jwtService.generateToken(response.getData().getUsername(), response.getData().getRole().toString(), TokenType.ACCESS_TOKEN);
         String refreshToken = jwtService.generateToken(response.getData().getUsername(), response.getData().getRole().toString(), TokenType.REFRESH_TOKEN);
-        revokeAllTokens(response.getData().getId());
+        revokeAllTokens(String.valueOf(response.getData().getId()));
         saveToken(response.getData().getId(), accessToken, refreshToken);
         return new AuthResponse(accessToken, refreshToken);
     }

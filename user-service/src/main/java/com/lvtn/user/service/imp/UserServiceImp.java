@@ -64,13 +64,13 @@ public class UserServiceImp implements UserService {
     @Transactional
     public void changePassword(UpdatePasswordRequest request) {
         User user = getUser();
-        if(!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())){
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new BaseException(ErrorCode.WRONG_PASSWORD.getCode(), ErrorCode.WRONG_PASSWORD.getMessage());
         }
-        if(request.getCurrentPassword().equals(request.getNewPassword())){
+        if (request.getCurrentPassword().equals(request.getNewPassword())) {
             throw new BaseException(ErrorCode.NEW_PASSWORD_EQUALS_CURRENT_PASSWORD.getCode(), ErrorCode.NEW_PASSWORD_EQUALS_CURRENT_PASSWORD.getMessage());
         }
-        if(!request.getConfirmNewPassword().equals(request.getNewPassword())){
+        if (!request.getConfirmNewPassword().equals(request.getNewPassword())) {
             throw new BaseException(ErrorCode.CONFIRM_PASSWORD_NOT_MATCH.getCode(), ErrorCode.CONFIRM_PASSWORD_NOT_MATCH.getMessage());
         }
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -137,9 +137,6 @@ public class UserServiceImp implements UserService {
         user = userRepository.saveAndFlush(user);
         //todo: publish notification
 //        publishNotification(user);
-
-//        todo: create shopping cart
-//        productClient.createCart(user.getId());
         return getApiResponse(HttpStatus.OK.value(), SuccessMessage.OK.getMessage(), mapper.fromUser(user));
     }
 

@@ -1,12 +1,15 @@
 package com.lvtn.authentication.controller;
 
 import com.lvtn.authentication.service.AuthService;
+import com.lvtn.utils.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 import static com.lvtn.utils.constant.ApiEndpoint.*;
 
@@ -26,8 +29,15 @@ import static com.lvtn.utils.constant.ApiEndpoint.*;
 @Slf4j
 public class InternalController {
     private final AuthService authService;
+
     @PostMapping(value = REVOKE_ALL_TOKEN)
-    public void revokeAllToken(@RequestBody String userId){
+    public void revokeAllToken(@RequestBody String userId) {
         authService.revokeAllTokens(userId);
     }
+
+    @PostMapping(value = EXTRACT_ALL_CLAIMS)
+    public ApiResponse<Map<String, Object>> getAllClaims(@RequestBody String token) {
+        return authService.getAllClaims(token);
+    }
+
 }

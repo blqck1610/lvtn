@@ -13,8 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import static com.lvtn.utils.constant.ApiEndpoint.BASE_API;
-import static com.lvtn.utils.constant.ApiEndpoint.USER;
+import static com.lvtn.utils.constant.ApiEndpoint.*;
 import static com.lvtn.utils.util.ResponseUtil.getApiResponse;
 
 @RestController
@@ -40,10 +39,16 @@ public class UserController {
         return getApiResponse(HttpStatus.OK.value(),SuccessMessage.UPDATED_SUCCESS.getMessage(),userService.update(request));
     }
 
-    @PutMapping(value = ApiEndpoint.PASSWORD)
+    @PutMapping(value = PASSWORD)
     public ApiResponse<UserResponse> updatePassword(@RequestBody UpdatePasswordRequest request){
         userService.changePassword(request);
         return getApiResponse(HttpStatus.OK.value(),SuccessMessage.UPDATED_SUCCESS.getMessage(), null);
     }
+
+//    @PutMapping(value = AVATAR)
+//    public ApiResponse<UserResponse> changeAvatar(@RequestBody UpdatePasswordRequest request){
+//        userService.changeAvatar(request);
+//        return getApiResponse(HttpStatus.OK.value(),SuccessMessage.UPDATED_SUCCESS.getMessage(), null);
+//    }
 
 }
