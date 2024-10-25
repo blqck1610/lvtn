@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -37,6 +38,7 @@ import java.util.Map;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticateFilter extends OncePerRequestFilter {
     private final AuthenticationClient authClient;
 
@@ -47,12 +49,14 @@ public class JwtAuthenticateFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader(Attribute.AUTHORIZATION);
         if (ObjectUtils.isEmpty(token) || !token.startsWith(Common.PREFIX_TOKEN)) {
+            log.info("empty token for request {}", request.getRequestURI());
             filterChain.doFilter(request, response);
             return;
         }
         token = token.substring(7);
         ApiResponse<Map<String, Object>> res = authClient.getAllClaims(token);
         if (ObjectUtils.isEmpty(res.getData())) {
+            log.error("Token has invalid for request: {}", request.getRequestURI());
             sendError(response, res.getCode(), res.getMessage());
             return;
         }

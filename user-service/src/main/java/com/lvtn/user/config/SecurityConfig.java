@@ -33,7 +33,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/api/v1/internal/**"
+            "/api/v1/internal/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/webjars/**"
     };
     private final JwtAuthenticationEntryPoint jwtEntryPoint;
     private final JwtAuthenticateFilter jwtAthFilter;
@@ -58,6 +63,7 @@ public class SecurityConfig {
                 // Authorization for public endpoints
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                                 .anyRequest().authenticated()  // All other requests require authentication
                 )
                 // Use stateless session management because we're using JWT

@@ -7,6 +7,7 @@ import com.lvtn.utils.dto.ApiResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -25,11 +26,13 @@ import java.io.IOException;
  * 04/10/2024        NGUYEN             create
  */
 @Component
+@Slf4j
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType(Common.JSON_CONTENT_TYPE);
+        log.error("error {}", request.getRequestURI());
         ApiResponse<?> apiResponse = ApiResponse.builder()
                 .code(ErrorCode.FORBIDDEN.getCode())
                 .message(ErrorCode.FORBIDDEN.getMessage())
