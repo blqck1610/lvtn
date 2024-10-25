@@ -1,6 +1,5 @@
 server:
   port: 8082
-
 spring:
   application:
     name: user-service
@@ -39,9 +38,6 @@ management:
       probability: 1.0
     enabled: true
 
-
-
-
 # traceID and spanId are predefined MDC keys - we want the logs to include them
 logging:
   pattern:
@@ -54,7 +50,6 @@ rabbitmq:
     notification: notification.queue
   routing-keys:
     internal-notification: internal.notification.routing-keys
-
 application:
   security:
     jwt:

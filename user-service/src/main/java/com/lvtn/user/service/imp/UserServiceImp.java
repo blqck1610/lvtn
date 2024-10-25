@@ -80,17 +80,21 @@ public class UserServiceImp implements UserService {
 
     @Override
     @Transactional
+    public void changeAvatar(String imageFile) {
+        User user = getUser();
+        user.setAvatar(imageFile);
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
     public void delete() {
         User user = getUser();
         user.setDelete(true);
         userRepository.save(user);
     }
 
-    @Transactional
-    public void changePassword(String password) {
-    }
-
-    public Boolean isUserExists(String username) {
+    private Boolean isUserExists(String username) {
         return userRepository.getByUsername(username).isPresent();
     }
 
@@ -135,12 +139,10 @@ public class UserServiceImp implements UserService {
                 .isDelete(false)
                 .build();
         user = userRepository.saveAndFlush(user);
-        //todo: publish notification
-//        publishNotification(user);
+        publishNotification(user);
         return getApiResponse(HttpStatus.OK.value(), SuccessMessage.OK.getMessage(), mapper.fromUser(user));
     }
 
-    //    TODO: implement publish notification
     private void publishNotification(User user) {
         NotificationRequest notificationRequest = NotificationRequest.builder()
                 .customerEmail(user.getEmail())

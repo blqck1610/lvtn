@@ -31,6 +31,5 @@ public class ApiEndpoint {
     public static final String ID = "/{id}";
     public static final String VIEW_LIST = "/view-list";
 
-
-
+    public static final String NOTIFICATION = "/notification";
 }

@@ -45,10 +45,10 @@ public class UserController {
         return getApiResponse(HttpStatus.OK.value(),SuccessMessage.UPDATED_SUCCESS.getMessage(), null);
     }
 
-//    @PutMapping(value = AVATAR)
-//    public ApiResponse<UserResponse> changeAvatar(@RequestBody UpdatePasswordRequest request){
-//        userService.changeAvatar(request);
-//        return getApiResponse(HttpStatus.OK.value(),SuccessMessage.UPDATED_SUCCESS.getMessage(), null);
-//    }
+    @PutMapping(value = AVATAR)
+    public ApiResponse<UserResponse> changeAvatar(@RequestBody String image){
+        userService.changeAvatar(image);
+        return getApiResponse(HttpStatus.OK.value(),SuccessMessage.UPDATED_SUCCESS.getMessage(), null);
+    }
 
 }

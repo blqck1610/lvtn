@@ -27,5 +27,5 @@ public interface UserService {
 
     void changePassword(UpdatePasswordRequest request);
 
-//    void changeAvatar(UpdatePasswordRequest request);
+    void changeAvatar(String imageFile);
 }

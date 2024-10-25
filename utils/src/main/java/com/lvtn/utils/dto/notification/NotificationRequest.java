@@ -13,7 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class NotificationRequest {
-
     private String message;
     private String customerEmail;
     private UUID customerId;
