@@ -1,4 +1,4 @@
-package com.lvtn.utils.dto.notification;
+package com.lvtn.utils.dto.request.notification;
 
 
 import lombok.AllArgsConstructor;

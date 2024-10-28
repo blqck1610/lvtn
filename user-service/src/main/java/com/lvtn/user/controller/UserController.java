@@ -3,7 +3,6 @@ package com.lvtn.user.controller;
 
 import com.lvtn.user.service.UserService;
 import com.lvtn.utils.common.SuccessMessage;
-import com.lvtn.utils.constant.ApiEndpoint;
 import com.lvtn.utils.dto.ApiResponse;
 import com.lvtn.utils.dto.request.user.UpdatePasswordRequest;
 import com.lvtn.utils.dto.request.user.UpdateUserRequest;

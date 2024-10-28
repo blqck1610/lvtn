@@ -32,4 +32,8 @@ public class ApiEndpoint {
     public static final String VIEW_LIST = "/view-list";
 
     public static final String NOTIFICATION = "/notification";
+
+    //    PRODUCT
+    public static final String PRODUCT = "/product";
 }
+

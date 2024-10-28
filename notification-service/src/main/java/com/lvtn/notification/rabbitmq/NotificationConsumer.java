@@ -2,7 +2,7 @@ package com.lvtn.notification.rabbitmq;
 
 
 import com.lvtn.notification.service.NotificationService;
-import com.lvtn.utils.dto.notification.NotificationRequest;
+import com.lvtn.utils.dto.request.notification.NotificationRequest;
 import io.micrometer.observation.annotation.Observed;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

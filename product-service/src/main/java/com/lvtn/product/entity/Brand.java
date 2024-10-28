@@ -1,28 +1,18 @@
 package com.lvtn.product.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.lvtn.utils.constant.TableName;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.*;
 
-import java.util.List;
-
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Brand {
-    @Id
-    @SequenceGenerator(name = "brand_id_sequence",
-            sequenceName = "brand_id_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "brand_id_sequence")
-    private  Integer id;
+@Table(name = TableName.BRAND)
+public class Brand extends BaseEntity {
     private String name;
     private String description;
-    @OneToMany(mappedBy = "brand", cascade = CascadeType.REMOVE)
-    private List<Product> products;
 }

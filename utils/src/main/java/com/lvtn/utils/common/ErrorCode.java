@@ -18,7 +18,7 @@ public enum ErrorCode {
     CONFIRM_PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST.value(), "confirm-password-not-match"),
     FORBIDDEN(HttpStatus.FORBIDDEN.value(), "forbidden"),
     ERROR(HttpStatus.FORBIDDEN.value(), "error"),
-    ;
+    BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "bad request"),;
 
     private final int code;
     private final String message;

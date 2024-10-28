@@ -1,34 +1,21 @@
 package com.lvtn.product.entity;
 
+import com.lvtn.utils.constant.TableName;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Review {
-    @Id
-    @SequenceGenerator(name = "review_id_sequence",
-                        sequenceName = "review_id_sequence",
-                allocationSize = 1
-    )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_id_sequence")
-    private Integer id;
-    private Integer userId;
-    private String reviewerName;
-    private Integer productId;
-
-    private Integer rating;
+@Table(name = TableName.REVIEW)
+public class Review extends BaseEntity {
+    private UUID userId;
+    private UUID productId;
+    private int rating;
     private String comment;
-    private LocalDate reviewAt;
-
-
 }

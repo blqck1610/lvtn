@@ -15,18 +15,10 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format-sql: 'true'
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: 'false'
-#    ko biet de lam gi :v
   flyway:
-    baseline-description: "init"
-    baseline-on-migrate: true
-    enabled: true
-
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 15MB
+    locations: classpath:/db/migration
 
 #  rabbitmq:
 #    addresses: localhost:5672
