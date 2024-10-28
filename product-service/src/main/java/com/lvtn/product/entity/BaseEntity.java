@@ -1,11 +1,7 @@
-package com.lvtn.notification.entity;
+package com.lvtn.product.entity;
 
-
-import com.lvtn.utils.constant.TableName;
-import com.lvtn.utils.dto.request.notification.NotificationType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,23 +11,26 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
+/**
+ * BaseEntity
+ * Version 1.0
+ * Date: 28/10/2024
+ * Copyright
+ * Modification Logs
+ * DATE          AUTHOR          DESCRIPTION
+ * ------------------------------------------------
+ * 28/10/2024        NGUYEN             create
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Table(name = TableName.NOTIFICATION)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @EntityListeners(AuditingEntityListener.class)
-public class Notification {
+@Entity
+public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private String message;
-    private String sender;
-    private String toCustomerEmail;
-    private UUID toCustomerId;
-    @Enumerated(EnumType.STRING)
-    private NotificationType notificationType;
     private Boolean isDelete;
     @CreatedDate
     private LocalDateTime createdAt;

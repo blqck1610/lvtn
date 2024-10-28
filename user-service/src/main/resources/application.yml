@@ -9,18 +9,19 @@ spring:
     username: admin
     url: jdbc:postgresql://localhost:5432/user
     password: password
-
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format-sql: 'true'
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: 'true'
-
   rabbitmq:
     addresses: localhost:5672
+  flyway:
+    locations: classpath:/db/migration
+
 
 #eureka-client
 eureka:
@@ -42,6 +43,8 @@ management:
 logging:
   pattern:
     level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+#  level:
+#    root: debug
 
 rabbitmq:
   exchanges:

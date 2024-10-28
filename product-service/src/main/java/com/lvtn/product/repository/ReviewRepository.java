@@ -7,14 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+import java.util.UUID;
 
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
-
-    @Query("SELECT u FROM Review u WHERE  u.userId = :userId")
-    Page<Review> getReviewsByUserId(Pageable pageable, @Param("userId") Integer userId);
-
-    @Query("SELECT u FROM Review u WHERE  u.productId = :productId")
-    Page<Review> getReviewByProduct(Pageable pageable,@Param("productId") Integer productId);
-
+    @Query("SELECT r FROM Review r WHERE  r.productId = :productId and r.isDelete != true")
+    Page<Review> getReviewByProduct(Pageable pageable, @Param("productId") UUID productId);
 }
