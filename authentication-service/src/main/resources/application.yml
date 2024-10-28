@@ -23,9 +23,10 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format-sql: 'true'
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: 'true'
-
+  flyway:
+    locations: classpath:/db/migration
 
 management:
   tracing:
