@@ -1,7 +1,7 @@
 package com.lvtn.product.service.imp;
 
-import com.lvtn.product.entity.MediaInfo;
-import com.lvtn.product.entity.MediaType;
+import com.lvtn.utils.common.MediaInfo;
+import com.lvtn.utils.common.MediaType;
 import com.lvtn.product.entity.Product;
 import com.lvtn.product.entity.ProductMedia;
 import com.lvtn.product.repository.ProductMediaRepository;

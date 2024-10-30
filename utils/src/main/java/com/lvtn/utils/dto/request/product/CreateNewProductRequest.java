@@ -1,5 +1,6 @@
 package com.lvtn.utils.dto.request.product;
 
+import com.lvtn.utils.common.Gender;
 import com.lvtn.utils.dto.response.product.MediaDto;
 import lombok.Data;
 
@@ -21,7 +22,7 @@ public class CreateNewProductRequest {
     private String description;
     private String brandName;
     private String categoryName;
-    private String gender;
+    private Gender gender;
     private List<MediaDto> mediaList;
     private Double price;
 }

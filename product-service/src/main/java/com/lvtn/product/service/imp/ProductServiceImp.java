@@ -1,24 +1,19 @@
 package com.lvtn.product.service.imp;
 
-import com.lvtn.product.entity.Gender;
+import com.lvtn.utils.common.Gender;
 import com.lvtn.product.entity.PriceHistory;
 import com.lvtn.product.entity.Product;
 import com.lvtn.product.repository.PriceHistoryRepository;
-import com.lvtn.product.repository.ProductMediaRepository;
 import com.lvtn.product.repository.ProductRepository;
 import com.lvtn.product.service.*;
 import com.lvtn.utils.common.ErrorCode;
 import com.lvtn.utils.dto.request.product.CreateNewProductRequest;
-import com.lvtn.utils.dto.response.product.MediaDto;
 import com.lvtn.utils.dto.response.product.ProductResponse;
 import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.print.attribute.standard.Media;
-import java.util.List;
 
 /**
  * ProductService

@@ -3,6 +3,7 @@ package com.lvtn.authentication.service.imp;
 
 import com.lvtn.authentication.entity.TokenType;
 import com.lvtn.utils.common.ErrorCode;
+import com.lvtn.utils.common.Role;
 import com.lvtn.utils.constant.Attribute;
 import com.lvtn.utils.exception.BaseException;
 import io.jsonwebtoken.Claims;
@@ -67,9 +68,9 @@ public class JwtService {
 
     }
 
-    public String generateToken(String username, String role, TokenType tokenType) {
+    public String generateToken(String username, Role role, TokenType tokenType) {
         Map<String, String> claims = Map.of(
-                Attribute.USERNAME, username, Attribute.ROLE, role
+                Attribute.USERNAME, username, Attribute.ROLE, role.name()
         );
         if (tokenType.equals(TokenType.ACCESS_TOKEN))
             return buildToken(claims, accessTokenExpiration);

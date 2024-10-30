@@ -2,6 +2,7 @@ package com.lvtn.user.config.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lvtn.clients.authentication.AuthenticationClient;
+import com.lvtn.utils.common.Role;
 import com.lvtn.utils.constant.Attribute;
 import com.lvtn.utils.constant.Common;
 import com.lvtn.utils.dto.ApiResponse;
@@ -54,14 +55,14 @@ public class JwtAuthenticateFilter extends OncePerRequestFilter {
             return;
         }
         token = token.substring(7);
-        ApiResponse<Map<String, Object>> res = authClient.getAllClaims(token);
+        ApiResponse<Map<String, String>> res = authClient.getAllClaims(token);
         if (ObjectUtils.isEmpty(res.getData())) {
             log.error("Token has invalid for request: {}", request.getRequestURI());
             sendError(response, res.getCode(), res.getMessage());
             return;
         }
-        String username = res.getData().get(Attribute.USERNAME).toString();
-        List<GrantedAuthority> authorities = extractAuthorities(res.getData());
+        String username = res.getData().get(Attribute.USERNAME);
+        List<? extends GrantedAuthority> authorities = extractAuthorities(res.getData());
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                 username, null, authorities
         );
@@ -75,13 +76,13 @@ public class JwtAuthenticateFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private List<GrantedAuthority> extractAuthorities(Map<String, Object> claims) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        Object role = claims.get(Attribute.ROLE);
+    private List<? extends GrantedAuthority> extractAuthorities(Map<String, String> claims) {
+        List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
+        String role = claims.get(Attribute.ROLE);
         if (!ObjectUtils.isEmpty(role)) {
-            authorities.add(new SimpleGrantedAuthority(role.toString()));
+            grantedAuthorities = Role.valueOf(role).getAuthorities();
         }
-        return authorities;
+        return grantedAuthorities;
     }
 
     private static void sendError(HttpServletResponse response, int code, String mess) throws IOException {

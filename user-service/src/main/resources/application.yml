@@ -61,7 +61,5 @@ application:
       refresh-token:
         expiration: 604800000 # 7 days
 springdoc:
-  api-docs:
-    path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
