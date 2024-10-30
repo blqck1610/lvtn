@@ -20,10 +20,7 @@
         <module>order-service</module>
         <module>payment-service</module>
         <module>product-service</module>
-        <module>documentation</module>
     </modules>
-
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
@@ -32,7 +29,6 @@
         <spring.boot.plugins.version>3.2.4</spring.boot.plugins.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
         <image>blqck/${project.artifactId}:${project.version}</image>
-        <springfox.swagger.version>3.0.0</springfox.swagger.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -73,26 +69,17 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 <!--        swagger-->
+
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox.swagger.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.1.0</version>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox.swagger.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+            <version>2.1.0</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springdoc</groupId>-->
-<!--            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>-->
-<!--            <version>2.1.0</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springdoc</groupId>-->
-<!--            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>-->
-<!--            <version>2.1.0</version>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
