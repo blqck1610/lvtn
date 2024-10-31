@@ -27,5 +27,5 @@ public interface AuthenticationClient {
     public void revokeAllTokens(@RequestBody String userId);
 
     @PostMapping(value = EXTRACT_ALL_CLAIMS)
-    public ApiResponse<Map<String, Object>> getAllClaims(@RequestBody String token);
+    public ApiResponse<Map<String, String>> getAllClaims(@RequestBody String token);
 }

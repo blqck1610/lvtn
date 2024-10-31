@@ -1,7 +1,6 @@
-package com.lvtn.product.entity;
+package com.lvtn.utils.common;
 
 public enum MediaInfo {
     INTRO,
-    THUMBNAIL,
     LARGE,
 }

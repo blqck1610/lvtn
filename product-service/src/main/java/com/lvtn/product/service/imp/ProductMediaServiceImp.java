@@ -1,17 +1,18 @@
 package com.lvtn.product.service.imp;
 
-import com.lvtn.product.entity.MediaInfo;
-import com.lvtn.product.entity.MediaType;
+import com.lvtn.product.dto.response.MediaDto;
 import com.lvtn.product.entity.Product;
 import com.lvtn.product.entity.ProductMedia;
 import com.lvtn.product.repository.ProductMediaRepository;
 import com.lvtn.product.service.ProductMediaService;
-import com.lvtn.utils.dto.response.product.MediaDto;
+import com.lvtn.utils.common.MediaInfo;
+import com.lvtn.utils.common.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * ProductMediaServiceImp
@@ -45,6 +46,15 @@ public class ProductMediaServiceImp implements ProductMediaService {
     @Override
     public List<MediaDto> getListProductMediaDto(Product product) {
         return List.of();
+    }
+
+    @Override
+    @Transactional
+    public void deleteMedia(UUID id, List<String> delMediaList) {
+        for (String delMedia : delMediaList) {
+            ProductMedia productMedia = productMediaRepository.getReferenceById(UUID.fromString(delMedia));
+            productMediaRepository.delete(productMedia);
+        }
     }
 
 }

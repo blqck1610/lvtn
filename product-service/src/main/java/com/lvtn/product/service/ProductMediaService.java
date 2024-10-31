@@ -1,7 +1,7 @@
 package com.lvtn.product.service;
 
+import com.lvtn.product.dto.response.MediaDto;
 import com.lvtn.product.entity.Product;
-import com.lvtn.utils.dto.response.product.MediaDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,4 +21,6 @@ public interface ProductMediaService {
     void saveMedia(Product product, List<MediaDto> mediaList);
 
     List<MediaDto> getListProductMediaDto(Product product);
+
+    void deleteMedia(UUID id, List<String> delMediaList);
 }

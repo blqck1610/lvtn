@@ -1,5 +1,6 @@
-package com.lvtn.utils.dto.response.product;
+package com.lvtn.product.dto.response;
 
+import com.lvtn.utils.common.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,9 +26,10 @@ import java.util.UUID;
 public class ProductResponse {
     private UUID id;
     private String name;
-    private String brand;
-    private String category;
-    private String gender;
+    private BrandResponse brand;
+    private CategoryResponse category;
+    private Gender gender;
     private List<MediaDto> mediaDto;
     private Double price;
+    private String thumbnail;
 }

@@ -2,6 +2,7 @@ package com.lvtn.user.config.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lvtn.clients.authentication.AuthenticationClient;
+import com.lvtn.utils.common.Role;
 import com.lvtn.utils.constant.Attribute;
 import com.lvtn.utils.constant.Common;
 import com.lvtn.utils.dto.ApiResponse;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -37,6 +39,7 @@ import java.util.Map;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticateFilter extends OncePerRequestFilter {
     private final AuthenticationClient authClient;
 
@@ -47,17 +50,19 @@ public class JwtAuthenticateFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader(Attribute.AUTHORIZATION);
         if (ObjectUtils.isEmpty(token) || !token.startsWith(Common.PREFIX_TOKEN)) {
+            log.info("empty token for request {}", request.getRequestURI());
             filterChain.doFilter(request, response);
             return;
         }
         token = token.substring(7);
-        ApiResponse<Map<String, Object>> res = authClient.getAllClaims(token);
+        ApiResponse<Map<String, String>> res = authClient.getAllClaims(token);
         if (ObjectUtils.isEmpty(res.getData())) {
+            log.error("Token has invalid for request: {}", request.getRequestURI());
             sendError(response, res.getCode(), res.getMessage());
             return;
         }
-        String username = res.getData().get(Attribute.USERNAME).toString();
-        List<GrantedAuthority> authorities = extractAuthorities(res.getData());
+        String username = res.getData().get(Attribute.USERNAME);
+        List<? extends GrantedAuthority> authorities = extractAuthorities(res.getData());
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                 username, null, authorities
         );
@@ -71,13 +76,13 @@ public class JwtAuthenticateFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private List<GrantedAuthority> extractAuthorities(Map<String, Object> claims) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        Object role = claims.get(Attribute.ROLE);
+    private List<? extends GrantedAuthority> extractAuthorities(Map<String, String> claims) {
+        List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
+        String role = claims.get(Attribute.ROLE);
         if (!ObjectUtils.isEmpty(role)) {
-            authorities.add(new SimpleGrantedAuthority(role.toString()));
+            grantedAuthorities = Role.valueOf(role).getAuthorities();
         }
-        return authorities;
+        return grantedAuthorities;
     }
 
     private static void sendError(HttpServletResponse response, int code, String mess) throws IOException {

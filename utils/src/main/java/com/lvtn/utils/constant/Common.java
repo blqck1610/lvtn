@@ -17,4 +17,5 @@ public class Common {
     public static final String OLIDUS = "/";
     public static final String COMMA = ",";
     public static final String ALL_REQUEST = "/**";
+    public static final String PREFIX_ROLE = "ROLE_";
 }

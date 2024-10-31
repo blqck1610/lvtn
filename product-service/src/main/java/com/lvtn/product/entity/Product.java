@@ -1,6 +1,7 @@
 package com.lvtn.product.entity;
 
 
+import com.lvtn.utils.common.Gender;
 import com.lvtn.utils.constant.TableName;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,5 +24,6 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private String description;
+    private String thumbnail;
 
 }

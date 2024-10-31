@@ -120,8 +120,8 @@ public class AuthServiceImp implements AuthService {
 
     @Transactional
     protected AuthResponse getAuthResponse(ApiResponse<UserResponse> response) {
-        String accessToken = jwtService.generateToken(response.getData().getUsername(), response.getData().getRole().toString(), TokenType.ACCESS_TOKEN);
-        String refreshToken = jwtService.generateToken(response.getData().getUsername(), response.getData().getRole().toString(), TokenType.REFRESH_TOKEN);
+        String accessToken = jwtService.generateToken(response.getData().getUsername(), response.getData().getRole(), TokenType.ACCESS_TOKEN);
+        String refreshToken = jwtService.generateToken(response.getData().getUsername(), response.getData().getRole(), TokenType.REFRESH_TOKEN);
         revokeAllTokens(String.valueOf(response.getData().getId()));
         saveToken(response.getData().getId(), accessToken, refreshToken);
         return new AuthResponse(accessToken, refreshToken);
