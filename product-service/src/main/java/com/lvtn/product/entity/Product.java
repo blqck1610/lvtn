@@ -24,5 +24,6 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private String description;
+    private String thumbnail;
 
 }

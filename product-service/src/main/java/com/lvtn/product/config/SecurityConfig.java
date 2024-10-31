@@ -1,5 +1,6 @@
 package com.lvtn.product.config;
 
+import com.lvtn.product.config.filter.JwtAuthenticateFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

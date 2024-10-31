@@ -1,4 +1,4 @@
-package com.lvtn.utils.dto.response.product;
+package com.lvtn.product.dto.response;
 
 import lombok.Data;
 

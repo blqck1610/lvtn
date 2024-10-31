@@ -2,6 +2,8 @@ package com.lvtn.product.service;
 
 import com.lvtn.product.entity.Brand;
 
+import java.util.UUID;
+
 /**
  * BrandService
  * Version 1.0
@@ -14,4 +16,6 @@ import com.lvtn.product.entity.Brand;
  */
 public interface BrandService {
     Brand getBrandByName(String brandName);
+
+    Brand getReferenceById(UUID uuid);
 }
