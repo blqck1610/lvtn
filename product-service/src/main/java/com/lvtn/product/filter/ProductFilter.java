@@ -14,6 +14,7 @@ import lombok.Data;
  */
 @Data
 public class ProductFilter {
+    private String keyword;
     private String brandName;
     private String categoryName;
     private Double priceMin;

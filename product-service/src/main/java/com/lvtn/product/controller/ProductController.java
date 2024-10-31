@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 import static com.lvtn.utils.constant.ApiEndpoint.*;
 import static com.lvtn.utils.util.ResponseUtil.getApiResponse;
 
@@ -69,6 +71,11 @@ public class ProductController {
                 SuccessMessage.GET_SUCCESS.getMessage(),
                 productService.getPageProduct(pagingRequest)
         );
+
+    }
+
+    @GetMapping(value = AUTO_COMPLETE)
+    public ApiResponse<List<String>> autoComplete(@RequestParam String prefix){
 
     }
 

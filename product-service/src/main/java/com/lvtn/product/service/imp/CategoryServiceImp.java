@@ -6,6 +6,8 @@ import com.lvtn.product.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 /**
  * CategoryServiceImp
  * Version 1.0
@@ -24,5 +26,10 @@ public class CategoryServiceImp implements CategoryService {
     @Override
     public Category getCategoryByName(String categoryName) {
         return null;
+    }
+
+    @Override
+    public Category getReferenceById(UUID uuid) {
+        return categoryRepository.getReferenceById(uuid);
     }
 }

@@ -48,9 +48,9 @@
             <version>42.7.3</version>
             <scope>runtime</scope>
         </dependency>
-<!--        flyway-->
+        <!--        flyway-->
 
-<!--eureka server-->
+        <!--eureka server-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
@@ -79,14 +79,28 @@
             <artifactId>zipkin-reporter-brave</artifactId>
         </dependency>
 
-<!--        feign client-->
+        <!--        feign client-->
         <dependency>
             <groupId>com.lvtn</groupId>
             <artifactId>clients</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-
-
+        <!--cache-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+            <version>3.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>6.0.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>6.0.13</version>
+        </dependency>
 
     </dependencies>
 </project>

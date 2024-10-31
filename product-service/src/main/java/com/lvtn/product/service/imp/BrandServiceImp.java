@@ -6,6 +6,8 @@ import com.lvtn.product.service.BrandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 /**
  * BrandServiceImp
  * Version 1.0
@@ -24,5 +26,10 @@ public class BrandServiceImp implements BrandService {
     @Override
     public Brand getBrandByName(String brandName) {
         return null;
+    }
+
+    @Override
+    public Brand getReferenceById(UUID uuid) {
+        return brandRepository.getReferenceById(uuid);
     }
 }

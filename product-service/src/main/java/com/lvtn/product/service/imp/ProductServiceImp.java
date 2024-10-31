@@ -14,10 +14,12 @@ import com.lvtn.product.service.*;
 import com.lvtn.utils.common.ErrorCode;
 import com.lvtn.utils.dto.request.page.PagingRequest;
 import com.lvtn.utils.exception.BaseException;
+import com.lvtn.utils.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -99,7 +101,15 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Page<ProductResponse> getPageProduct(PagingRequest<ProductFilter> pagingRequest) {
-
+        Pageable pageable = PageUtil.getPageable(pagingRequest);
+        Page<Product> pageProduct = productRepository.getPageProduct(
+                pageable,
+                pagingRequest.getFilter().getKeyword(),
+                pagingRequest.getFilter().getBrandName(),
+                pagingRequest.getFilter().getCategoryName(),
+                pagingRequest.getFilter().getPriceMin(),
+                pagingRequest.getFilter().getPriceMax()
+        )
         return null;
     }
 

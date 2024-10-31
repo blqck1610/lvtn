@@ -1,5 +1,6 @@
 package com.lvtn.payment.entity;
 
+import com.lvtn.utils.common.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
