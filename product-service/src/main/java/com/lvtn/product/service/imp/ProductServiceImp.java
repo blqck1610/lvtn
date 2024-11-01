@@ -109,7 +109,7 @@ public class ProductServiceImp implements ProductService {
                 pagingRequest.getFilter().getCategoryName(),
                 pagingRequest.getFilter().getPriceMin(),
                 pagingRequest.getFilter().getPriceMax()
-        )
+        );
         return null;
     }
 
