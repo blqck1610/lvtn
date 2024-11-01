@@ -10,5 +10,6 @@ package com.lvtn.product.controller;
  * ------------------------------------------------
  * 28/10/2024        NGUYEN             create
  */
+
 public class InternalController {
 }

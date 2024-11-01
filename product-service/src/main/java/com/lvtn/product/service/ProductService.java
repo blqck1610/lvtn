@@ -7,6 +7,8 @@ import com.lvtn.product.filter.ProductFilter;
 import com.lvtn.utils.dto.request.page.PagingRequest;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface ProductService {
     ProductResponse saveProduct(CreateNewProductRequest request);
 
@@ -17,4 +19,6 @@ public interface ProductService {
     void deleteProduct(String id);
 
     Page<ProductResponse> getPageProduct(PagingRequest<ProductFilter> pagingRequest);
+
+    List<String> autoComplete(String prefix);
 }

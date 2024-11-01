@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -65,18 +64,20 @@ public class ProductController {
     }
 
     @PostMapping(value = VIEW_LIST)
-    public ApiResponse<Page<ProductResponse>> getPageProduct(@RequestBody PagingRequest<ProductFilter> pagingRequest){
+    public ApiResponse<Page<ProductResponse>> getPageProduct(@RequestBody PagingRequest<ProductFilter> pagingRequest) {
         return getApiResponse(
                 HttpStatus.OK.value(),
                 SuccessMessage.GET_SUCCESS.getMessage(),
                 productService.getPageProduct(pagingRequest)
         );
-
     }
 
     @GetMapping(value = AUTO_COMPLETE)
-    public ApiResponse<List<String>> autoComplete(@RequestParam String prefix){
-
+    public ApiResponse<List<String>> autoComplete(@RequestParam String prefix) {
+        return getApiResponse(HttpStatus.OK.value(),
+                SuccessMessage.GET_SUCCESS.getMessage(),
+                productService.autoComplete(prefix)
+        );
     }
 
 }
