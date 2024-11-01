@@ -15,8 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 import static com.lvtn.utils.constant.ApiEndpoint.*;
 import static com.lvtn.utils.util.ResponseUtil.getApiResponse;
 
@@ -72,12 +70,5 @@ public class ProductController {
         );
     }
 
-    @GetMapping(value = AUTO_COMPLETE)
-    public ApiResponse<List<String>> autoComplete(@RequestParam String prefix) {
-        return getApiResponse(HttpStatus.OK.value(),
-                SuccessMessage.GET_SUCCESS.getMessage(),
-                productService.autoComplete(prefix)
-        );
-    }
 
 }
