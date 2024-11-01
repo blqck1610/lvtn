@@ -1,11 +1,18 @@
 package com.lvtn.search.controller;
 
+import com.lvtn.search.service.SearchService;
+import com.lvtn.utils.common.SuccessMessage;
+import com.lvtn.utils.dto.ApiResponse;
+import com.lvtn.utils.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.lvtn.utils.constant.ApiEndpoint.BASE_API;
-import static com.lvtn.utils.constant.ApiEndpoint.SEARCH;
+import java.util.List;
+
+import static com.lvtn.utils.constant.ApiEndpoint.*;
 
 /**
  * SearchController
@@ -23,4 +30,10 @@ import static com.lvtn.utils.constant.ApiEndpoint.SEARCH;
 public class SearchController {
     private final SearchService searchService;
 
+    @GetMapping(value = AUTO_COMPLETE)
+    public ApiResponse<List<String>> autoCompleteProductName(String prefix) {
+        return ResponseUtil.getApiResponse(HttpStatus.OK.value(),
+                SuccessMessage.OK.getMessage(),
+                searchService.autoComplete(prefix));
+    }
 }
