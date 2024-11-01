@@ -35,6 +35,9 @@ public class ApiEndpoint {
 
     //    PRODUCT
     public static final String PRODUCT = "/product";
+
+//    SEARCH
+    public static final String SEARCH = "/search";
     public static final String AUTO_COMPLETE = "/auto-complete";
 }
 

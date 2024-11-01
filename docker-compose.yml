@@ -1,5 +1,4 @@
 networks:
-
   spring:
     driver: bridge
 volumes:
@@ -62,19 +61,27 @@ services:
       - spring
     restart: unless-stopped
 
-  key-cloak:
-    image: quay.io/keycloak/keycloak:25.0.1
-    container_name: keycloak
-    ports:
-      - 8088:8080
+  elastic-search:
+    container_name: elastic-search
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-#      KC_DB: postgres
-#      KC_DB_URL: jdbc:postgresql://localhost:5432/keycloak
-#      KC_DB_USERNAME: admin
-#      KC_DB_PASSWORD: password
-    command: start-dev
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
     networks:
       - spring
+    ports:
+      - 9200:9200
     restart: unless-stopped
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.11.0
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elastic-search:9200
+    networks:
+      - spring
+    depends_on:
+      - elastic-search
+    ports:
+      - 5601:5601
+    restart: unless-stopped
+
