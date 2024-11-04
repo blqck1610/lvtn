@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,4 +39,12 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
                                  @Param("categoryName") String categoryName,
                                  @Param("min") Double priceMin,
                                  @Param("max") Double priceMax);
+
+    @Query("""
+                    SELECT p.name
+                    from Product p
+                    WHERE p.isDelete != true AND p.name LIKE concat('%', :prefix,'%' )
+                    ORDER BY p.createdAt DESC LIMIT 10
+            """)
+    List<String> getAutoComplete(@Param("prefix") String prefix);
 }

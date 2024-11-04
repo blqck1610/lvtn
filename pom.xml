@@ -19,7 +19,6 @@
         <module>notification-service</module>
         <module>payment-service</module>
         <module>product-service</module>
-        <module>search-service</module>
         <module>inventory-service</module>
     </modules>
     <properties>

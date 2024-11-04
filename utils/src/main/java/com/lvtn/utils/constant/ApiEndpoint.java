@@ -13,6 +13,8 @@ package com.lvtn.utils.constant;
 public class ApiEndpoint {
     public static final String BASE_API = "/api/v1";
     public static final String INTERNAL = "/internal";
+    public static final String PUBLIC = "/public";
+    public static final String ADMIN = "/admin";
 
     //    User
     public static final String USER = "/user";

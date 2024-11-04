@@ -34,7 +34,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private static final String[] PUBLIC_ENDPOINTS = {
             "/api/v1/internal/**",
-            "/api/v1/product/public/**"
+            "/api/v1/public/**"
     };
     private final JwtAuthenticationEntryPoint jwtEntryPoint;
     private final JwtAuthenticateFilter jwtAthFilter;

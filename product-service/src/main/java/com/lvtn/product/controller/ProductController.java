@@ -7,6 +7,7 @@ import com.lvtn.product.dto.response.ProductResponse;
 import com.lvtn.product.filter.ProductFilter;
 import com.lvtn.product.service.ProductService;
 import com.lvtn.utils.common.SuccessMessage;
+import com.lvtn.utils.constant.Common;
 import com.lvtn.utils.dto.ApiResponse;
 import com.lvtn.utils.dto.request.page.PagingRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,49 +16,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.lvtn.utils.constant.ApiEndpoint.*;
 import static com.lvtn.utils.util.ResponseUtil.getApiResponse;
 
 @RestController
-@RequestMapping(value = BASE_API + PRODUCT)
+@RequestMapping(value = BASE_API + PUBLIC + PRODUCT)
 @RequiredArgsConstructor
 @Slf4j
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping
-    public ApiResponse<ProductResponse> saveProduct(@RequestBody CreateNewProductRequest request) {
-        return getApiResponse(HttpStatus.CREATED.value(),
-                SuccessMessage.CREATED_SUCCESS.getMessage(),
-                productService.saveProduct(request)
-        );
-    }
-
     @GetMapping(value = ID)
-    public ApiResponse<ProductResponse> getProduct(@PathVariable("id") String id) {
+    public ApiResponse<ProductResponse> getProduct(@PathVariable(Common.ID) String id) {
         return getApiResponse(
                 HttpStatus.OK.value(),
                 SuccessMessage.GET_SUCCESS.getMessage(),
                 productService.getProductDto(id)
-        );
-    }
-
-    @PutMapping
-    public ApiResponse<ProductResponse> updateProduct(@RequestBody UpdateProductRequest request) {
-        return getApiResponse(
-                HttpStatus.OK.value(),
-                SuccessMessage.GET_SUCCESS.getMessage(),
-                productService.updateProduct(request)
-        );
-    }
-
-    @DeleteMapping(value = ID)
-    public ApiResponse<ProductResponse> delProduct(@PathVariable("id") String id) {
-        productService.deleteProduct(id);
-        return getApiResponse(
-                HttpStatus.OK.value(),
-                SuccessMessage.DELETE_SUCCESS.getMessage(),
-                null
         );
     }
 
@@ -70,5 +46,8 @@ public class ProductController {
         );
     }
 
-
+    @GetMapping(value = AUTO_COMPLETE)
+    public ApiResponse<List<String>> autoComplete(@RequestParam(name = Common.PREFIX) String prefix){
+        return getApiResponse(HttpStatus.OK.value(), SuccessMessage.OK.getMessage(), productService.autoComplete(prefix));
+    }
 }
