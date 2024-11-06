@@ -4,10 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record PaymentRequest(
-
         long amount,
         String orderId
-
-
 ) {
 }

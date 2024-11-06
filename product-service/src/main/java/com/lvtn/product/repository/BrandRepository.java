@@ -12,4 +12,5 @@ import java.util.UUID;
 public interface BrandRepository extends JpaRepository<Brand, UUID> {
     @Query("SELECT b FROM Brand b WHERE b.name = :name and b.isDelete != true ")
     Optional<Brand> findByName(@Param("name") String name);
+
 }

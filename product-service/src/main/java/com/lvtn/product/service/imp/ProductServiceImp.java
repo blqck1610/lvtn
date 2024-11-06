@@ -79,6 +79,7 @@ public class ProductServiceImp implements ProductService {
                 .category(categoryService.getCategoryByName(request.getCategoryName()))
                 .thumbnail(request.getThumbnail())
                 .gender(request.getGender())
+
                 .build();
         product = productRepository.saveAndFlush(product);
         return product;
@@ -104,6 +105,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     @Transactional
+    @CacheEvict(Common.CACHE_AUTOCOMPLETE)
     public void deleteProduct(String id) {
         log.info("deleting product {}", id);
         Product product = getProduct(id);
@@ -112,7 +114,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Page<ProductResponse> getPageProduct(PagingRequest<ProductFilter> pagingRequest) {
-        Pageable pageable = PageUtil.getPageable(pagingRequest);
+        Pageable pageable = PageUtil.getPageRequest(pagingRequest);
         Page<Product> pageProduct = productRepository.getPageProduct(
                 pageable,
                 pagingRequest.getFilter().getKeyword(),
@@ -132,8 +134,8 @@ public class ProductServiceImp implements ProductService {
     }
 
     private Product updateProduct(UpdateProductRequest request, Product product) {
-        Brand brand = brandService.getReferenceById(UUID.fromString(request.getBrand().getId()));
-        Category category = categoryService.getReferenceById(UUID.fromString(request.getCategory().getId()));
+        Brand brand = brandService.getReferenceById(UUID.fromString(request.getBrandId()));
+        Category category = categoryService.getReferenceById(UUID.fromString(request.getCategoryId()));
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setBrand(brand);
@@ -149,6 +151,4 @@ public class ProductServiceImp implements ProductService {
     private Product getProduct(String id) {
         return productRepository.findProductById(UUID.fromString(id)).orElse(null);
     }
-
-
 }

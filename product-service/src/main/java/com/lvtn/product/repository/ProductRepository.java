@@ -43,7 +43,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Query("""
                     SELECT p.name
                     from Product p
-                    WHERE p.isDelete != true AND p.name LIKE concat('%', :prefix,'%' )
+                    WHERE p.isDelete != true AND upper(p.name) LIKE upper(concat('%', :prefix,'%' ))
                     ORDER BY p.createdAt DESC LIMIT 10
             """)
     List<String> getAutoComplete(@Param("prefix") String prefix);

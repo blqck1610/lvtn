@@ -1,8 +1,6 @@
 package com.lvtn.product.controller;
 
 
-import com.lvtn.product.dto.request.CreateNewProductRequest;
-import com.lvtn.product.dto.request.UpdateProductRequest;
 import com.lvtn.product.dto.response.ProductResponse;
 import com.lvtn.product.filter.ProductFilter;
 import com.lvtn.product.service.ProductService;
@@ -14,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +21,7 @@ import static com.lvtn.utils.constant.ApiEndpoint.*;
 import static com.lvtn.utils.util.ResponseUtil.getApiResponse;
 
 @RestController
-@RequestMapping(value = BASE_API + PUBLIC + PRODUCT)
+@RequestMapping(value = BASE_API + PRODUCT + PUBLIC)
 @RequiredArgsConstructor
 @Slf4j
 public class ProductController {
@@ -47,7 +46,8 @@ public class ProductController {
     }
 
     @GetMapping(value = AUTO_COMPLETE)
-    public ApiResponse<List<String>> autoComplete(@RequestParam(name = Common.PREFIX) String prefix){
+    public ApiResponse<List<String>> autoComplete(@RequestParam(name = Common.PREFIX) String prefix) {
         return getApiResponse(HttpStatus.OK.value(), SuccessMessage.OK.getMessage(), productService.autoComplete(prefix));
     }
+
 }

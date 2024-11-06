@@ -25,8 +25,7 @@ import java.util.List;
 public class PagingRequest<T> {
     private int page;
     private int size;
-    private List<Sort.Order> orderList;
+    private String sortField;
+    private Sort.Direction sortBy;
     private T filter;
-
-
 }

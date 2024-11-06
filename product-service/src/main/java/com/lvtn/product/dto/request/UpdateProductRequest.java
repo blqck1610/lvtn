@@ -1,9 +1,7 @@
 package com.lvtn.product.dto.request;
 
-import com.lvtn.product.dto.response.BrandResponse;
-import com.lvtn.product.dto.response.CategoryResponse;
-import com.lvtn.utils.common.Gender;
 import com.lvtn.product.dto.response.MediaDto;
+import com.lvtn.utils.common.Gender;
 import lombok.Data;
 
 import java.util.List;
@@ -23,8 +21,8 @@ public class UpdateProductRequest {
     private String id;
     private String name;
     private String description;
-    private BrandResponse brand;
-    private CategoryResponse category;
+    private String brandId;
+    private String categoryId;
     private Gender gender;
     private String thumbnail;
     private List<MediaDto> AddMediaList;

@@ -26,15 +26,14 @@ import static com.lvtn.utils.util.ResponseUtil.getApiResponse;
  * 04/11/2024        NGUYEN             create
  */
 @RestController
-@RequestMapping(value = BASE_API + ADMIN + PRODUCT)
+@RequestMapping(value = BASE_API + PRODUCT + ADMIN)
 @RequiredArgsConstructor
 @Slf4j
-@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminController {
     private final ProductService productService;
 
-    @PostMapping
-    @PreAuthorize("hasPermission('ADMIN_CREATE')")
+    @PostMapping(value = CREATE)
+    @PreAuthorize("hasAuthority('ADMIN_CREATE')")
     public ApiResponse<ProductResponse> saveProduct(@RequestBody CreateNewProductRequest request) {
         return getApiResponse(HttpStatus.CREATED.value(),
                 SuccessMessage.CREATED_SUCCESS.getMessage(),
@@ -42,8 +41,8 @@ public class AdminController {
         );
     }
 
-    @PutMapping
-    @PreAuthorize("hasPermission('ADMIN_UPDATE')")
+    @PutMapping(value = UPDATE)
+    @PreAuthorize("hasAuthority('ADMIN_UPDATE')")
     public ApiResponse<ProductResponse> updateProduct(@RequestBody UpdateProductRequest request) {
         return getApiResponse(
                 HttpStatus.OK.value(),
@@ -52,8 +51,8 @@ public class AdminController {
         );
     }
 
-    @DeleteMapping(value = ID)
-    @PreAuthorize("hasPermission('ADMIN_DELETE')")
+    @DeleteMapping(value = DELETE + ID)
+    @PreAuthorize("hasAuthority('ADMIN_DELETE')")
     public ApiResponse<ProductResponse> delProduct(@PathVariable("id") String id) {
         productService.deleteProduct(id);
         return getApiResponse(
