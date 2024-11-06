@@ -25,5 +25,4 @@ public class Product extends BaseEntity {
     private Gender gender;
     private String description;
     private String thumbnail;
-
 }

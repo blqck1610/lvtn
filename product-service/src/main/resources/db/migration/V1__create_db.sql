@@ -26,6 +26,7 @@ CREATE TABLE "product"
     "category_id"   uuid,
     "gender"        varchar,
     "description"   varchar,
+    "thumbnail"     varchar,
     "is_delete"     bool,
     "last_modified" timestamp,
     "created_at"    timestamp
@@ -35,7 +36,7 @@ CREATE TABLE "price_history"
 (
     "id"            uuid PRIMARY KEY,
     "product_id"    uuid,
-    "price" float,
+    "price"         float,
     "last_modified" timestamp,
     "is_delete"     bool,
     "created_at"    timestamp

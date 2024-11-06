@@ -12,17 +12,22 @@ import com.lvtn.product.repository.PriceHistoryRepository;
 import com.lvtn.product.repository.ProductRepository;
 import com.lvtn.product.service.*;
 import com.lvtn.utils.common.ErrorCode;
+import com.lvtn.utils.constant.Common;
 import com.lvtn.utils.dto.request.page.PagingRequest;
 import com.lvtn.utils.exception.BaseException;
 import com.lvtn.utils.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -48,7 +53,9 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     @Transactional
+    @CacheEvict(Common.CACHE_AUTOCOMPLETE)
     public ProductResponse saveProduct(CreateNewProductRequest request) {
+        log.info("creating new product {} ", request);
         try {
             Product product = buildProduct(request);
             priceHistoryRepository.save(PriceHistory.builder()
@@ -64,6 +71,7 @@ public class ProductServiceImp implements ProductService {
     }
 
     private Product buildProduct(CreateNewProductRequest request) {
+        log.info("Building product {}", request);
         Product product = Product.builder()
                 .name(request.getName())
                 .description(request.getDescription())
@@ -72,6 +80,7 @@ public class ProductServiceImp implements ProductService {
                 .thumbnail(request.getThumbnail())
                 .gender(request.getGender())
                 .build();
+        product.setIsDelete(false);
         product = productRepository.saveAndFlush(product);
         return product;
     }
@@ -82,7 +91,9 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
+    @CacheEvict(Common.CACHE_AUTOCOMPLETE)
     public ProductResponse updateProduct(UpdateProductRequest request) {
+        log.info("Updating product {}", request);
         Product product = getProduct(request.getId());
         if (ObjectUtils.isEmpty(product)) {
             log.error("not found product for id {}", request.getId());
@@ -94,14 +105,16 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     @Transactional
+    @CacheEvict(Common.CACHE_AUTOCOMPLETE)
     public void deleteProduct(String id) {
+        log.info("deleting product {}", id);
         Product product = getProduct(id);
         product.setIsDelete(true);
     }
 
     @Override
     public Page<ProductResponse> getPageProduct(PagingRequest<ProductFilter> pagingRequest) {
-        Pageable pageable = PageUtil.getPageable(pagingRequest);
+        Pageable pageable = PageUtil.getPageRequest(pagingRequest);
         Page<Product> pageProduct = productRepository.getPageProduct(
                 pageable,
                 pagingRequest.getFilter().getKeyword(),
@@ -110,12 +123,19 @@ public class ProductServiceImp implements ProductService {
                 pagingRequest.getFilter().getPriceMin(),
                 pagingRequest.getFilter().getPriceMax()
         );
-        return null;
+        List<ProductResponse> productResponseList = pageProduct.stream().map(mapper::from).toList();
+        return new PageImpl<>(productResponseList, pageable, pageProduct.getTotalElements());
+    }
+
+    @Override
+    @Cacheable(Common.CACHE_AUTOCOMPLETE)
+    public List<String> autoComplete(String prefix) {
+        return productRepository.getAutoComplete(prefix);
     }
 
     private Product updateProduct(UpdateProductRequest request, Product product) {
-        Brand brand = brandService.getReferenceById(UUID.fromString(request.getBrand().getId()));
-        Category category = categoryService.getReferenceById(UUID.fromString(request.getCategory().getId()));
+        Brand brand = brandService.getReferenceById(UUID.fromString(request.getBrandId()));
+        Category category = categoryService.getReferenceById(UUID.fromString(request.getCategoryId()));
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setBrand(brand);
@@ -131,6 +151,4 @@ public class ProductServiceImp implements ProductService {
     private Product getProduct(String id) {
         return productRepository.findProductById(UUID.fromString(id)).orElse(null);
     }
-
-
 }

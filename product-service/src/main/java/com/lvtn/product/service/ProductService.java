@@ -20,4 +20,5 @@ public interface ProductService {
 
     Page<ProductResponse> getPageProduct(PagingRequest<ProductFilter> pagingRequest);
 
+    List<String> autoComplete(String prefix);
 }

@@ -7,6 +7,7 @@ import com.lvtn.utils.exception.BaseException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,45 +24,9 @@ import java.util.List;
  */
 public class PageUtil {
     public static <T> PageRequest getPageRequest(PagingRequest<T> requestPaging) {
-        return requestPaging.getOrderList().isEmpty()
+        return StringUtils.isEmpty(requestPaging.getSortField())
                 ? PageRequest.of(requestPaging.getPage() - 1, requestPaging.getSize())
                 : PageRequest.of(requestPaging.getPage() - 1, requestPaging.getSize(),
-                Sort.by(requestPaging.getOrderList()));
-    }
-
-    public static List<Sort.Order> getOrderList(String[] sort) {
-        List<Sort.Order> orders = new ArrayList<>();
-        if (sort[0].contains(Common.COMMA)) {
-            for (String sortOrder : sort) {
-                String[] _sort = sortOrder.split(Common.COMMA);
-                orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
-            }
-        } else orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
-        return orders;
-    }
-
-    public static Sort.Direction getSortDirection(String s) {
-        Sort.Direction direction = null;
-        try {
-            direction = Sort.Direction.fromString(s);
-        } catch (Exception e) {
-            throw new BaseException(ErrorCode.DIRECTION_NOT_CORRECT.getCode(), ErrorCode.DIRECTION_NOT_CORRECT.getMessage());
-        }
-        return direction;
-    }
-
-    public static Pageable getPageable(PagingRequest pagingRequest) {
-        return getPageRequest(pagingRequest);
+                Sort.by(requestPaging.getSortBy(), new String[]{requestPaging.getSortField()}));
     }
 }
-//exam
-//    public ResponseEntity<ApiResponse<Page<PostDto>>> getNews(
-//            @RequestParam(name = "page", defaultValue = "1") int page,
-//            @RequestParam(name = "pageSize", defaultValue = "8") int pageSize,
-//            @RequestParam(name = "sort", defaultValue = "createdAt, desc") String[] sort
-//    ) {
-//        Pageable pageable = PageUtil.getPageable(PagingRequest.<Object>builder()
-//                .size(pageSize)
-//                .page(page)
-//                .orderList(PageUtil.getOrderList(sort))
-//                .build());

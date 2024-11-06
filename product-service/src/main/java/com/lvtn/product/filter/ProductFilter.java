@@ -1,5 +1,6 @@
 package com.lvtn.product.filter;
 
+import com.lvtn.utils.common.Gender;
 import lombok.Data;
 
 /**
@@ -15,9 +16,9 @@ import lombok.Data;
 @Data
 public class ProductFilter {
     private String keyword;
+    private Gender gender;
     private String brandName;
     private String categoryName;
     private Double priceMin;
     private Double priceMax;
-    private Boolean isSales;
 }

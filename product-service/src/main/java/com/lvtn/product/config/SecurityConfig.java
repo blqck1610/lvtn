@@ -16,6 +16,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * SecurityConfig
@@ -34,7 +39,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private static final String[] PUBLIC_ENDPOINTS = {
             "/api/v1/internal/**",
-            "/api/v1/product/public/**"
+            "/api/v1/product/public/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/webjars/**"
     };
     private final JwtAuthenticationEntryPoint jwtEntryPoint;
     private final JwtAuthenticateFilter jwtAthFilter;
@@ -44,24 +54,16 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Disable CSRF protection since we are using JWT tokens
                 .csrf(AbstractHttpConfigurer::disable)
-                // CORS configuration
                 .cors(Customizer.withDefaults())
-                // Authorization for public endpoints
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                                .anyRequest().authenticated()  // All other requests require authentication
+                                .anyRequest().authenticated()
                 )
-                // Use stateless session management because we're using JWT
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )

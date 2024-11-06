@@ -16,7 +16,7 @@ spring:
         format-sql: 'true'
     hibernate:
       ddl-auto: none
-    show-sql: 'false'
+    show-sql: 'true'
   flyway:
     locations: classpath:/db/migration
 
@@ -40,5 +40,9 @@ management:
 logging:
   pattern:
     level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+  level:
+    org:
+      springframework:
+        security: DEBUG
 
 

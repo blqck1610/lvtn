@@ -18,4 +18,8 @@ public class Common {
     public static final String COMMA = ",";
     public static final String ALL_REQUEST = "/**";
     public static final String PREFIX_ROLE = "ROLE_";
+    public static final String CACHE_AUTOCOMPLETE = "autocomplete";
+    public static final String ID = "id";
+    public static final String PREFIX = "prefix";
+
 }

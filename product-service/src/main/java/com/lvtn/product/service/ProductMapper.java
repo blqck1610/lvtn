@@ -20,13 +20,19 @@ public class ProductMapper {
         if (ObjectUtils.isEmpty(product)) {
             return null;
         }
-        PriceHistory priceHistory = priceHistoryRepository.getByProduct(product.getId());
+        PriceHistory priceHistory = priceHistoryRepository.getByProduct(product.getId()).orElse(null);
+        Double price = ObjectUtils.isEmpty(priceHistory) ? null : priceHistory.getPrice();
+        BrandResponse brandResponse = new BrandResponse(product.getBrand().getId().toString(), product.getBrand().getName());
+        CategoryResponse categoryResponse = new CategoryResponse(product.getCategory().getId().toString(), product.getCategory().getName());
         return ProductResponse.builder()
                 .id(product.getId())
-                .brand(new BrandResponse(product.getBrand().getId().toString(), product.getName()))
-                .category(new CategoryResponse(product.getCategory().getId().toString(), product.getCategory().getName()))
+                .name(product.getName())
+                .description(product.getDescription())
+                .gender(product.getGender())
+                .brand(brandResponse)
+                .category(categoryResponse)
                 .mediaDto(productMediaService.getListProductMediaDto(product))
-                .price(priceHistory.getPrice())
+                .price(price)
                 .thumbnail(product.getThumbnail())
                 .build();
     }

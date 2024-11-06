@@ -26,6 +26,7 @@ import java.util.UUID;
 public class ProductResponse {
     private UUID id;
     private String name;
+    private String description;
     private BrandResponse brand;
     private CategoryResponse category;
     private Gender gender;

@@ -3,6 +3,8 @@ package com.lvtn.product.service.imp;
 import com.lvtn.product.entity.Brand;
 import com.lvtn.product.repository.BrandRepository;
 import com.lvtn.product.service.BrandService;
+import com.lvtn.utils.common.ErrorCode;
+import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,7 @@ public class BrandServiceImp implements BrandService {
 
     @Override
     public Brand getBrandByName(String brandName) {
-        return null;
+        return brandRepository.findByName(brandName).orElseThrow(() -> new BaseException(ErrorCode.BAD_REQUEST.getCode(), ErrorCode.BRAND_NOT_FOUND.getMessage()));
     }
 
     @Override
