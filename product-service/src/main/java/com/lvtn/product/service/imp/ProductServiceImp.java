@@ -79,8 +79,8 @@ public class ProductServiceImp implements ProductService {
                 .category(categoryService.getCategoryByName(request.getCategoryName()))
                 .thumbnail(request.getThumbnail())
                 .gender(request.getGender())
-
                 .build();
+        product.setIsDelete(false);
         product = productRepository.saveAndFlush(product);
         return product;
     }
