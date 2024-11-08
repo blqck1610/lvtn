@@ -3,6 +3,7 @@ package com.lvtn.product.entity;
 import com.lvtn.utils.constant.TableName;
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.catalina.realm.UserDatabaseRealm;
 
 import java.util.UUID;
 
@@ -14,8 +15,8 @@ import java.util.UUID;
 @Builder
 @Table(name = TableName.REVIEW)
 public class Review extends BaseEntity {
-    private UUID userId;
-    private UUID productId;
+    private String username;
+    private Product product;
     private int rating;
     private String comment;
 }

@@ -57,7 +57,7 @@ CREATE TABLE "product_media"
 CREATE TABLE "review"
 (
     "id"            uuid PRIMARY KEY,
-    "user_id"       uuid,
+    "username"       varchar,
     "product_id"    uuid,
     "rating"        int,
     "comment"       varchar,

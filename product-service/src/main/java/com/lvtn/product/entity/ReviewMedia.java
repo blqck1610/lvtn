@@ -30,7 +30,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class ReviewMedia extends BaseEntity {
     @ManyToOne
-    private Product product;
+    private Review review;
     private String resource;
     private MediaType mediaType;
     private MediaInfo mediaInfo;

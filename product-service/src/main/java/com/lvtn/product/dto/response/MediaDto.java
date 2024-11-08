@@ -1,5 +1,6 @@
 package com.lvtn.product.dto.response;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.UUID;
@@ -15,6 +16,7 @@ import java.util.UUID;
  * 28/10/2024        NGUYEN             create
  */
 @Data
+@Builder
 public class MediaDto {
     private UUID id;
     private String resource;

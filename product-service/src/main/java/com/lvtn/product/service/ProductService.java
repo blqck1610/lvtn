@@ -1,8 +1,11 @@
 package com.lvtn.product.service;
 
+import com.lvtn.product.dto.request.CreateReviewRequest;
 import com.lvtn.product.dto.request.UpdateProductRequest;
 import com.lvtn.product.dto.request.CreateNewProductRequest;
 import com.lvtn.product.dto.response.ProductResponse;
+import com.lvtn.product.dto.response.ReviewResponse;
+import com.lvtn.product.entity.Product;
 import com.lvtn.product.filter.ProductFilter;
 import com.lvtn.utils.dto.request.page.PagingRequest;
 import org.springframework.data.domain.Page;
@@ -21,4 +24,6 @@ public interface ProductService {
     Page<ProductResponse> getPageProduct(PagingRequest<ProductFilter> pagingRequest);
 
     List<String> autoComplete(String prefix);
+
+    Product getProduct(String productId);
 }

@@ -1,20 +1,25 @@
 package com.lvtn.product.service;
 
-import com.lvtn.product.dto.response.BrandResponse;
-import com.lvtn.product.dto.response.CategoryResponse;
+import com.lvtn.product.dto.response.*;
 import com.lvtn.product.entity.PriceHistory;
 import com.lvtn.product.entity.Product;
+import com.lvtn.product.entity.Review;
+import com.lvtn.product.entity.ReviewMedia;
 import com.lvtn.product.repository.PriceHistoryRepository;
-import com.lvtn.product.dto.response.ProductResponse;
+import com.lvtn.product.repository.ReviewMediaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
-public class ProductMapper {
+public class Mapper {
     private final ProductMediaService productMediaService;
     private final PriceHistoryRepository priceHistoryRepository;
+    private final ReviewMediaRepository reviewMediaRepository;
+
 
     public ProductResponse from(Product product) {
         if (ObjectUtils.isEmpty(product)) {
@@ -34,6 +39,27 @@ public class ProductMapper {
                 .mediaDto(productMediaService.getListProductMediaDto(product))
                 .price(price)
                 .thumbnail(product.getThumbnail())
+                .build();
+    }
+
+    public ReviewResponse from(Review review) {
+        List<MediaDto> mediaList = reviewMediaRepository.findAllByProductId(review.getId())
+                .stream().map(this::from).toList();
+        return ReviewResponse.builder()
+                .id(review.getId().toString())
+                .username(review.getUsername())
+                .comment(review.getComment())
+                .listMedia(mediaList)
+                .rating(review.getRating())
+                .build();
+    }
+
+    public MediaDto from(ReviewMedia reviewMedia) {
+        return MediaDto.builder()
+                .id(reviewMedia.getId())
+                .mediaInfo(String.valueOf(reviewMedia.getMediaInfo()))
+                .mediaType(String.valueOf(reviewMedia.getMediaType()))
+                .resource(reviewMedia.getResource())
                 .build();
     }
 }
