@@ -57,7 +57,7 @@ CREATE TABLE "product_media"
 CREATE TABLE "review"
 (
     "id"            uuid PRIMARY KEY,
-    "username"       varchar,
+    "username"      varchar,
     "product_id"    uuid,
     "rating"        int,
     "comment"       varchar,
@@ -76,6 +76,32 @@ CREATE TABLE "review_media"
     "last_modified" timestamp,
     "created_at"    timestamp
 );
+
+CREATE TABLE "cart"
+(
+    "id"            uuid PRIMARY KEY,
+    "user_id"       uuid,
+    "total_price"   float,
+    "is_delete"     bool,
+    "created_at"    timestamp,
+    "last_modified" timestamp
+);
+CREATE TABLE "item"
+(
+    "id"            uuid PRIMARY KEY,
+    "cart_id"       uuid,
+    "product_id"    uuid,
+    "quantity"      int,
+    "is_delete"     bool,
+    "created_at"    timestamp,
+    "last_modified" timestamp
+);
+
+-- ALTER TABLE "item"
+--     ADD FOREIGN KEY ("product_id") REFERENCES "product" ("id");
+-- ALTER TABLE "item"
+--     ADD FOREIGN KEY ("cart_id") REFERENCES "cart" ("id");
+
 
 ALTER TABLE "product"
     ADD FOREIGN KEY ("category_id") REFERENCES "category" ("id");

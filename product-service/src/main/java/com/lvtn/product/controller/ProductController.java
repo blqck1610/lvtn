@@ -112,7 +112,8 @@ public class ProductController {
     @DeleteMapping(value = REVIEW + ID)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ApiResponse<ReviewResponse> deleteReview(@PathVariable String id) {
-        return getApiResponse(HttpStatus.OK.value(), SuccessMessage.DELETE_SUCCESS.getMessage(), reviewService.deleteReview(id));
+        reviewService.deleteReview(id);
+        return getApiResponse(HttpStatus.OK.value(), SuccessMessage.DELETE_SUCCESS.getMessage(), null);
     }
 
     @PostMapping(value = REVIEW + VIEW_LIST)
@@ -120,6 +121,4 @@ public class ProductController {
     public ApiResponse<Page<ReviewResponse>> getPageReview(@RequestBody PagingRequest<IdFilter> request) {
         return getApiResponse(HttpStatus.OK.value(), SuccessMessage.GET_SUCCESS.getMessage(), reviewService.getPageReview(request));
     }
-
-
 }

@@ -33,4 +33,5 @@ public class ProductResponse {
     private List<MediaDto> mediaDto;
     private Double price;
     private String thumbnail;
+//    private SaleResponse sale;
 }
