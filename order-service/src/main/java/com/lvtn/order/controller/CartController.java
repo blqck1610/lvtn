@@ -1,9 +1,7 @@
-package com.lvtn.order.entity;
-
-import jakarta.persistence.Entity;
+package com.lvtn.order.controller;
 
 /**
- * Cart
+ * Controller
  * Version 1.0
  * Date: 08/11/2024
  * Copyright
@@ -12,7 +10,5 @@ import jakarta.persistence.Entity;
  * ------------------------------------------------
  * 08/11/2024        NGUYEN             create
  */
-@Entity
-public class Cart extends BaseEntity {
-
+public class CartController {
 }

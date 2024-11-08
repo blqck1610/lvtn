@@ -1,9 +1,9 @@
-package com.lvtn.order.entity;
+package com.lvtn.order.service.imp;
 
-import jakarta.persistence.Entity;
+import org.springframework.stereotype.Service;
 
 /**
- * Item
+ * CartServiceImp
  * Version 1.0
  * Date: 08/11/2024
  * Copyright
@@ -12,6 +12,6 @@ import jakarta.persistence.Entity;
  * ------------------------------------------------
  * 08/11/2024        NGUYEN             create
  */
-@Entity
-public class Item extends BaseEntity {
+@Service
+public class CartServiceImp {
 }
