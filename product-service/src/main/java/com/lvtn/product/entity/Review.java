@@ -16,6 +16,7 @@ import java.util.UUID;
 @Table(name = TableName.REVIEW)
 public class Review extends BaseEntity {
     private String username;
+    @ManyToOne
     private Product product;
     private int rating;
     private String comment;
