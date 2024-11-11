@@ -28,6 +28,6 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = TableName.CART)
 public class Cart extends BaseEntity {
-    private UUID userId;
+    private String username;
     private Double totalAmount;
 }

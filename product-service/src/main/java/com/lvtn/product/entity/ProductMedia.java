@@ -1,6 +1,5 @@
 package com.lvtn.product.entity;
 
-import com.lvtn.utils.common.MediaInfo;
 import com.lvtn.utils.common.MediaType;
 import com.lvtn.utils.constant.TableName;
 import jakarta.persistence.Entity;
@@ -33,5 +32,4 @@ public class ProductMedia extends BaseEntity {
     private Product product;
     private String resource;
     private MediaType mediaType;
-    private MediaInfo mediaInfo;
 }

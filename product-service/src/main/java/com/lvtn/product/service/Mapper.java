@@ -1,10 +1,8 @@
 package com.lvtn.product.service;
 
 import com.lvtn.product.dto.response.*;
-import com.lvtn.product.entity.PriceHistory;
-import com.lvtn.product.entity.Product;
-import com.lvtn.product.entity.Review;
-import com.lvtn.product.entity.ReviewMedia;
+import com.lvtn.product.entity.*;
+import com.lvtn.product.repository.ItemRepository;
 import com.lvtn.product.repository.PriceHistoryRepository;
 import com.lvtn.product.repository.ReviewMediaRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +17,7 @@ public class Mapper {
     private final ProductMediaService productMediaService;
     private final PriceHistoryRepository priceHistoryRepository;
     private final ReviewMediaRepository reviewMediaRepository;
+    private final ItemRepository itemRepository;
 
 
     public ProductResponse from(Product product) {
@@ -57,9 +56,24 @@ public class Mapper {
     public MediaDto from(ReviewMedia reviewMedia) {
         return MediaDto.builder()
                 .id(reviewMedia.getId())
-                .mediaInfo(String.valueOf(reviewMedia.getMediaInfo()))
                 .mediaType(String.valueOf(reviewMedia.getMediaType()))
                 .resource(reviewMedia.getResource())
+                .build();
+    }
+
+    public ItemResponse from(Item item){
+        return ItemResponse.builder()
+                .id(item.getId().toString())
+                .product(this.from(item.getProduct()))
+                .quantity(item.getQuantity())
+                .build();
+    }
+
+    public CartResponse from(Cart cart) {
+        List<ItemResponse> items = itemRepository.findAllByCart(cart).stream().map(this::from).toList();
+        return CartResponse.builder()
+                .items(items)
+                .totalAmount(cart.getTotalAmount())
                 .build();
     }
 }

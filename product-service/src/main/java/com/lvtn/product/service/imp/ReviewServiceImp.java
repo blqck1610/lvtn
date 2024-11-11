@@ -14,7 +14,6 @@ import com.lvtn.product.service.Mapper;
 import com.lvtn.product.service.ProductService;
 import com.lvtn.product.service.ReviewService;
 import com.lvtn.utils.common.ErrorCode;
-import com.lvtn.utils.common.MediaInfo;
 import com.lvtn.utils.common.MediaType;
 import com.lvtn.utils.dto.request.page.PagingRequest;
 import com.lvtn.utils.exception.BaseException;
@@ -86,7 +85,6 @@ public class ReviewServiceImp implements ReviewService {
         }
         for (MediaDto mediaDto : listMedia) {
             ReviewMedia reviewMedia = ReviewMedia.builder()
-                    .mediaInfo(MediaInfo.valueOf(mediaDto.getMediaInfo()))
                     .review(review)
                     .mediaType(MediaType.valueOf(mediaDto.getMediaType()))
                     .resource(mediaDto.getResource())

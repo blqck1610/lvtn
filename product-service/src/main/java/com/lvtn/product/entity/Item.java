@@ -25,10 +25,10 @@ import java.util.UUID;
 @Builder
 @Table(name = TableName.ITEM)
 @EntityListeners(AuditingEntityListener.class)
-public class Item extends  BaseEntity {
+public class Item extends BaseEntity {
     @ManyToOne
     private Cart cart;
-//    @ManyToOne
-//    private Product product;
+    @ManyToOne
+    private Product product;
     private int quantity;
 }

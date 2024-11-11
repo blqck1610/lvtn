@@ -48,7 +48,6 @@ CREATE TABLE "product_media"
     "product_id"    uuid,
     "resource"      varchar,
     "media_type"    varchar,
-    "media_info"    varchar,
     "is_delete"     bool,
     "last_modified" timestamp,
     "created_at"    timestamp
@@ -80,7 +79,7 @@ CREATE TABLE "review_media"
 CREATE TABLE "cart"
 (
     "id"            uuid PRIMARY KEY,
-    "user_id"       uuid,
+    "username"       varchar,
     "total_price"   float,
     "is_delete"     bool,
     "created_at"    timestamp,
