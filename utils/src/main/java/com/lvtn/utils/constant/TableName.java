@@ -21,5 +21,7 @@ public class TableName {
     public static final String PRICE_HISTORY = "\"price_history\"";
     public static final String PRODUCT_MEDIA = "\"product_media\"";
     public static final String REVIEW_MEDIA = "\"review_media\"";
+    public static final String ITEM = "\"item\"";
+    public static final String CART = "\"cart\"";
     public static final String INVENTORY = "\"inventory\"";
 }
