@@ -24,4 +24,5 @@ public class TableName {
     public static final String ITEM = "\"item\"";
     public static final String CART = "\"cart\"";
     public static final String INVENTORY = "\"inventory\"";
+    public static final String ORDER = "\"order\"";
 }

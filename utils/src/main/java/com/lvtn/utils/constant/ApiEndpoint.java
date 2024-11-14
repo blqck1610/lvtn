@@ -46,5 +46,8 @@ public class ApiEndpoint {
 
 //    REVIEW
     public static final String REVIEW = "/review";
+
+//    Order
+    public static final String ORDER = "/order";
 }
 
