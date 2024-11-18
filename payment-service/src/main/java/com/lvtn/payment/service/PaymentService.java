@@ -2,9 +2,10 @@ package com.lvtn.payment.service;
 
 
 import com.lvtn.amqp.RabbitMQMessageProducer;
-import com.lvtn.payment.RabbitMQ.AMQPConfig;
+import com.lvtn.payment.config.amqp.InventoryConfig;
 import com.lvtn.payment.entity.Transaction;
 import com.lvtn.payment.repository.PaymentRepository;
+import com.lvtn.utils.dto.order.OrderDto;
 import com.lvtn.utils.dto.payment.PaymentStatusResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final RabbitMQMessageProducer producer;
-    private final AMQPConfig rabbitMQConfig;
+    private final InventoryConfig rabbitMQConfig;
 
 
     @Transactional
@@ -37,4 +38,6 @@ public class PaymentService {
         producer.publish(paymentStatusResponse, rabbitMQConfig.getInternalExchange(), rabbitMQConfig.getInternalPaymentRoutingKey());
     }
 
+    public void createPayment(OrderDto request) {
+    }
 }

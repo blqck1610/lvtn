@@ -1,6 +1,7 @@
 package com.lvtn.order.entity;
 
 import com.lvtn.utils.common.OrderStatus;
+import com.lvtn.utils.common.PaymentMethod;
 import com.lvtn.utils.constant.TableName;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -33,4 +34,5 @@ public class Order extends BaseEntity {
     private OrderStatus status;
     private String note;
     private Double totalAmount;
+    private PaymentMethod paymentMethod;
 }

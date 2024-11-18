@@ -1,5 +1,6 @@
 package com.lvtn.utils.dto.order;
 
+import com.lvtn.utils.common.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,5 +27,6 @@ public class OrderDto {
     private UUID id;
     private UUID userId;
     private Double totalAmount;
-    List<ItemDto> items;
+    private List<ItemDto> items;
+    private PaymentMethod paymentMethod;
 }

@@ -1,13 +1,12 @@
 package com.lvtn.payment.vnpay.service;
 
-import com.lvtn.utils.dto.payment.PaymentRequest;
-import com.lvtn.utils.dto.payment.PaymentResponseDTO;
 import com.lvtn.payment.service.PaymentService;
 import com.lvtn.payment.vnpay.config.Config;
+import com.lvtn.utils.dto.payment.PaymentRequest;
+import com.lvtn.utils.dto.payment.PaymentResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -20,7 +19,6 @@ import java.util.*;
 public class VNPayService {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
     private final PaymentService paymentService;
-
 
 
     public PaymentResponseDTO createVNPayPayment(HttpServletRequest request, PaymentRequest paymentRequest) throws UnsupportedEncodingException {
@@ -103,19 +101,8 @@ public class VNPayService {
         paymentResponseDTO.setMessage("Successfully");
         paymentResponseDTO.setURL(paymentUrl);
 
-//        com.google.gson.JsonObject job = new JsonObject();
-//        job.addProperty("code", "00");
-//        job.addProperty("message", "success");
-//        job.addProperty("data", paymentUrl);
-//        Gson gson = new Gson();
-//        resp.getWriter().write(gson.toJson(job));
-        RestTemplate restTemplate = new RestTemplate();
-
-
         return paymentResponseDTO;
     }
-
-
 
 
 }

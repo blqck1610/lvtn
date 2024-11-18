@@ -1,13 +1,14 @@
 create table "order"
 (
-    id            uuid not null primary key,
-    user_id       uuid,
-    order_status  varchar(255),
-    note          varchar(255),
-    total_amount  float,
-    is_delete     boolean,
-    created_at    timestamp,
-    last_modified timestamp
+    id             uuid not null primary key,
+    user_id        uuid,
+    order_status   varchar(255),
+    note           varchar(255),
+    total_amount   float,
+    payment_method varchar(255),
+    is_delete      boolean,
+    created_at     timestamp,
+    last_modified  timestamp
 );
 
 create table "order_line"
