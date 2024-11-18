@@ -39,5 +39,4 @@ public class OrderController {
                 SuccessMessage.CREATED_SUCCESS.getMessage(),
                 orderService.createOrder(request));
     }
-
 }
