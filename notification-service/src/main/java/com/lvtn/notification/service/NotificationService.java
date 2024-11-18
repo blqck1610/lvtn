@@ -7,7 +7,7 @@ import com.lvtn.notification.entity.Notification;
 import com.lvtn.notification.repository.NotificationRepository;
 import com.lvtn.utils.common.Role;
 import com.lvtn.utils.constant.Mail;
-import com.lvtn.utils.dto.request.notification.NotificationRequest;
+import com.lvtn.utils.dto.notification.NotificationRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

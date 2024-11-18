@@ -14,7 +14,7 @@ import com.lvtn.product.service.ReviewService;
 import com.lvtn.utils.common.SuccessMessage;
 import com.lvtn.utils.constant.Common;
 import com.lvtn.utils.dto.ApiResponse;
-import com.lvtn.utils.dto.request.page.PagingRequest;
+import com.lvtn.utils.dto.page.PagingRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

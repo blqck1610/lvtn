@@ -1,12 +1,10 @@
-package com.lvtn.utils.dto.request.page;
+package com.lvtn.utils.dto.page;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Sort;
-
-import java.util.List;
 
 /**
  * PageRequest

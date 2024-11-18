@@ -2,7 +2,7 @@ package com.lvtn.notification.entity;
 
 
 import com.lvtn.utils.constant.TableName;
-import com.lvtn.utils.dto.request.notification.NotificationType;
+import com.lvtn.utils.dto.notification.NotificationType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

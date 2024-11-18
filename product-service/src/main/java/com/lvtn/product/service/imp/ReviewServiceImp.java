@@ -15,7 +15,7 @@ import com.lvtn.product.service.ProductService;
 import com.lvtn.product.service.ReviewService;
 import com.lvtn.utils.common.ErrorCode;
 import com.lvtn.utils.common.MediaType;
-import com.lvtn.utils.dto.request.page.PagingRequest;
+import com.lvtn.utils.dto.page.PagingRequest;
 import com.lvtn.utils.exception.BaseException;
 import com.lvtn.utils.util.PageUtil;
 import lombok.RequiredArgsConstructor;

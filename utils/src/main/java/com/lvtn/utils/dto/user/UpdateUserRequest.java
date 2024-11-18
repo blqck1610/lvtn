@@ -1,4 +1,4 @@
-package com.lvtn.utils.dto.request.user;
+package com.lvtn.utils.dto.user;
 
 import lombok.Data;
 

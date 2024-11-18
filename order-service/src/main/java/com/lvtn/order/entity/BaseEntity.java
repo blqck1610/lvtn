@@ -30,7 +30,7 @@ public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private Boolean isDelete;
+    private Boolean isDelete = false;
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate

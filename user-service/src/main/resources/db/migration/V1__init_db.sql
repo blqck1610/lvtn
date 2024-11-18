@@ -3,7 +3,7 @@ create table "user"
     id            uuid    not null
         primary key,
     avatar        varchar(255),
-    creat_at      timestamp(6),
+    created_at      timestamp(6),
     date_of_birth date,
     email         varchar(255),
     first_name    varchar(255),

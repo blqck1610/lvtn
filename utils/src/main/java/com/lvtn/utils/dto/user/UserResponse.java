@@ -1,4 +1,4 @@
-package com.lvtn.utils.dto.response.user;
+package com.lvtn.utils.dto.user;
 
 
 import com.lvtn.utils.common.Role;

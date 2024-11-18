@@ -1,4 +1,4 @@
-package com.lvtn.utils.dto.request.authenticate;
+package com.lvtn.utils.dto.auth;
 
 
 import lombok.Data;

@@ -1,8 +1,12 @@
 package com.lvtn.order.service;
 
-import com.lvtn.order.dto.request.CreateOrderRequest;
-import com.lvtn.order.dto.response.OrderResponse;
+import com.lvtn.utils.dto.order.OrderDto;
+import com.lvtn.utils.dto.order.CancelOrderRequest;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface OrderService {
-    OrderResponse createOrder(CreateOrderRequest request);
+    OrderDto createOrder(OrderDto request);
+
+    @Transactional
+    void cancelOrder(CancelOrderRequest request);
 }

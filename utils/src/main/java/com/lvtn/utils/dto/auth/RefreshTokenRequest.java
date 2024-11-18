@@ -1,9 +1,9 @@
-package com.lvtn.utils.dto.request.user;
+package com.lvtn.utils.dto.auth;
 
 import lombok.Data;
 
 /**
- * UpdatePasswordRequest
+ * RefreshTokenRequest
  * Version 1.0
  * Date: 24/10/2024
  * Copyright
@@ -13,8 +13,6 @@ import lombok.Data;
  * 24/10/2024        NGUYEN             create
  */
 @Data
-public class UpdatePasswordRequest {
-    private String currentPassword;
-    private String newPassword;
-    private String confirmNewPassword;
+public class RefreshTokenRequest {
+    private String token;
 }

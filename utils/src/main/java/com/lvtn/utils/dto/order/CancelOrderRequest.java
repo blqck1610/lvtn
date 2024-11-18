@@ -1,23 +1,25 @@
-package com.lvtn.order.dto.response;
+package com.lvtn.utils.dto.order;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 /**
- * OrderResponse
+ * CancelOrderRequest
  * Version 1.0
- * Date: 11/11/2024
+ * Date: 15/11/2024
  * Copyright
  * Modification Logs
  * DATE          AUTHOR          DESCRIPTION
  * ------------------------------------------------
- * 11/11/2024        NGUYEN             create
+ * 15/11/2024        NGUYEN             create
  */
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class OrderResponse {
+@AllArgsConstructor
+public class CancelOrderRequest {
+    private UUID orderId;
+    private CancelOrderReason reason;
 }

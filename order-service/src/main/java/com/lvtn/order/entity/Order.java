@@ -31,5 +31,6 @@ import java.util.UUID;
 public class Order extends BaseEntity {
     private UUID userId;
     private OrderStatus status;
+    private String note;
     private Double totalAmount;
 }

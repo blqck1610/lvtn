@@ -2,12 +2,12 @@ server:
   port: 8087
 spring:
   application:
-    name: user-service
+    name: order-service
   #    database
   datasource:
     driver-class-name: org.postgresql.Driver
     username: admin
-    url: jdbc:postgresql://localhost:5432/user
+    url: jdbc:postgresql://localhost:5432/order
     password: password
   jpa:
     properties:
@@ -50,9 +50,10 @@ rabbitmq:
   exchanges:
     internal: internal.exchanges
   queue:
-    notification: notification.queue
+    inventory: inventory.queue
+    order: order.queue
   routing-keys:
-    internal-notification: internal.notification.routing-keys
+    internal-inventory: internal.inventory.routing-keys
 application:
   security:
     jwt:
@@ -60,6 +61,3 @@ application:
       expiration: 86400000 # 1 day
       refresh-token:
         expiration: 604800000 # 7 days
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html

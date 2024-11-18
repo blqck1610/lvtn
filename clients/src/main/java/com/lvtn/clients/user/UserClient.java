@@ -1,13 +1,11 @@
 package com.lvtn.clients.user;
 
 
-import com.lvtn.clients.config.AuthenticationRequestInterceptor;
-import com.lvtn.utils.constant.ApiEndpoint;
 import com.lvtn.utils.constant.Attribute;
 import com.lvtn.utils.dto.ApiResponse;
-import com.lvtn.utils.dto.request.authenticate.AuthRequest;
-import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
-import com.lvtn.utils.dto.response.user.UserResponse;
+import com.lvtn.utils.dto.auth.AuthRequest;
+import com.lvtn.utils.dto.auth.RegisterRequest;
+import com.lvtn.utils.dto.user.UserResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
