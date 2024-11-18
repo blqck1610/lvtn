@@ -2,6 +2,10 @@ package com.lvtn.inventory.entity;
 
 import com.lvtn.utils.constant.TableName;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -22,6 +26,10 @@ import java.util.UUID;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = TableName.INVENTORY)
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

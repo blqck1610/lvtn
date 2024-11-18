@@ -1,5 +1,6 @@
 package com.lvtn.utils.dto.order;
 
+import com.lvtn.utils.common.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,5 +22,5 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CancelOrderRequest {
     private UUID orderId;
-    private CancelOrderReason reason;
+    private String reason;
 }

@@ -17,7 +17,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  */
 @SpringBootApplication(scanBasePackages = {
         "com.lvtn.inventory",
-        "com.lvtn.utils"
+        "com.lvtn.utils",
+        "com.lvtn.amqp"
 })
 @EnableFeignClients(basePackages = "com.lvtn.clients")
 @EnableJpaAuditing

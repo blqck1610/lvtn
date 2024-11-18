@@ -1,4 +1,4 @@
-package com.lvtn.order.config.rabbitmq;
+package com.lvtn.inventory.config.rabbitmq;
 
 import lombok.Data;
 import org.springframework.amqp.core.Binding;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * InventoryConfig
+ * PaymentConfig
  * Version 1.0
  * Date: 18/11/2024
  * Copyright
@@ -21,29 +21,29 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @Data
-public class InventoryConfig {
+public class PaymentConfig {
     @Value("${rabbitmq.exchanges.internal}")
     private String internalExchange;
-    @Value("${rabbitmq.queue.inventory}")
-    private String inventoryQueue;
-    @Value("${rabbitmq.routing-keys.internal-inventory}")
-    private String internalInventoryRoutingKey;
+    @Value("${rabbitmq.queue.payment}")
+    private String paymentQueue;
+    @Value("${rabbitmq.routing-keys.internal-payment}")
+    private String internalPaymentRoutingKey;
 
     @Bean
-    public TopicExchange topicExchange(){
+    public TopicExchange topicExchange() {
         return new TopicExchange(internalExchange);
     }
 
     @Bean
-    public Queue queue(){
-        return new Queue(inventoryQueue);
+    public Queue paymentQueue() {
+        return new Queue(paymentQueue);
     }
 
     @Bean
-    public Binding internalInventoryBinding(){
+    public Binding internalPaymentBinding() {
         return BindingBuilder
-                .bind(queue())
+                .bind(paymentQueue())
                 .to(topicExchange())
-                .with(internalInventoryRoutingKey);
+                .with(internalPaymentRoutingKey);
     }
 }
