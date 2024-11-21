@@ -5,7 +5,7 @@ import com.lvtn.amqp.RabbitMQMessageProducer;
 import com.lvtn.payment.config.amqp.InventoryConfig;
 import com.lvtn.payment.entity.Transaction;
 import com.lvtn.payment.repository.PaymentRepository;
-import com.lvtn.utils.dto.order.OrderDto;
+import com.lvtn.utils.dto.order.CreateOrderRequest;
 import com.lvtn.utils.dto.payment.PaymentStatusResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +38,6 @@ public class PaymentService {
         producer.publish(paymentStatusResponse, rabbitMQConfig.getInternalExchange(), rabbitMQConfig.getInternalPaymentRoutingKey());
     }
 
-    public void createPayment(OrderDto request) {
+    public void createPayment(CreateOrderRequest request) {
     }
 }

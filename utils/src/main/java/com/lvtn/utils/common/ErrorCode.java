@@ -23,7 +23,8 @@ public enum ErrorCode {
     CATEGORY_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "category-not-found"),
     INVENTORY_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "inventory-not-found"),
     OUT_OF_STOCK(HttpStatus.BAD_REQUEST.value(), "out-of-stock"),
-    PAYMENT_FAILED(HttpStatus.BAD_REQUEST.value(), "payment-failed"),;
+    CREATED_PAYMENT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR.value(), "created-payment-failed"),
+    ;
 
     private final int code;
     private final String message;

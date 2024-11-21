@@ -50,5 +50,7 @@ public class ApiEndpoint {
 //    Order
     public static final String ORDER = "/order";
     public static final String INVENTORY = "/inventory";
+    public static final String CHECK = "/check";
+    public static final String CANCEL = "/cancel";
 }
 

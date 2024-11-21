@@ -26,4 +26,7 @@ public interface UserClient {
 
     @GetMapping(value = GET_BY_USERNAME)
     ApiResponse<UserResponse> getByUsername(@PathVariable(Attribute.USERNAME) String username);
+
+    @PostMapping(value = "/test")
+    ApiResponse<UserResponse> test(@RequestBody AuthRequest request);
 }

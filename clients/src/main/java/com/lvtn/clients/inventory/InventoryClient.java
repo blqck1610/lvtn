@@ -1,10 +1,11 @@
 package com.lvtn.clients.inventory;
 
+import com.lvtn.utils.constant.ApiEndpoint;
 import com.lvtn.utils.dto.ApiResponse;
-import com.lvtn.utils.dto.inventory.InventoryDto;
 import com.lvtn.utils.dto.order.ItemDto;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -22,7 +23,9 @@ import java.util.List;
 @FeignClient(value = "INVENTORY-SERVICE", path = "/api/v1/internal/inventory")
 public interface InventoryClient {
 
-    @GetMapping
-    public ApiResponse<List<InventoryDto>> getInventoryList(@RequestBody List<ItemDto> request);
+    @PutMapping
+    public ApiResponse<Object> updateInventory(@RequestBody List<ItemDto> request);
 
+    @PostMapping(ApiEndpoint.CANCEL)
+    void cancelUpdateInventory(List<ItemDto> items);
 }
