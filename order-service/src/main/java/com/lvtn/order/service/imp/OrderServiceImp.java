@@ -41,13 +41,21 @@ public class OrderServiceImp implements OrderService {
         Order order = Order.builder()
                 .status(OrderStatus.ORDER_PENDING)
                 .userId(request.getUserId())
-                .totalAmount(request.getTotalAmount())
+                .totalAmount(getTotalAmount(request))
                 .build();
         order = iOrderRepository.saveAndFlush(order);
         save(request.getItems(), order);
         request.setId(order.getId());
 
         return request;
+    }
+
+    private Double getTotalAmount(OrderDto request) {
+        double totalAmount = 0;
+        for (ItemDto item : request.getItems()) {
+            totalAmount += item.getPrice() + item.getQuantity();
+        }
+        return totalAmount;
     }
 
     @Transactional

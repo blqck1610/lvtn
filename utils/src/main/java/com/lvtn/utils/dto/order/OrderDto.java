@@ -26,7 +26,6 @@ import java.util.UUID;
 public class OrderDto {
     private UUID id;
     private UUID userId;
-    private Double totalAmount;
     private List<ItemDto> items;
     private PaymentMethod paymentMethod;
 }

@@ -5,6 +5,7 @@ import com.lvtn.inventory.entity.Inventory;
 import com.lvtn.inventory.repository.IInventoryRepository;
 import com.lvtn.inventory.service.InventoryService;
 import com.lvtn.utils.common.ErrorCode;
+import com.lvtn.utils.dto.inventory.InventoryDto;
 import com.lvtn.utils.dto.order.CancelOrderRequest;
 import com.lvtn.utils.dto.order.ItemDto;
 import com.lvtn.utils.dto.order.OrderDto;
@@ -12,6 +13,8 @@ import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * InventoryImp
@@ -65,6 +68,11 @@ public class InventoryServiceImp implements InventoryService {
         cancelOrderRequest.setOrderId(orderDto.getId());
         cancelOrderRequest.setReason(ErrorCode.PAYMENT_FAILED.getMessage());
         cancelOrder(cancelOrderRequest);
+    }
+
+    @Override
+    public List<InventoryDto> getInventoryList(List<ItemDto> request) {
+        return List.of();
     }
 
     private void cancelOrder(CancelOrderRequest request) {
