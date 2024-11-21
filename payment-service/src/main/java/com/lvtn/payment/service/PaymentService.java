@@ -30,12 +30,12 @@ public class PaymentService {
                 .build();
         paymentRepository.save(transaction);
 
-        publishToOrder(paymentStatusResponse);
+//        publishToOrder(paymentStatusResponse);
     }
 
     public void publishToOrder(PaymentStatusResponse paymentStatusResponse){
         log.info("publish payment status to order: " + paymentStatusResponse);
-        producer.publish(paymentStatusResponse, rabbitMQConfig.getInternalExchange(), rabbitMQConfig.getInternalPaymentRoutingKey());
+//        producer.publish(paymentStatusResponse, rabbitMQConfig.getInternalExchange(), rabbitMQConfig.getInternalPaymentRoutingKey());
     }
 
     public void createPayment(CreateOrderRequest request) {

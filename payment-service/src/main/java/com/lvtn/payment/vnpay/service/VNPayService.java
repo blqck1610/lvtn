@@ -2,8 +2,9 @@ package com.lvtn.payment.vnpay.service;
 
 import com.lvtn.payment.service.PaymentService;
 import com.lvtn.payment.vnpay.config.Config;
+import com.lvtn.utils.common.PaymentMethod;
 import com.lvtn.utils.dto.payment.PaymentRequest;
-import com.lvtn.utils.dto.payment.PaymentResponseDTO;
+import com.lvtn.utils.dto.payment.PaymentResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class VNPayService {
     private final PaymentService paymentService;
 
 
-    public PaymentResponseDTO createVNPayPayment(HttpServletRequest request, PaymentRequest paymentRequest) throws UnsupportedEncodingException {
+    public PaymentResponse createVNPayPayment(HttpServletRequest request, PaymentRequest paymentRequest) throws UnsupportedEncodingException {
 //        String vnp_Version = "2.1.0";
 //        String vnp_Command = "pay";
         String orderType = "other";
@@ -95,13 +96,13 @@ public class VNPayService {
         String vnp_SecureHash = Config.hmacSHA512(Config.secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = Config.vnp_PayUrl + "?" + queryUrl;
+//
+//        PaymentResponseDTO paymentResponseDTO = new PaymentResponseDTO();
+//        paymentResponseDTO.setStatus("OK");
+//        paymentResponseDTO.setMessage("Successfully");
+//        paymentResponseDTO.setURL(paymentUrl);
 
-        PaymentResponseDTO paymentResponseDTO = new PaymentResponseDTO();
-        paymentResponseDTO.setStatus("OK");
-        paymentResponseDTO.setMessage("Successfully");
-        paymentResponseDTO.setURL(paymentUrl);
-
-        return paymentResponseDTO;
+        return new PaymentResponse(PaymentMethod.VNPAY, paymentUrl);
     }
 
 

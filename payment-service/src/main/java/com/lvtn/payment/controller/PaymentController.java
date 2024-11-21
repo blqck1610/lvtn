@@ -1,10 +1,10 @@
 package com.lvtn.payment.controller;
 
-import com.lvtn.utils.dto.payment.PaymentRequest;
-import com.lvtn.utils.dto.payment.PaymentResponseDTO;
 import com.lvtn.payment.entity.Transaction;
 import com.lvtn.payment.service.PaymentService;
 import com.lvtn.payment.vnpay.service.VNPayService;
+import com.lvtn.utils.dto.payment.PaymentRequest;
+import com.lvtn.utils.dto.payment.PaymentResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class PaymentController {
 
 
     @PostMapping(value = "/create-payment/vnpay")
-    public PaymentResponseDTO createVNPayPayment(HttpServletRequest request, @RequestBody PaymentRequest paymentRequest) throws UnsupportedEncodingException {
+    public PaymentResponse createVNPayPayment(HttpServletRequest request, @RequestBody PaymentRequest paymentRequest) throws UnsupportedEncodingException {
         return vnpayservice.createVNPayPayment(request, paymentRequest);
     }
 
@@ -44,10 +44,10 @@ public class PaymentController {
 
     ) throws ParseException {
         Date payDate = formatter.parse(payDateString);
-        PaymentResponseDTO paymentResponseDTO = new PaymentResponseDTO();
+        PaymentResponse paymentResponseDTO = new PaymentResponse();
         if (responseCode.equals("00")) {
-            paymentResponseDTO.setStatus("OK");
-            paymentResponseDTO.setMessage("successfully");
+//            paymentResponseDTO.setStatus("OK");
+//            paymentResponseDTO.setMessage("successfully");
 
             Transaction transaction = Transaction.builder()
                     .responseCode(responseCode)
@@ -61,9 +61,9 @@ public class PaymentController {
             paymentService.saveTransaction(transaction);
             log.info("saved transaction {}", transaction);
 
-        } else{
-            paymentResponseDTO.setStatus("FAILED");
-            paymentResponseDTO.setMessage("failed");
+        } else {
+//            paymentResponseDTO.setStatus("FAILED");
+//            paymentResponseDTO.setMessage("failed");
         }
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("http://localhost:5173/payment-successful"));
