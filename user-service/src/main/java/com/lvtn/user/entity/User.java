@@ -37,7 +37,7 @@ public class User {
     private String avatar;
     private boolean isDelete;
     @CreatedDate
-    private LocalDateTime creatAt;
+    private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime lastModified;
 

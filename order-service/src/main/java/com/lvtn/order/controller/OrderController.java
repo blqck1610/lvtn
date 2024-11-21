@@ -3,7 +3,7 @@ package com.lvtn.order.controller;
 import com.lvtn.order.service.OrderService;
 import com.lvtn.utils.common.SuccessMessage;
 import com.lvtn.utils.dto.ApiResponse;
-import com.lvtn.utils.dto.order.OrderDto;
+import com.lvtn.utils.dto.order.CreateOrderRequest;
 import com.lvtn.utils.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ApiResponse<OrderDto> createOrder(@RequestBody OrderDto request) {
+    public ApiResponse<CreateOrderRequest> createOrder(@RequestBody CreateOrderRequest request) {
         return ResponseUtil.getApiResponse(HttpStatus.OK.value(),
                 SuccessMessage.CREATED_SUCCESS.getMessage(),
                 orderService.createOrder(request));

@@ -1,17 +1,18 @@
 package com.lvtn.inventory.service;
 
-import com.lvtn.utils.dto.inventory.InventoryDto;
+import com.lvtn.utils.dto.ApiResponse;
+import com.lvtn.utils.dto.order.CreateOrderRequest;
 import com.lvtn.utils.dto.order.ItemDto;
-import com.lvtn.utils.dto.order.OrderDto;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface InventoryService {
-    void updateInventory(OrderDto request);
+    void updateInventory(CreateOrderRequest request);
+
+    ApiResponse<Object> updateInventory(List<ItemDto> request);
 
     @Transactional
-    void cancelUpdateInventory(OrderDto orderDto);
+    void cancelUpdateInventory(CreateOrderRequest orderDto);
 
-    List<InventoryDto> getInventoryList(List<ItemDto> request);
 }

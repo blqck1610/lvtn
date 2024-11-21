@@ -9,9 +9,9 @@ import com.lvtn.utils.common.ErrorCode;
 import com.lvtn.utils.common.SuccessMessage;
 import com.lvtn.utils.dto.ApiResponse;
 import com.lvtn.utils.dto.auth.AuthRequest;
+import com.lvtn.utils.dto.auth.AuthResponse;
 import com.lvtn.utils.dto.auth.RefreshTokenRequest;
 import com.lvtn.utils.dto.auth.RegisterRequest;
-import com.lvtn.utils.dto.auth.AuthResponse;
 import com.lvtn.utils.dto.user.UserResponse;
 import com.lvtn.utils.exception.BaseException;
 import io.jsonwebtoken.Claims;
@@ -22,7 +22,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.lvtn.utils.util.ResponseUtil.getApiResponse;
 
@@ -43,9 +46,16 @@ public class AuthServiceImp implements AuthService {
     @Override
     @Transactional
     public AuthResponse getToken(AuthRequest request) {
-        ApiResponse<UserResponse> response = userClient.authenticate(request);
-        check(response);
-        return getAuthResponse(response);
+//        ApiResponse<UserResponse> response = userClient.authenticate(request);
+        try {
+            ApiResponse<UserResponse> response = userClient.test(request);
+            return getAuthResponse(response);
+
+        }
+        catch (BaseException e){
+            throw new BaseException(e);
+        }
+//        check(response);
     }
 
     @Override
@@ -70,14 +80,13 @@ public class AuthServiceImp implements AuthService {
 
     @Override
     public ApiResponse<Map<String, Object>> getAllClaims(String token) {
-        if(!isTokenValid(token, TokenType.ACCESS_TOKEN)){
+        if (!isTokenValid(token, TokenType.ACCESS_TOKEN)) {
             return getApiResponse(ErrorCode.TOKEN_INVALID.getCode(), ErrorCode.TOKEN_INVALID.getMessage(), null);
         }
         try {
             Claims claims = jwtService.extractAllClaims(token);
             return getApiResponse(HttpStatus.OK.value(), SuccessMessage.OK.getMessage(), claims);
-        }
-        catch (BaseException e){
+        } catch (BaseException e) {
             return getApiResponse(ErrorCode.TOKEN_INVALID.getCode(), ErrorCode.TOKEN_INVALID.getMessage(), null);
         }
     }

@@ -1,7 +1,7 @@
 package com.lvtn.inventory.rabbitmq;
 
 import com.lvtn.inventory.service.InventoryService;
-import com.lvtn.utils.dto.order.OrderDto;
+import com.lvtn.utils.dto.order.CreateOrderRequest;
 import io.micrometer.observation.annotation.Observed;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +27,8 @@ public class InventoryConsumer {
 
     @RabbitListener(queues = "${rabbitmq.queue.inventory}")
     @Observed
-    public void consumerNotification(OrderDto request) {
-        inventoryService.updateInventory(request);
+    public void consumerNotification(CreateOrderRequest request) {
+        inventoryService.cancelUpdateInventory(request);
     }
 }
 

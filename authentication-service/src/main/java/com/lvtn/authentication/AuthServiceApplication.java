@@ -22,7 +22,7 @@ public class AuthServiceApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("admin " + authService.getToken(new AuthRequest("admin", "password")).getAccessToken());
-        System.out.println("user " + authService.getToken(new AuthRequest("user", "password")).getAccessToken());
+//        System.out.println("admin " + authService.getToken(new AuthRequest("admin", "password")).getAccessToken());
+//        System.out.println("user " + authService.getToken(new AuthRequest("user", "password")).getAccessToken());
     }
 }

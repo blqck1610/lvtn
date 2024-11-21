@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * OrderDto
+ * CreateOrderRequest
  * Version 1.0
  * Date: 11/11/2024
  * Copyright
@@ -23,7 +23,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDto {
+public class CreateOrderRequest {
     private UUID id;
     private UUID userId;
     private List<ItemDto> items;

@@ -5,12 +5,16 @@ import com.lvtn.inventory.entity.Inventory;
 import com.lvtn.inventory.repository.IInventoryRepository;
 import com.lvtn.inventory.service.InventoryService;
 import com.lvtn.utils.common.ErrorCode;
+import com.lvtn.utils.common.SuccessMessage;
+import com.lvtn.utils.dto.ApiResponse;
 import com.lvtn.utils.dto.inventory.InventoryDto;
 import com.lvtn.utils.dto.order.CancelOrderRequest;
 import com.lvtn.utils.dto.order.ItemDto;
-import com.lvtn.utils.dto.order.OrderDto;
+import com.lvtn.utils.dto.order.CreateOrderRequest;
 import com.lvtn.utils.exception.BaseException;
+import com.lvtn.utils.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +39,7 @@ public class InventoryServiceImp implements InventoryService {
 
     @Override
     @Transactional
-    public void updateInventory(OrderDto request) {
+    public void updateInventory(CreateOrderRequest request) {
         for (ItemDto itemDto : request.getItems()) {
             try {
                 Inventory inventory = iInventoryRepository.findByProductId(itemDto.getProductId()).orElseThrow(() -> new BaseException(ErrorCode.INVENTORY_NOT_FOUND.getCode(), ErrorCode.INVENTORY_NOT_FOUND.getMessage()));
@@ -50,32 +54,39 @@ public class InventoryServiceImp implements InventoryService {
                 CancelOrderRequest cancelOrderRequest = new CancelOrderRequest();
                 cancelOrderRequest.setOrderId(request.getId());
                 cancelOrderRequest.setReason(e.getMessage());
-                cancelOrder(cancelOrderRequest);
             }
         }
     }
 
+    @Override
+    public ApiResponse<Object> updateInventory(List<ItemDto> request) {
+        for (ItemDto itemDto : request) {
+            Inventory inventory = iInventoryRepository.findByProductId(itemDto.getProductId()).orElseThrow(() -> new BaseException(ErrorCode.INVENTORY_NOT_FOUND.getCode(), ErrorCode.INVENTORY_NOT_FOUND.getMessage()));
+            int quantity = inventory.getAvailableQuantity() - itemDto.getQuantity();
+            if (quantity < 0) {
+                return ResponseUtil.getApiResponse(
+                        ErrorCode.BAD_REQUEST.getCode(), ErrorCode.OUT_OF_STOCK.getMessage(), null
+                );
+            }
+            inventory.setAvailableQuantity(quantity);
+            iInventoryRepository.save(inventory);
+        }
+        return ResponseUtil.getApiResponse(
+                HttpStatus.OK.value(),
+                SuccessMessage.UPDATED_SUCCESS.getMessage(), null
+        );
+    }
+
     @Transactional
     @Override
-    public void cancelUpdateInventory(OrderDto orderDto) {
+    public void cancelUpdateInventory(CreateOrderRequest orderDto) {
         for (ItemDto itemDto : orderDto.getItems()) {
             Inventory inventory = iInventoryRepository.findByProductId(itemDto.getProductId()).orElseThrow(() -> new BaseException(ErrorCode.INVENTORY_NOT_FOUND.getCode(), ErrorCode.INVENTORY_NOT_FOUND.getMessage()));
             int quantity = inventory.getAvailableQuantity() + itemDto.getQuantity();
             inventory.setAvailableQuantity(quantity);
             iInventoryRepository.save(inventory);
         }
-        CancelOrderRequest cancelOrderRequest = new CancelOrderRequest();
-        cancelOrderRequest.setOrderId(orderDto.getId());
-        cancelOrderRequest.setReason(ErrorCode.PAYMENT_FAILED.getMessage());
-        cancelOrder(cancelOrderRequest);
     }
 
-    @Override
-    public List<InventoryDto> getInventoryList(List<ItemDto> request) {
-        return List.of();
-    }
 
-    private void cancelOrder(CancelOrderRequest request) {
-
-    }
 }
