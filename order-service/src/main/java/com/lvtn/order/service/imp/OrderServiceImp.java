@@ -1,8 +1,7 @@
 package com.lvtn.order.service.imp;
 
-import com.lvtn.amqp.RabbitMQMessageProducer;
+import com.lvtn.clients.inventory.InventoryClient;
 import com.lvtn.clients.payment.PaymentClient;
-import com.lvtn.order.config.rabbitmq.InventoryConfig;
 import com.lvtn.order.entity.Order;
 import com.lvtn.order.entity.OrderLine;
 import com.lvtn.order.repository.IOrderLineRepository;
@@ -34,13 +33,11 @@ public class OrderServiceImp implements OrderService {
     private final IOrderRepository iOrderRepository;
     private final IOrderLineRepository iOrderLineRepository;
     private final PaymentClient paymentClient;
-    private final RabbitMQMessageProducer producer;
-    private final InventoryConfig inventoryConfig;
+    private final InventoryClient inventoryClient;
 
     @Override
     @Transactional
     public OrderDto createOrder(OrderDto request) {
-//        process: create order
         Order order = Order.builder()
                 .status(OrderStatus.ORDER_PENDING)
                 .userId(request.getUserId())
@@ -50,10 +47,6 @@ public class OrderServiceImp implements OrderService {
         save(request.getItems(), order);
         request.setId(order.getId());
 
-        //publish -> inventory -> update inventory
-        producer.publish(request,
-                inventoryConfig.getInternalExchange(),
-                inventoryConfig.getInternalInventoryRoutingKey());
         return request;
     }
 
@@ -75,7 +68,7 @@ public class OrderServiceImp implements OrderService {
     public void cancelOrder(CancelOrderRequest request) {
         Order order = iOrderRepository.getReferenceById(request.getOrderId());
         order.setStatus(OrderStatus.ORDER_CANCELLED);
-        order.setNote(request.getReason().getMessage());
+        order.setNote(request.getReason());
         iOrderRepository.save(order);
     }
 }
