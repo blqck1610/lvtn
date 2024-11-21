@@ -1,12 +1,11 @@
 package com.lvtn.inventory.service.imp;
 
 import com.lvtn.amqp.RabbitMQMessageProducer;
-import com.lvtn.inventory.config.rabbitmq.OrderConfig;
-import com.lvtn.inventory.config.rabbitmq.PaymentConfig;
 import com.lvtn.inventory.entity.Inventory;
 import com.lvtn.inventory.repository.IInventoryRepository;
 import com.lvtn.inventory.service.InventoryService;
 import com.lvtn.utils.common.ErrorCode;
+import com.lvtn.utils.dto.inventory.InventoryDto;
 import com.lvtn.utils.dto.order.CancelOrderRequest;
 import com.lvtn.utils.dto.order.ItemDto;
 import com.lvtn.utils.dto.order.OrderDto;
@@ -14,6 +13,8 @@ import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * InventoryImp
@@ -30,8 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class InventoryServiceImp implements InventoryService {
     private final IInventoryRepository iInventoryRepository;
     private final RabbitMQMessageProducer producer;
-    private final OrderConfig orderConfig;
-    private final PaymentConfig paymentConfig;
+
 
     @Override
     @Transactional
@@ -45,10 +45,7 @@ public class InventoryServiceImp implements InventoryService {
                 }
                 inventory.setAvailableQuantity(quantity);
                 iInventoryRepository.save(inventory);
-                producer.publish(request,
-                        paymentConfig.getInternalExchange(),
-                        paymentConfig.getInternalPaymentRoutingKey()
-                );
+
             } catch (BaseException e) {
                 CancelOrderRequest cancelOrderRequest = new CancelOrderRequest();
                 cancelOrderRequest.setOrderId(request.getId());
@@ -73,10 +70,12 @@ public class InventoryServiceImp implements InventoryService {
         cancelOrder(cancelOrderRequest);
     }
 
+    @Override
+    public List<InventoryDto> getInventoryList(List<ItemDto> request) {
+        return List.of();
+    }
+
     private void cancelOrder(CancelOrderRequest request) {
-        producer.publish(request,
-                orderConfig.getInternalExchange(),
-                orderConfig.getInternalOrderRoutingKey()
-        );
+
     }
 }
