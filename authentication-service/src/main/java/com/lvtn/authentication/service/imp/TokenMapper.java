@@ -1,7 +1,7 @@
 package com.lvtn.authentication.service.imp;
 
 import com.lvtn.authentication.entity.Token;
-import com.lvtn.utils.dto.response.authenticate.TokenDto;
+import com.lvtn.utils.dto.auth.TokenDto;
 
 import org.springframework.stereotype.Service;
 

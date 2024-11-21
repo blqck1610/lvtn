@@ -1,0 +1,63 @@
+server:
+  port: 8087
+spring:
+  application:
+    name: order-service
+  #    database
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: admin
+    url: jdbc:postgresql://localhost:5432/order
+    password: password
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format-sql: 'true'
+    hibernate:
+      ddl-auto: none
+    show-sql: 'true'
+  rabbitmq:
+    addresses: localhost:5672
+  flyway:
+    locations: classpath:/db/migration
+
+
+#eureka-client
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+#      defaultZone: http://eureka-server:8761/eureka for docker
+
+# tracing
+
+# All traces should be sent to latency analysis tool
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    enabled: true
+
+# traceID and spanId are predefined MDC keys - we want the logs to include them
+logging:
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+#  level:
+#    root: debug
+
+rabbitmq:
+  exchanges:
+    internal: internal.exchanges
+  queue:
+    inventory: inventory.queue
+    order: order.queue
+  routing-keys:
+    internal-inventory: internal.inventory.routing-keys
+application:
+  security:
+    jwt:
+      secret-key: bb49931b1b6e4cd6529c2f21bcbce342c46d5dfe6b8b829237dceff8afb4d1cf
+      expiration: 86400000 # 1 day
+      refresh-token:
+        expiration: 604800000 # 7 days

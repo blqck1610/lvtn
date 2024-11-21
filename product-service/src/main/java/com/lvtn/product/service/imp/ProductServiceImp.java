@@ -13,7 +13,7 @@ import com.lvtn.product.repository.ProductRepository;
 import com.lvtn.product.service.*;
 import com.lvtn.utils.common.ErrorCode;
 import com.lvtn.utils.constant.Common;
-import com.lvtn.utils.dto.request.page.PagingRequest;
+import com.lvtn.utils.dto.page.PagingRequest;
 import com.lvtn.utils.exception.BaseException;
 import com.lvtn.utils.util.PageUtil;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +49,7 @@ public class ProductServiceImp implements ProductService {
     private final ProductMediaService productMediaService;
     private final CategoryService categoryService;
     private final PriceHistoryRepository priceHistoryRepository;
-    private final ProductMapper mapper;
+    private final Mapper mapper;
 
     @Override
     @Transactional
@@ -133,6 +133,8 @@ public class ProductServiceImp implements ProductService {
         return productRepository.getAutoComplete(prefix);
     }
 
+
+
     private Product updateProduct(UpdateProductRequest request, Product product) {
         Brand brand = brandService.getReferenceById(UUID.fromString(request.getBrandId()));
         Category category = categoryService.getReferenceById(UUID.fromString(request.getCategoryId()));
@@ -148,7 +150,8 @@ public class ProductServiceImp implements ProductService {
         return product;
     }
 
-    private Product getProduct(String id) {
+    @Override
+    public Product getProduct(String id) {
         return productRepository.findProductById(UUID.fromString(id)).orElse(null);
     }
 }

@@ -1,6 +1,4 @@
 package com.lvtn.product.entity;
-
-
 import com.lvtn.utils.common.Gender;
 import com.lvtn.utils.constant.TableName;
 import jakarta.persistence.*;

@@ -1,8 +1,7 @@
 package com.lvtn.authentication;
 
 import com.lvtn.authentication.service.AuthService;
-import com.lvtn.authentication.service.imp.AuthServiceImp;
-import com.lvtn.utils.dto.request.authenticate.AuthRequest;
+import com.lvtn.utils.dto.auth.AuthRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

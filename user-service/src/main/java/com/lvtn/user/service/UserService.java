@@ -1,11 +1,11 @@
 package com.lvtn.user.service;
 
 import com.lvtn.utils.dto.ApiResponse;
-import com.lvtn.utils.dto.request.authenticate.AuthRequest;
-import com.lvtn.utils.dto.request.user.UpdatePasswordRequest;
-import com.lvtn.utils.dto.request.user.UpdateUserRequest;
-import com.lvtn.utils.dto.response.user.UserResponse;
-import com.lvtn.utils.dto.request.authenticate.RegisterRequest;
+import com.lvtn.utils.dto.auth.AuthRequest;
+import com.lvtn.utils.dto.user.UpdatePasswordRequest;
+import com.lvtn.utils.dto.user.UpdateUserRequest;
+import com.lvtn.utils.dto.user.UserResponse;
+import com.lvtn.utils.dto.auth.RegisterRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

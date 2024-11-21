@@ -5,7 +5,6 @@ import com.lvtn.product.entity.Product;
 import com.lvtn.product.entity.ProductMedia;
 import com.lvtn.product.repository.ProductMediaRepository;
 import com.lvtn.product.service.ProductMediaService;
-import com.lvtn.utils.common.MediaInfo;
 import com.lvtn.utils.common.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +40,6 @@ public class ProductMediaServiceImp implements ProductMediaService {
         for (MediaDto mediaDto : mediaList) {
             ProductMedia productMedia = ProductMedia.builder()
                     .product(product)
-                    .mediaInfo(MediaInfo.valueOf(mediaDto.getMediaInfo()))
                     .mediaType(MediaType.valueOf(mediaDto.getMediaType()))
                     .resource(mediaDto.getResource())
                     .build();

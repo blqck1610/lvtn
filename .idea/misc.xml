@@ -19,7 +19,6 @@
         <option value="$PROJECT_DIR$/dto/pom.xml" />
         <option value="$PROJECT_DIR$/exception/pom.xml" />
         <option value="$PROJECT_DIR$/gw/pom.xml" />
-        <option value="$PROJECT_DIR$/order-service/pom.xml" />
         <option value="$PROJECT_DIR$/production-service/pom.xml" />
         <option value="$PROJECT_DIR$/search-service/pom.xml" />
         <option value="$PROJECT_DIR$/stock-service/pom.xml" />
