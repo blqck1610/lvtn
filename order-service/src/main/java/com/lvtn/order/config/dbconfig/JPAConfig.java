@@ -1,4 +1,4 @@
-package com.lvtn.order.config;
+package com.lvtn.order.config.dbconfig;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

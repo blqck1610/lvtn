@@ -1,4 +1,4 @@
-package com.lvtn.order.config;
+package com.lvtn.order.config.document;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;

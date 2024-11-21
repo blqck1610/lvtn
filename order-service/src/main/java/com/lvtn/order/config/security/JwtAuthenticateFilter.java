@@ -1,4 +1,4 @@
-package com.lvtn.product.config.filter;
+package com.lvtn.order.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lvtn.clients.authentication.AuthenticationClient;
@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

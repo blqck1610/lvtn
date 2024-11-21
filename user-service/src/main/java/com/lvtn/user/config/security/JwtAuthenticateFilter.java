@@ -1,4 +1,4 @@
-package com.lvtn.order.config.filter;
+package com.lvtn.user.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lvtn.clients.authentication.AuthenticationClient;
