@@ -1,7 +1,7 @@
 create table "order"
 (
     id             uuid not null primary key,
-    user_id        uuid,
+    username        varchar,
     order_status   varchar(255),
     note           varchar(255),
     total_amount   float,

@@ -25,7 +25,7 @@ public class Mapper {
             return null;
         }
         PriceHistory priceHistory = priceHistoryRepository.getByProduct(product.getId()).orElse(null);
-        Double price = ObjectUtils.isEmpty(priceHistory) ? null : priceHistory.getPrice();
+        Double price = ObjectUtils.isEmpty(priceHistory) ? 0 : priceHistory.getPrice();
         BrandResponse brandResponse = new BrandResponse(product.getBrand().getId().toString(), product.getBrand().getName());
         CategoryResponse categoryResponse = new CategoryResponse(product.getCategory().getId().toString(), product.getCategory().getName());
         return ProductResponse.builder()
@@ -61,7 +61,7 @@ public class Mapper {
                 .build();
     }
 
-    public ItemResponse from(Item item){
+    public ItemResponse from(Item item) {
         return ItemResponse.builder()
                 .id(item.getId().toString())
                 .product(this.from(item.getProduct()))
@@ -71,9 +71,13 @@ public class Mapper {
 
     public CartResponse from(Cart cart) {
         List<ItemResponse> items = itemRepository.findAllByCart(cart).stream().map(this::from).toList();
+        double totalAmount = 0.0;
+        for (ItemResponse itemResponse : items) {
+            totalAmount += itemResponse.getProduct().getPrice() * itemResponse.getQuantity();
+        }
         return CartResponse.builder()
                 .items(items)
-                .totalAmount(cart.getTotalAmount())
+                .totalAmount(totalAmount)
                 .build();
     }
 }

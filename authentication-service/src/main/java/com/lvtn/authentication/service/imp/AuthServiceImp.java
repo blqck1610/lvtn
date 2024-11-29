@@ -46,16 +46,9 @@ public class AuthServiceImp implements AuthService {
     @Override
     @Transactional
     public AuthResponse getToken(AuthRequest request) {
-//        ApiResponse<UserResponse> response = userClient.authenticate(request);
-        try {
-            ApiResponse<UserResponse> response = userClient.test(request);
-            return getAuthResponse(response);
-
-        }
-        catch (BaseException e){
-            throw new BaseException(e);
-        }
-//        check(response);
+        ApiResponse<UserResponse> response = userClient.authenticate(request);
+        check(response);
+        return getAuthResponse(response);
     }
 
     @Override

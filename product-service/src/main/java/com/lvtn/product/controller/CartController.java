@@ -25,7 +25,7 @@ import static com.lvtn.utils.constant.ApiEndpoint.*;
  * 11/11/2024        NGUYEN             create
  */
 @RestController
-@RequestMapping(value = BASE_API + PRODUCT + CART)
+@RequestMapping(value = BASE_API + CART)
 @RequiredArgsConstructor
 @Slf4j
 public class CartController {

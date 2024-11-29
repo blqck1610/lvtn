@@ -2,7 +2,6 @@ package com.lvtn.payment.service;
 
 
 import com.lvtn.amqp.RabbitMQMessageProducer;
-import com.lvtn.payment.config.amqp.InventoryConfig;
 import com.lvtn.payment.entity.Transaction;
 import com.lvtn.payment.repository.PaymentRepository;
 import com.lvtn.utils.dto.order.CreateOrderRequest;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final RabbitMQMessageProducer producer;
-    private final InventoryConfig rabbitMQConfig;
 
 
     @Transactional

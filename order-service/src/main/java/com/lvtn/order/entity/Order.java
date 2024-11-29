@@ -30,7 +30,7 @@ import java.util.UUID;
 @Table(name = TableName.ORDER)
 @EntityListeners(AuditingEntityListener.class)
 public class Order extends BaseEntity {
-    private UUID userId;
+    private String username;
     private OrderStatus status;
     private String note;
     private Double totalAmount;
