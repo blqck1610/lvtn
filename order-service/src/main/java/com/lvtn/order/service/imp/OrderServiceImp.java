@@ -20,6 +20,8 @@ import com.lvtn.utils.dto.payment.PaymentResponse;
 import com.lvtn.utils.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,9 +51,10 @@ public class OrderServiceImp implements OrderService {
     @Override
     @Transactional(rollbackFor = {SQLException.class})
     public CreateOrderResponse createOrder(CreateOrderRequest request) {
+        String username = getUsername();
         Order order = Order.builder()
                 .status(OrderStatus.ORDER_PENDING)
-                .userId(request.getUserId())
+                .username(username)
                 .totalAmount(getTotalAmount(request))
                 .build();
         ApiResponse<Object> inventoryResponse = inventoryClient.updateInventory(request.getItems());
@@ -70,6 +73,14 @@ public class OrderServiceImp implements OrderService {
             throw new BaseException(ErrorCode.CREATED_PAYMENT_FAILED.getCode(), ErrorCode.CREATED_PAYMENT_FAILED.getMessage());
         }
         return new CreateOrderResponse(order.getId(), paymentResponse.getData());
+    }
+
+    private String getUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.isAuthenticated()) {
+            throw new BaseException(ErrorCode.UNAUTHENTICATED.getCode(), ErrorCode.UNAUTHENTICATED.getMessage());
+        }
+        return authentication.getName();
     }
 
     private Double getTotalAmount(CreateOrderRequest request) {

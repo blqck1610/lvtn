@@ -48,13 +48,12 @@ public class CartServiceImp implements CartService {
     }
 
     @Transactional
-    Cart getCart() {
+    public Cart getCart() {
         String username = getUsername();
         Cart cart = cartRepository.getByUsername(username);
         if (ObjectUtils.isEmpty(cart)) {
             cart = Cart.builder()
                     .username(username)
-                    .totalAmount(0.0)
                     .build();
             cart.setIsDelete(false);
             cart = cartRepository.saveAndFlush(cart);

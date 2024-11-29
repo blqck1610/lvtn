@@ -29,5 +29,4 @@ import java.util.UUID;
 @Table(name = TableName.CART)
 public class Cart extends BaseEntity {
     private String username;
-    private Double totalAmount;
 }

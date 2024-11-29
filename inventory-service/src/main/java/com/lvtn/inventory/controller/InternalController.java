@@ -32,13 +32,13 @@ import static com.lvtn.utils.constant.ApiEndpoint.*;
 public class InternalController {
     private final InventoryService inventoryService;
 
-    @GetMapping
-    public ApiResponse<List<InventoryDto>> getInventoryList(@RequestBody List<ItemDto> request) {
-        return ResponseUtil.getApiResponse(
-                HttpStatus.OK.value(),
-                SuccessMessage.GET_SUCCESS.getMessage(),
-                inventoryService.getInventoryList(request));
-    }
+//    @GetMapping
+//    public ApiResponse<List<InventoryDto>> getInventoryList(@RequestBody List<ItemDto> request) {
+//        return ResponseUtil.getApiResponse(
+//                HttpStatus.OK.value(),
+//                SuccessMessage.GET_SUCCESS.getMessage(),
+//                inventoryService.getInventoryList(request));
+//    }
 
     @PutMapping
     public ApiResponse<Object> updateInventory(@RequestBody List<ItemDto> request) {

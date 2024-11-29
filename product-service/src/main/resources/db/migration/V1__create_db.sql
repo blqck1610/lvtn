@@ -80,7 +80,6 @@ CREATE TABLE "cart"
 (
     "id"            uuid PRIMARY KEY,
     "username"       varchar,
-    "total_price"   float,
     "is_delete"     bool,
     "created_at"    timestamp,
     "last_modified" timestamp
