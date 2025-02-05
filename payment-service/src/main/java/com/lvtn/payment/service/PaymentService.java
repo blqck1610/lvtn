@@ -22,9 +22,9 @@ public class PaymentService {
     @Transactional
     public void saveTransaction(Transaction transaction){
         PaymentStatusResponse paymentStatusResponse = PaymentStatusResponse.builder()
-                .orderId(transaction.getOrderId())
+                .orderId(transaction.getTransactionReference())
                 .responseCode(transaction.getResponseCode())
-                .paymentStatus(transaction.getTransactionStatus())
+                .paymentStatus(transaction.getTransactionResponseCode())
                 .build();
         paymentRepository.save(transaction);
 

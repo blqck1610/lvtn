@@ -3,6 +3,7 @@ package com.lvtn.payment.controller;
 import com.lvtn.payment.entity.Transaction;
 import com.lvtn.payment.service.PaymentService;
 import com.lvtn.payment.vnpay.service.VNPayService;
+import com.lvtn.utils.constant.ApiEndpoint;
 import com.lvtn.utils.dto.payment.PaymentRequest;
 import com.lvtn.utils.dto.payment.PaymentResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,51 +20,50 @@ import java.util.Date;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "/api/v1/payment")
+@RequestMapping(value = ApiEndpoint.BASE_API + ApiEndpoint.PAYMENT + ApiEndpoint.VNPAY)
 @RequiredArgsConstructor
-public class PaymentController {
+public class VNPayController {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
     private final PaymentService paymentService;
     private final VNPayService vnpayservice;
 
 
-    @PostMapping(value = "/create-payment/vnpay")
+    @PostMapping
     public PaymentResponse createVNPayPayment(HttpServletRequest request, @RequestBody PaymentRequest paymentRequest) throws UnsupportedEncodingException {
         return vnpayservice.createVNPayPayment(request, paymentRequest);
     }
 
-    @GetMapping("/transaction-info/vnpay")
+    @GetMapping(ApiEndpoint.TRANSACTION)
     public Object transactionVNPay(
             @RequestParam(value = "vnp_Amount", required = false) String amount,
-            @RequestParam(value = "vnp_BankCode", required = false) String bankCode,
+            @RequestParam(value = "vnp_BankCode", required = false) String bank,
+            @RequestParam(value = "vnp_TransactionNo", required = false) String transactionNumber,
             @RequestParam(value = "vnp_ResponseCode", required = false) String responseCode,
             @RequestParam(value = "vnp_TransactionStatus", required = false) String transactionStatus,
-            @RequestParam(value = "vnp_OrderInfo", required = false) String orderInfo,
+            @RequestParam(value = "vnp_OrderInfo", required = false) String transactionInfo,
             @RequestParam(value = "vnp_PayDate", required = false) String payDateString,
-            @RequestParam(value = "vnp_TxnRef", required = false) String orderId
+            @RequestParam(value = "vnp_TxnRef", required = false) String transactionReference
 
     ) throws ParseException {
         Date payDate = formatter.parse(payDateString);
         PaymentResponse paymentResponseDTO = new PaymentResponse();
         if (responseCode.equals("00")) {
-//            paymentResponseDTO.setStatus("OK");
-//            paymentResponseDTO.setMessage("successfully");
-
             Transaction transaction = Transaction.builder()
                     .responseCode(responseCode)
                     .amount(amount)
-                    .transactionStatus(transactionStatus)
-                    .bankCode(bankCode)
-                    .orderId(orderId)
-                    .orderInfo(orderInfo)
+                    .transactionNumber(transactionNumber)
+                    .bank(bank)
+                    .transactionReference(transactionReference)
+                    .transactionInfo(transactionInfo)
+                    .payDate(payDate)
+                    .transactionResponseCode(transactionStatus)
                     .build();
 
             paymentService.saveTransaction(transaction);
             log.info("saved transaction {}", transaction);
 
         } else {
-//            paymentResponseDTO.setStatus("FAILED");
-//            paymentResponseDTO.setMessage("failed");
+
         }
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("http://localhost:5173/payment-successful"));

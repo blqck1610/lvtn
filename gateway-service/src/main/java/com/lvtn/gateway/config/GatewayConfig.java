@@ -27,6 +27,8 @@ public class GatewayConfig {
                 .route("cart-service", r -> r.path("/api/v1/cart/**")
                         .uri("lb://PRODUCT-SERVICE")
                 )
+                .route("payment-service", r -> r.path("/api/v1/payment/**")
+                        .uri("lb://PAYMENT-SERVICE"))
                 .build();
     }
 

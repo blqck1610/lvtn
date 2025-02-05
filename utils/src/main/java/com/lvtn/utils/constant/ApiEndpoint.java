@@ -52,5 +52,11 @@ public class ApiEndpoint {
     public static final String INVENTORY = "/inventory";
     public static final String CHECK = "/check";
     public static final String CANCEL = "/cancel";
+
+//    payment
+    public static final String PAYMENT = "/payment";
+    public static final String VNPAY = "/vnpay";
+    public static final String PAYPAL = "/paypal";
+    public static final String TRANSACTION = "/transaction";
 }
 

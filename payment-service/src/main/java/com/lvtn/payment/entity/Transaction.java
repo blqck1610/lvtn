@@ -1,6 +1,7 @@
 package com.lvtn.payment.entity;
 
 import com.lvtn.utils.common.PaymentMethod;
+import com.lvtn.utils.constant.TableName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +12,11 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.UUID;
 
 @Entity
-@Table(name = "_transaction")
+@Table(name = TableName.TRANSACTION)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,23 +24,19 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class Transaction {
     @Id
-    @SequenceGenerator(name = "transaction_id_sequence",
-            sequenceName = "transaction_id_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id_sequence")
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    private String transactionReference;
+    private String transactionInfo;
     private String amount;
-    private String bankCode;
     private String responseCode;
-    private String transactionStatus;
-    private String orderInfo;
-    private String orderId;
-
+    private String transactionResponseCode;
+    private String message;
+    private String transactionNumber;
+    private String bank;
+    private Date payDate;
     @CreatedDate
     private LocalDateTime createdDate;
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
-    @Enumerated(EnumType.STRING)
-    private PaymentMethod paymentMethod;
 }

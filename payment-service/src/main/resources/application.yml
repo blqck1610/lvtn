@@ -37,3 +37,7 @@ management:
 logging:
   pattern:
     level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+paypal:
+  client-id: Af15VNh1uDvpdFn466i2L-sel32VFXcJgUfPhMA7AWsTEaDZR_s_bCJ02CqBFilIOWyl8z-6qaenDEIr
+  client-secret: EEebENR4M3pidu2qqvg3cKmBPHMYWi_v2mY2iQU-7kW6TbUseNopX2yKqinH0vmgbCKGQG06WfpUTPpL
+  mode: sandbox # 'sandbox' for testing, 'live' for production
