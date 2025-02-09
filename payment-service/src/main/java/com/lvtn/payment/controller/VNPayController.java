@@ -63,7 +63,9 @@ public class VNPayController {
             log.info("saved transaction {}", transaction);
 
         } else {
-
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(URI.create("http://localhost:5173/error"));
+            return headers;
         }
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("http://localhost:5173/payment-successful"));
